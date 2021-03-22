@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ApiModel(value = "模板属性配置")
-public class TemplatePropertyVO {
+public class TemplatePropertyPageVO {
 
 	private static final long serialVersionUID = 1L;
 

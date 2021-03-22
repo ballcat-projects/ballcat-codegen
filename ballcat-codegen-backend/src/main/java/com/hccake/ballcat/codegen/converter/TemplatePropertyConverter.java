@@ -1,7 +1,7 @@
-package com.hccake.ballcat.codegen.model.converter;
+package com.hccake.ballcat.codegen.converter;
 
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
-import com.hccake.ballcat.codegen.model.vo.TemplatePropertyVO;
+import com.hccake.ballcat.codegen.model.vo.TemplatePropertyPageVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -15,10 +15,10 @@ public interface TemplatePropertyConverter {
 	TemplatePropertyConverter INSTANCE = Mappers.getMapper(TemplatePropertyConverter.class);
 
 	/**
-	 * po转换为Vo
-	 * @param property 模板属性
-	 * @return 模板配置VO
+	 * 模板属性配置 PO 转换为 PageVO
+	 * @param templateProperty 模板属性配置实体
+	 * @return TemplatePropertyPageVO 模板属性配置分页VO
 	 */
-	TemplatePropertyVO poToVo(TemplateProperty property);
+	TemplatePropertyPageVO poToPageVo(TemplateProperty templateProperty);
 
 }

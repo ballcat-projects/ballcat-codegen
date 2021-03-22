@@ -1,7 +1,8 @@
-package com.hccake.ballcat.codegen.model.converter;
+package com.hccake.ballcat.codegen.converter;
 
 import com.hccake.ballcat.codegen.model.dto.DataSourceConfigDTO;
 import com.hccake.ballcat.codegen.model.entity.DataSourceConfig;
+import com.hccake.ballcat.codegen.model.vo.DataSourceConfigPageVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,6 +15,13 @@ import org.mapstruct.factory.Mappers;
 public interface DataSourceConfigConverter {
 
 	DataSourceConfigConverter INSTANCE = Mappers.getMapper(DataSourceConfigConverter.class);
+
+	/**
+	 * PO 转 PageVO
+	 * @param dataSourceConfig 数据源配置
+	 * @return DataSourceConfigPageVO 数据源配置分页VO
+	 */
+	DataSourceConfigPageVO poToPageVo(DataSourceConfig dataSourceConfig);
 
 	/**
 	 * 转换Dto为Po

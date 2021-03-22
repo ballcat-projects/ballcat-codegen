@@ -7,14 +7,14 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 数据源
+ * 模板组
  *
  * @author hccake
- * @date 2020-06-17 10:24:47
+ * @date 2020-06-19 19:11:41
  */
 @Data
-@ApiModel(value = "数据源")
-public class DataSourceConfigVO {
+@ApiModel(value = "模板组分页VO")
+public class TemplateGroupPageVO {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,22 +31,10 @@ public class DataSourceConfigVO {
 	private String name;
 
 	/**
-	 * 用户名
+	 * 备注
 	 */
-	@ApiModelProperty(value = "用户名")
-	private String username;
-
-	/**
-	 * 密码
-	 */
-	@ApiModelProperty(value = "密码")
-	private String password;
-
-	/**
-	 * 数据源连接
-	 */
-	@ApiModelProperty(value = "数据源连接")
-	private String url;
+	@ApiModelProperty(value = "备注")
+	private String remarks;
 
 	/**
 	 * 创建时间
@@ -55,9 +43,9 @@ public class DataSourceConfigVO {
 	private LocalDateTime createTime;
 
 	/**
-	 * 删除时间
+	 * 修改时间
 	 */
-	@ApiModelProperty(value = "删除时间")
+	@ApiModelProperty(value = "修改时间")
 	private LocalDateTime updateTime;
 
 }

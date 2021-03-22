@@ -1,11 +1,13 @@
-package com.hccake.ballcat.codegen.model.converter;
+package com.hccake.ballcat.codegen.converter;
 
 import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryCreateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateInfoDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
+import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
 import com.hccake.ballcat.codegen.model.vo.TemplateDirectory;
 import com.hccake.ballcat.codegen.model.vo.TemplateDirectoryEntryVO;
+import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -18,6 +20,13 @@ import org.mapstruct.factory.Mappers;
 public interface TemplateModelConverter {
 
 	TemplateModelConverter INSTANCE = Mappers.getMapper(TemplateModelConverter.class);
+
+	/**
+	 * 模板组 PO 转换为 PageVO
+	 * @param templateGroup 模板组实体
+	 * @return TemplateGroupPageVO 模板组分页VO
+	 */
+	TemplateGroupPageVO groupPoToPageVo(TemplateGroup templateGroup);
 
 	/**
 	 * 转换 DirectoryEntryPO 为 DirectoryEntryVO
