@@ -38,6 +38,11 @@ public class GenerateProperties {
 	private String classname;
 
 	/**
+	 * 请求路径，中划线连接单词 eg: table-info
+	 */
+	private String path;
+
+	/**
 	 * 请求路径，全小写的类名 eg: tableinfo
 	 */
 	private String pathName;

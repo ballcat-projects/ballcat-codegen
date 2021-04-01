@@ -111,11 +111,18 @@ public class GenUtils {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
 		// 表名
-		generateProperties.setTableName(tableInfo.getTableName());
+		String tableName = tableInfo.getTableName();
+		generateProperties.setTableName(tableName);
+		// 去除前缀的表名
+		String noPrefixTableName = tableName;
+		if (StringUtils.isNotBlank(tablePrefix) && tableName.startsWith(tablePrefix)) {
+			noPrefixTableName = tableName.substring(tablePrefix.length());
+		}
+
 		// 表备注
 		generateProperties.setComments(tableInfo.getTableComment());
 		// 大驼峰类名
-		String className = getClassName(generateProperties.getTableName(), tablePrefix);
+		String className = underlineToCamel(noPrefixTableName);
 		generateProperties.setClassName(className);
 		// 表别名
 		generateProperties.setTableAlias(prodAlias(className));
@@ -123,6 +130,7 @@ public class GenUtils {
 		String classname = StringUtils.uncapitalize(className);
 		generateProperties.setClassname(classname);
 		// 请求路径
+		generateProperties.setPath(noPrefixTableName.replace('_', '-'));
 		generateProperties.setPathName(classname.toLowerCase());
 
 		// 列信息
@@ -137,7 +145,7 @@ public class GenUtils {
 			columnProperties.setColumnType(columnInfo.getColumnType());
 
 			// 列名转换成Java属性名
-			String capitalizedAttrName = columnToJava(columnName);
+			String capitalizedAttrName = underlineToCamel(columnName);
 			columnProperties.setCapitalizedAttrName(capitalizedAttrName);
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
@@ -199,18 +207,8 @@ public class GenUtils {
 	/**
 	 * 列名转换成Java属性名
 	 */
-	public String columnToJava(String columnName) {
-		return WordUtils.capitalizeFully(columnName, new char[] { '_' }).replace("_", "");
-	}
-
-	/**
-	 * 表名转换成Java类名
-	 */
-	private String getClassName(String tableName, String tablePrefix) {
-		if (StringUtils.isNotBlank(tablePrefix) && tableName.startsWith(tablePrefix)) {
-			tableName = tableName.substring(tablePrefix.length());
-		}
-		return columnToJava(tableName);
+	public String underlineToCamel(String underlineStr) {
+		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
 	}
 
 }
