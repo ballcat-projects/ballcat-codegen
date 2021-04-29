@@ -2,14 +2,14 @@
   <a-modal
     :title="'属性配置-' + groupName"
     :visible="visible"
-    @ok="handleOk"
-    @cancel="handleClose"
-    :confirmLoading="confirmLoading"
-    :maskClosable="false"
+    :confirm-loading="confirmLoading"
+    :mask-closable="false"
     :footer="null"
-    :bodyStyle="{ padding: '12px 18px' }"
+    :body-style="{ padding: '12px 18px' }"
     width="75%"
     :centered="true"
+    @ok="handleOk"
+    @cancel="handleClose"
   >
     <div v-show="tableShow" :bordered="false">
       <!-- 操作按钮区域 -->
@@ -22,9 +22,9 @@
         <a-table
           ref="table"
           size="small"
-          :rowKey="rowKey"
+          :row-key="rowKey"
           :columns="columns"
-          :dataSource="dataSource"
+          :data-source="dataSource"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
@@ -41,8 +41,13 @@
     </div>
 
     <!--表单页面-->
-    <div v-if="formInited" :bordered="false" :title="cardTitle" v-show="!tableShow">
-      <form-page ref="formPage" @backToPage="backToPage"></form-page>
+    <div
+      v-if="formInited"
+      v-show="!tableShow"
+      :bordered="false"
+      :title="cardTitle"
+    >
+      <form-page ref="formPage" @backToPage="backToPage" />
     </div>
   </a-modal>
 </template>
@@ -54,8 +59,8 @@ import { TablePageMixin } from '@/mixins'
 
 export default {
   name: 'TemplatePropertyPage',
-  mixins: [TablePageMixin],
   components: { FormPage },
+  mixins: [TablePageMixin],
   data() {
     return {
       getPage: getPage,

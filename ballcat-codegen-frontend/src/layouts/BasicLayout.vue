@@ -1,9 +1,20 @@
 <template>
   <a-layout id="components-layout-side" style="min-height: 100vh">
-    <a-layout-sider :trigger="null" v-model="collapsed" collapsible width="208px" collapsedWidth="48px">
+    <a-layout-sider
+      v-model="collapsed"
+      :trigger="null"
+      collapsible
+      width="208px"
+      collapsed-width="48px"
+    >
       <div class="logo">
         <!--<LogSvg alt="logo" />-->
-        <img src="~@/assets/logo.svg" class="logo" alt="logo" style="width:32px;height:auto" />
+        <img
+          src="~@/assets/logo.svg"
+          class="logo"
+          alt="logo"
+          style="width:32px;height:auto"
+        >
         <span v-show="!collapsed" class="project-name">Code Generator</span>
       </div>
       <SiderMenu />
@@ -26,11 +37,10 @@
 import Header from './Header'
 import Footer from './Footer'
 import SiderMenu from './SiderMenu'
-import LogSvg from '@/assets/logo.svg?inline'
 
 export default {
   name: 'BasicLayout',
-  components: { Header, Footer, SiderMenu, LogSvg },
+  components: { Header, Footer, SiderMenu },
   data() {
     return {
       collapsed: false

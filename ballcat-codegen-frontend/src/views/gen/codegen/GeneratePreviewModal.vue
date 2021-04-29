@@ -5,14 +5,14 @@
     :visible="visible"
     :footer="null"
     :centered="true"
-    :bodyStyle="{ padding: 0 }"
+    :body-style="{ padding: 0 }"
     class="preview-modal"
     @cancel="handleClose"
   >
     <a-tabs>
       <a-tab-pane v-for="(value, key) in data" :key="key" :tab="key">
         <div style="padding-left: 8px; height: 800px; overflow-y: auto">
-          <pre><code class="hljs" v-html="highlightedCode(value,key)"></code></pre>
+          <pre><code class="hljs" v-html="highlightedCode(value,key)" /></pre>
         </div>
       </a-tab-pane>
     </a-tabs>

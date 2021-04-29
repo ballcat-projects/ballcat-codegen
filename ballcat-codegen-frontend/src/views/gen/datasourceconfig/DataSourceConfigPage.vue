@@ -40,29 +40,32 @@
         <a-table
           ref="table"
           size="middle"
-          :rowKey="rowKey"
+          :row-key="rowKey"
           :columns="columns"
-          :dataSource="dataSource"
+          :data-source="dataSource"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
         >
-          <span slot="action-slot" slot-scope="text, record">
-            <template>
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm>
-            </template>
-          </span>
+          <template #action-slot="text, record">
+            <a @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
+              <a href="javascript:;">删除</a>
+            </a-popconfirm>
+          </template>
         </a-table>
       </div>
     </a-card>
 
     <!--表单页面-->
-    <a-card v-if="formInited" :bordered="false" :title="cardTitle" v-show="!tableShow">
-      <form-page ref="formPage" @backToPage="backToPage"></form-page>
+    <a-card
+      v-if="formInited"
+      v-show="!tableShow"
+      :bordered="false"
+      :title="cardTitle"
+    >
+      <form-page ref="formPage" @backToPage="backToPage" />
     </a-card>
   </div>
 </template>
@@ -74,8 +77,8 @@ import { TablePageMixin } from '@/mixins'
 
 export default {
   name: 'DataSourceConfigPage',
-  mixins: [TablePageMixin],
   components: { FormPage },
+  mixins: [TablePageMixin],
   data() {
     return {
       getPage: getPage,

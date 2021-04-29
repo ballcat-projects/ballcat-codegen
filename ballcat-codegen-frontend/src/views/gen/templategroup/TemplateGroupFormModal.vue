@@ -1,10 +1,21 @@
 <template>
-  <a-modal :title="title" :visible="visible" :confirm-loading="submitLoading" @ok="handleSubmit" @cancel="handleClose">
+  <a-modal
+    :title="title"
+    :visible="visible"
+    :confirm-loading="submitLoading"
+    @ok="handleSubmit"
+    @cancel="handleClose"
+  >
     <a-form :form="form">
-      <a-form-item v-if="formAction === this.FORM_ACTION.UPDATE" style="display: none">
+      <a-form-item v-if="formAction === FORM_ACTION.UPDATE" style="display: none">
         <a-input v-decorator="['id']" />
       </a-form-item>
-      <a-form-item v-if="formAction === 'copy'" :label-col="labelCol" :wrapper-col="wrapperCol" label="源模板组">
+      <a-form-item
+        v-if="formAction === 'copy'"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+        label="源模板组"
+      >
         <span>{{ resourceGroupName }}</span>
       </a-form-item>
       <a-form-item :label-col="labelCol" :wrapper-col="wrapperCol" label="名称">

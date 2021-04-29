@@ -1,6 +1,11 @@
 <template>
   <div style="width: 208px">
-    <a-menu :selected-keys="selectedKeys" :open-keys.sync="openKeys" mode="inline" theme="dark">
+    <a-menu
+      :selected-keys="selectedKeys"
+      :open-keys.sync="openKeys"
+      mode="inline"
+      theme="dark"
+    >
       <template v-for="item in menuData">
         <a-menu-item v-if="!item.children" :key="item.path" @click="$router.push({ path: item.path })">
           <a-icon v-if="item.meta.icon" :type="item.meta.icon" />
@@ -20,12 +25,6 @@ export default {
   components: {
     'sub-menu': SubMenu
   },
-  watch: {
-    '$route.path': function(val) {
-      this.selectedKeys = this.selectedKeysMap[val]
-      this.openKeys = this.openKeysMap[val]
-    }
-  },
   data() {
     this.selectedKeysMap = {}
     this.openKeysMap = {}
@@ -34,6 +33,12 @@ export default {
       selectedKeys: this.selectedKeysMap[this.$route.path],
       openKeys: this.openKeysMap[this.$route.path],
       menuData
+    }
+  },
+  watch: {
+    '$route.path': function(val) {
+      this.selectedKeys = this.selectedKeysMap[val]
+      this.openKeys = this.openKeysMap[val]
     }
   },
   methods: {

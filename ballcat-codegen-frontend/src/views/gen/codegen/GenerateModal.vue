@@ -12,7 +12,7 @@
         <a-button @click="handleClose">
           取消
         </a-button>
-        <a-button @click="previewCode" v-if="'single' === this.type">
+        <a-button v-if="'single' === type" @click="previewCode">
           预览
         </a-button>
         <a-button type="primary" @click="handleOk">
@@ -24,7 +24,6 @@
           <a-col :span="10">
             <a-form-item :label-col="labelCol" :wrapper-col="wrapperCol" label="模板组">
               <a-select
-                @change="onTemplateGroupChange"
                 v-decorator="[
                   'templateGroupId',
                   {
@@ -32,6 +31,7 @@
                     rules: [{ required: true, message: '必须选择一个模板组' }]
                   }
                 ]"
+                @change="onTemplateGroupChange"
               >
                 <a-select-option v-for="item in templateGroupSelectData" :key="Number(item.value)">
                   {{ item.name }}
@@ -46,12 +46,12 @@
               </div>
               <a-checkbox-group
                 v-decorator="['templateFileIds', { initialValue: templateFileIds }]"
-                @change="onTemplateFileIdsChange"
                 style="width: 100%;"
+                @change="onTemplateFileIdsChange"
               >
                 <a-row>
                   <template v-for="item in templateFiles">
-                    <a-col :span="12">
+                    <a-col :key="item.id" :span="12">
                       <a-checkbox :value="item.directoryEntryId">
                         {{ item.title }}
                       </a-checkbox>
@@ -108,10 +108,13 @@ import GeneratePreviewModal from '@/views/gen/codegen/GeneratePreviewModal'
 
 export default {
   name: 'GenerateModalForm',
-  mixins: [PopUpFormMixin],
   components: { GeneratePreviewModal },
+  mixins: [PopUpFormMixin],
   props: {
-    dsName: String
+    dsName: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {

@@ -8,26 +8,25 @@
       @resize="resize"
     >
       <template slot="paneL">
-        <div class="left-pane" @contextmenu.prevent="onRightClickBox" :style="leftPaneStyle">
+        <div class="left-pane" :style="leftPaneStyle" @contextmenu.prevent="onRightClickBox">
           <h1 align="center">右键即可创建文件或文件夹</h1>
           <a-directory-tree
-            :style="directoryTreeStyle"
             v-model="checkedKeys"
+            :style="directoryTreeStyle"
             :expanded-keys="expandedKeys"
             :auto-expand-parent="autoExpandParent"
             :selected-keys="selectedKeys"
             :tree-data="treeData"
-            :showIcon="true"
+            :show-icon="true"
             :draggable="true"
             @expand="onExpand"
             @select="onSelect"
             @drop="onDrop"
             @dblclick="ondblclick"
             @rightClick="onRightClick"
-          >
-          </a-directory-tree>
-          <a-menu :style="menuStyle" v-if="menuVisible">
-            <template v-if="this.selectedNode">
+          />
+          <a-menu v-if="menuVisible" :style="menuStyle">
+            <template v-if="selectedNode">
               <a-menu-item key="1" :style="menuItemStyle" @click="updateEntry">
                 <a-icon type="edit" />
                 编辑
@@ -37,7 +36,7 @@
                 删除
               </a-menu-item>
             </template>
-            <template v-if="!this.selectedNode || this.selectedNode.dataRef.type !== 2">
+            <template v-if="!selectedNode || selectedNode.dataRef.type !== 2">
               <a-menu-item key="3" :style="menuItemStyle" @click="createdEntry(1)">
                 <a-icon type="diff" />
                 新建文件夹
@@ -53,33 +52,33 @@
       </template>
       <template slot="paneR" style="padding:0;">
         <div ref="paneR" class="right-pane">
-          <code-gen-tips v-show="showTips" :template-group-id="this.templateGroupId" />
+          <code-gen-tips v-show="showTips" :template-group-id="templateGroupId" />
           <div v-show="!showTips">
             <a-tabs
               v-model="activeKey"
               default-active-key="1"
-              :tabBarStyle="{ margin: 0 }"
+              :tab-bar-style="{ margin: 0 }"
               type="editable-card"
               hide-add
               class="file-editor-tab"
               @change="handlePaneChange"
               @edit="handlePaneEdit"
             >
-              <a-tab-pane v-for="([key, info], index) in templateInfoMap" :key="key" :closable="info.closable">
+              <a-tab-pane v-for="([key, info]) in templateInfoMap" :key="key" :closable="info.closable">
                 <span slot="tab">
-                  <a-badge status="default" v-if="info.createData" />
+                  <a-badge v-if="info.createData" status="default" />
                   {{ info.title }}
                 </span>
               </a-tab-pane>
             </a-tabs>
             <div id="codeEditor">
-              <codemirror v-model="content" :options="cmOptions" style="line-height: 1.5"></codemirror>
+              <codemirror v-model="content" :options="cmOptions" style="line-height: 1.5" />
             </div>
           </div>
         </div>
       </template>
     </split-pane>
-    <remove-model ref="removeModel"></remove-model>
+    <remove-model ref="removeModel" />
     <template-folder-modal-form ref="folderModalForm" @reload-page-table="treeLoad" />
     <template-file-modal-form ref="fileModalForm" @reload-page-table="treeLoad" @create-entry-file="createEntryFile" />
   </div>
@@ -118,7 +117,10 @@ export default {
     CodeGenTips
   },
   props: {
-    templateGroupId: Number
+    templateGroupId: {
+      type: Number,
+      required: true
+    }
   },
   data() {
     return {

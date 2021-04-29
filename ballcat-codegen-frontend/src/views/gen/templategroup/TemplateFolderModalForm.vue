@@ -1,7 +1,13 @@
 <template>
-  <a-modal :title="title" :visible="visible" :confirm-loading="submitLoading" @ok="handleSubmit" @cancel="handleClose">
-    <a-form :form="form" :labelCol="labelCol" :wrapperCol="wrapperCol">
-      <template v-if="formAction === this.FORM_ACTION.CREATE">
+  <a-modal
+    :title="title"
+    :visible="visible"
+    :confirm-loading="submitLoading"
+    @ok="handleSubmit"
+    @cancel="handleClose"
+  >
+    <a-form :form="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <template v-if="formAction === FORM_ACTION.CREATE">
         <a-form-item style="display: none">
           <a-input v-decorator="['groupId']" />
         </a-form-item>
@@ -15,13 +21,13 @@
           <span> {{ parentFileName }}</span>
         </a-form-item>
       </template>
-      <template v-if="formAction === this.FORM_ACTION.UPDATE">
+      <template v-if="formAction === FORM_ACTION.UPDATE">
         <a-form-item style="display: none">
           <a-input v-decorator="['id']" />
         </a-form-item>
       </template>
       <a-form-item label="文件名">
-        <a-input placeholder="请输入文件名" v-decorator="['fileName']" />
+        <a-input v-decorator="['fileName']" placeholder="请输入文件名" />
       </a-form-item>
     </a-form>
   </a-modal>

@@ -3,12 +3,12 @@
     :title="title"
     :visible="visible"
     :confirm-loading="submitLoading"
-    :ok-text="formAction === this.FORM_ACTION.CREATE ? '填写文件内容' : '保存'"
+    :ok-text="formAction === FORM_ACTION.CREATE ? '填写文件内容' : '保存'"
     @ok="handleOk"
     @cancel="handleClose"
   >
-    <a-form :form="form" :labelCol="labelCol" :wrapperCol="wrapperCol">
-      <template v-if="formAction === this.FORM_ACTION.CREATE">
+    <a-form :form="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <template v-if="formAction === FORM_ACTION.CREATE">
         <a-form-item style="display: none">
           <a-input v-decorator="['groupId']" />
         </a-form-item>
@@ -22,23 +22,23 @@
           <span> {{ parentFileName }}</span>
         </a-form-item>
       </template>
-      <a-form-item v-if="formAction === this.FORM_ACTION.UPDATE" style="display: none">
+      <a-form-item v-if="formAction === FORM_ACTION.UPDATE" style="display: none">
         <a-input v-decorator="['id']" />
       </a-form-item>
 
       <a-form-item label="文件名">
-        <a-input placeholder="请输入文件名" v-decorator="['fileName']" />
+        <a-input v-decorator="['fileName']" placeholder="请输入文件名" />
       </a-form-item>
-      <a-form-item label="标题" :labelCol="labelCol" :wrapperCol="wrapperCol">
-        <a-input placeholder="标题" v-decorator="['templateInfo.title']" />
+      <a-form-item label="标题" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-input v-decorator="['templateInfo.title']" placeholder="标题" />
       </a-form-item>
-      <a-form-item label="引擎" :labelCol="labelCol" :wrapperCol="wrapperCol">
+      <a-form-item label="引擎" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-select v-decorator="['templateInfo.engineType', { initialValue: 1 }]">
           <a-select-option :value="1">velocity</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
-        <a-textarea placeholder="备注" v-decorator="['templateInfo.remarks']" />
+      <a-form-item label="备注" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-textarea v-decorator="['templateInfo.remarks']" placeholder="备注" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -88,7 +88,7 @@ export default {
       })
     },
     handleOk(e) {
-      if (this.formAction === this.FORM_ACTION.UPDATE) {
+      if (this.formAction === FORM_ACTION.UPDATE) {
         // 如果是修改，则直接提交表单数据
         this.handleSubmit(e)
       } else {

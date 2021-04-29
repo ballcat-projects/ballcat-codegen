@@ -50,30 +50,28 @@
         <a-table
           ref="table"
           size="middle"
-          :rowKey="rowKey"
+          :row-key="rowKey"
           :columns="columns"
-          :dataSource="dataSource"
+          :data-source="dataSource"
           :pagination="pagination"
           :loading="loading"
+          :row-selection="{ onChange: onSelectChange, selectedRowKeys: selectedRowKeys }"
           @change="handleTableChange"
-          :rowSelection="{ onChange: onSelectChange, selectedRowKeys: selectedRowKeys }"
         >
-          <span slot="action-slot" slot-scope="text, record">
-            <template>
-              <a @click="singleGenerate(record)">生成</a>
-            </template>
-          </span>
+          <template #action-slot="text, record">
+            <a @click="singleGenerate(record)">生成</a>
+          </template>
         </a-table>
       </div>
     </a-card>
 
     <generate-modal
       ref="generateModal"
-      :dsName="dsName"
-      :bodyStyle="{
+      :ds-name="dsName"
+      :body-style="{
         padding: '12px 24px'
       }"
-    ></generate-modal>
+    />
   </div>
 </template>
 
@@ -130,15 +128,15 @@ export default {
       dsName: 'master'
     }
   },
-  mounted() {
-    getSelectData().then(res => {
-      this.dataSourceSelectData = res.data
-    })
-  },
   watch: {
     dsName() {
       this.reloadTable(true)
     }
+  },
+  mounted() {
+    getSelectData().then(res => {
+      this.dataSourceSelectData = res.data
+    })
   },
   methods: {
     singleGenerate(record) {

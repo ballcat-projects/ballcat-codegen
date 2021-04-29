@@ -40,53 +40,54 @@
         <a-table
           ref="table"
           size="middle"
-          :rowKey="rowKey"
+          :row-key="rowKey"
           :columns="columns"
-          :dataSource="dataSource"
+          :data-source="dataSource"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
         >
-          <span slot="template-action-slot" slot-scope="text, record">
-            <template>
-              <a @click="editEntry(record, '编辑模板组 - ' + record.name)">模板编辑</a>
-              <a-divider type="vertical" />
-              <a @click="editProperties(record)">属性配置</a>
-            </template>
-          </span>
-          <span slot="action-slot" slot-scope="text, record">
-            <template>
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a @click="handleCopy(record)">复制</a>
-              <a-divider type="vertical" />
-              <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm>
-            </template>
-          </span>
+          <template #template-action-slot="text, record">
+            <a @click="editEntry(record, '编辑模板组 - ' + record.name)">模板编辑</a>
+            <a-divider type="vertical" />
+            <a @click="editProperties(record)">属性配置</a>
+          </template>
+          <template #action-slot="text, record">
+            <a @click="handleEdit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a @click="handleCopy(record)">复制</a>
+            <a-divider type="vertical" />
+            <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
+              <a href="javascript:;">删除</a>
+            </a-popconfirm>
+          </template>
         </a-table>
       </div>
     </a-card>
 
     <!--表单页面-->
-    <a-card v-if="formInited" size="small" :bodyStyle="{ padding: '0px' }" v-show="!tableShow">
+    <a-card
+      v-if="formInited"
+      v-show="!tableShow"
+      size="small"
+      :body-style="{ padding: '0px' }"
+    >
       <slot slot="title">
         <div style="position:relative;height:32px;line-height:32px;padding:0 1%">
           {{ cardTitle }}
           <div style="position:absolute;right:1%;top:0"><a-button @click="backToPage">返回上级</a-button></div>
         </div>
       </slot>
-      <form-page ref="formPage" :templateGroupId="templateGroupId" @backToPage="backToPage"></form-page>
+      <form-page ref="formPage" :template-group-id="templateGroupId" @backToPage="backToPage" />
     </a-card>
 
     <!--字典项-->
     <div v-if="itemModalInited">
-      <template-property-modal ref="propertyModal"></template-property-modal>
+      <template-property-modal ref="propertyModal" />
     </div>
 
     <!--模板组表单弹窗-->
-    <template-group-form-modal ref="formModal" @reload-page-table="reloadTable"></template-group-form-modal>
+    <template-group-form-modal ref="formModal" @reload-page-table="reloadTable" />
   </div>
 </template>
 
@@ -99,8 +100,8 @@ import TemplateGroupFormModal from './TemplateGroupFormModal'
 
 export default {
   name: 'TemplateGroupPage',
-  mixins: [TablePageMixin],
   components: { TemplateGroupFormModal, FormPage, TemplatePropertyModal },
+  mixins: [TablePageMixin],
   data() {
     return {
       getPage: getPage,
