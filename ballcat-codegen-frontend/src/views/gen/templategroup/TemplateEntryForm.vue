@@ -236,9 +236,11 @@ export default {
       if (this.templateInfoMap.size === 0) {
         this.showTips = true
         this.activeKey = null
+        this.content = ''
       } else if (closeCurrent) {
         // 当关闭标签为第一个的时候，默认打开现在的第一个标签
         this.activeKey = preKey ? preKey : this.templateInfoMap.keys().next().value
+        this.content = this.templateInfoMap.get(this.activeKey).content
       }
       // Vue2 Map 双向绑定有点问题，需要强制刷新
       this.$forceUpdate()
