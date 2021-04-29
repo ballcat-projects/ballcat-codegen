@@ -67,7 +67,6 @@
 
     <!--表单页面-->
     <a-card
-      v-if="formInited"
       v-show="!tableShow"
       size="small"
       :body-style="{ padding: '0px' }"
@@ -75,16 +74,14 @@
       <slot slot="title">
         <div style="position:relative;height:32px;line-height:32px;padding:0 1%">
           {{ cardTitle }}
-          <div style="position:absolute;right:1%;top:0"><a-button @click="backToPage">返回上级</a-button></div>
+          <div style="position:absolute;right:1%;top:0"><a-button @click="backToPage(false)">返回上级</a-button></div>
         </div>
       </slot>
-      <form-page ref="formPage" :template-group-id="templateGroupId" @backToPage="backToPage" />
+      <form-page ref="formPage" @back-to-page="backToPage" />
     </a-card>
 
     <!--字典项-->
-    <div v-if="itemModalInited">
-      <template-property-modal ref="propertyModal" />
-    </div>
+    <template-property-page-modal ref="propertyPageModal" />
 
     <!--模板组表单弹窗-->
     <template-group-form-modal ref="formModal" @reload-page-table="reloadTable" />
@@ -94,13 +91,13 @@
 <script>
 import { getPage, delObj } from '@/api/gen/templategroup'
 import FormPage from './TemplateEntryForm'
-import TemplatePropertyModal from './TemplatePropertyModal'
+import TemplatePropertyPageModal from './TemplatePropertyPageModal'
 import { TablePageMixin } from '@/mixins'
 import TemplateGroupFormModal from './TemplateGroupFormModal'
 
 export default {
   name: 'TemplateGroupPage',
-  components: { TemplateGroupFormModal, FormPage, TemplatePropertyModal },
+  components: { TemplateGroupFormModal, FormPage, TemplatePropertyPageModal },
   mixins: [TablePageMixin],
   data() {
     return {
@@ -140,8 +137,7 @@ export default {
         }
       ],
 
-      itemModalInited: false,
-      templateGroupId: null
+      cardTitle: ''
     }
   },
   methods: {
@@ -156,16 +152,10 @@ export default {
     },
     editEntry(record, title) {
       this.switchPage()
-      this.cardTitle = title || '修改'
-      this.templateGroupId = record.id
+      this.$refs.formPage.show(record.id, title)
     },
     editProperties(record) {
-      if (!this.itemModalInited) {
-        this.itemModalInited = true
-      }
-      this.$nextTick(function() {
-        this.$refs.propertyModal.show(record)
-      })
+      this.$refs.propertyPageModal.show(record)
     }
   }
 }

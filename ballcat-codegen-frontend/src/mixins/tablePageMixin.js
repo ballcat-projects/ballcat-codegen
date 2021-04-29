@@ -1,5 +1,5 @@
 export default {
-  data() {
+  data () {
     return {
       // 主键 默认id
       rowKey: 'id',
@@ -30,14 +30,11 @@ export default {
       // 高级搜索 展开/关闭
       advanced: false,
       // 获取分页数据的方法
-      getPage: function() {},
+      getPage: function () {
+      },
       // 删除 数据的方法
-      delObj: function() {},
-
-      // 表单页的title
-      cardTitle: '',
-      //表单初始化标识
-      formInited: false,
+      delObj: function () {
+      },
 
       // 已选中数据集合
       selectedRows: [],
@@ -46,19 +43,27 @@ export default {
       // 延迟加载，created时不主动加载数据
       lazyLoad: false,
 
-      // 需要加载的 dictSlot数据
-      dictCodes: []
+      // 搜索表单的布局
+      searchFormLayout: {
+        labelCol: {
+          md: { span: 6 }
+        },
+        wrapperCol: {
+          md: { span: 18 }
+        }
+      }
     }
   },
-  created() {
-    // this.DictPool.initDictList(this.dictCodes)
-    !this.lazyLoad && this.loadData()
+  created () {
+    this.initDefaultSort()
+    !this.lazyLoad && this.reloadTable()
   },
   methods: {
+
     /**
      * 默认排序规则
      */
-    initDefaultSort() {
+    initDefaultSort () {
       this.sortField = 'id'
       this.sortOrder = 'desc'
     },
@@ -67,7 +72,7 @@ export default {
      * 如果参数为 true, 则强制刷新到第一页
      * @param bool
      */
-    reloadTable(bool = false) {
+    reloadTable (bool = false) {
       bool && (this.pagination.current = 1)
       this.loadData()
     },
@@ -75,25 +80,20 @@ export default {
      * 合并查询参数，分页参数，排序参数，过滤参数
      * @returns {{current: number, size: number} & {sortOrders: null, sortFields: null}}
      */
-    pageParams: function() {
-      return Object.assign(
-        this.queryParam,
-        {
-          current: this.pagination.current,
-          size: this.pagination.pageSize
-        },
-        {
-          // TODO 多列排序支持
-          sortFields: this.sortField,
-          sortOrders: this.sortOrder
-        },
-        { ...this.filters }
-      )
+    pageParams: function () {
+      return Object.assign(this.queryParam, {
+        current: this.pagination.current,
+        size: this.pagination.pageSize
+      }, {
+        // TODO 多列排序支持
+        sortFields: this.sortField,
+        sortOrders: this.sortOrder
+      }, { ...this.filters })
     },
     /**
      * 表格数据加载方法
      */
-    loadData() {
+    loadData () {
       const params = this.pageParams()
 
       this.loading = true
@@ -113,28 +113,27 @@ export default {
           } else {
             this.$message.warning(res.message || 'error request')
           }
-        })
-        .catch(e => {
-          // 未被 axios拦截器处理过，则在这里继续处理
-          !e.resolved && this.$message.error(e.message || 'error request')
-        })
-        .finally(() => {
-          this.loading = false
-        })
+        }).catch((e) => {
+        // 未被 axios拦截器处理过，则在这里继续处理
+        !e.resolved && this.$message.error(e.message || 'error request')
+      }).finally(() => {
+        this.loading = false
+      })
     },
     /**
      * 分页查询成功回调
      * @param page
      */
-    /* eslint-disable no-unused-vars */
-    onPageLoadSuccess(page) {},
+    onPageLoadSuccess (page) {
+
+    },
     /**
      * 分页、排序、筛选变化时进行数据更新
      * @param pagination
      * @param filters
      * @param sorter
      */
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange (pagination, filters, sorter) {
       this.filters = filters
       if (sorter && sorter.field) {
         if (sorter.order) {
@@ -148,26 +147,26 @@ export default {
       this.loadData()
     },
     // 展开/关闭 搜索条件
-    toggleAdvanced() {
+    toggleAdvanced () {
       this.advanced = !this.advanced
     },
     // 清空搜索条件
-    resetSearchForm() {
+    resetSearchForm () {
       this.queryParam = {}
     },
     // 选择
-    onSelectChange(selectedRowKeys, selectedRows) {
+    onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
     },
     // 清空选项
-    onClearSelected() {
+    onClearSelected () {
       this.selectedRowKeys = []
       this.selectedRows = []
     },
 
     // 删除
-    handleDel(record) {
+    handleDel (record) {
       this.delObj(record[this.rowKey]).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
@@ -175,39 +174,22 @@ export default {
         } else {
           this.$message.error(res.message)
         }
+      }).catch((e) => {
+        // 未被 axios拦截器处理过，则在这里继续处理
+        !e.resolved && this.$message.error(e.message || 'error request')
       })
     },
 
-    // ========== PageForm交互 ===================
-    // TODO 支持 modal 形式表单
+    // ========== 需要显示隐藏表格页时使用 ===================
     // 切换表格/表单
-    switchPage() {
+    switchPage () {
       window.scrollTo(0, 0)
       this.tableShow = !this.tableShow
-      if (!this.formInited) {
-        this.formInited = true
-      }
     },
     // 返回表格
-    backToPage(needRefresh) {
+    backToPage (needRefresh) {
       this.switchPage()
       needRefresh && this.reloadTable(false)
-    },
-    // 新增
-    handleAdd(argument) {
-      this.switchPage()
-      this.cardTitle = '新增'
-      this.$nextTick(function() {
-        this.$refs.formPage.add(argument)
-      })
-    },
-    // 编辑
-    handleEdit(record, title) {
-      this.switchPage()
-      this.cardTitle = title || '修改'
-      this.$nextTick(function() {
-        this.$refs.formPage.update(record)
-      })
     }
   }
 }

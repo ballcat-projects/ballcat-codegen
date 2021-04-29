@@ -139,6 +139,12 @@ export default {
     })
   },
   methods: {
+    /**
+     * 不排序
+     */
+    initDefaultSort () {
+      // do nothing 以便不排序
+    },
     singleGenerate(record) {
       this.$refs.generateModal.show([record.tableName], 'single')
     },

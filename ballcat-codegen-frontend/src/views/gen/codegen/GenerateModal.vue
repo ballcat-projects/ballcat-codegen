@@ -4,6 +4,7 @@
       title="属性配置"
       cancel-text="取消"
       :visible="visible"
+      :body-style="{paddingBottom: '8px'}"
       :confirm-loading="submitLoading"
       :width="900"
       @cancel="handleClose"
@@ -19,7 +20,7 @@
           确认
         </a-button>
       </template>
-      <a-form :form="form" @submit="handleOk">
+      <a-form :form="form">
         <a-row :gutter="6">
           <a-col :span="10">
             <a-form-item :label-col="labelCol" :wrapper-col="wrapperCol" label="模板组">

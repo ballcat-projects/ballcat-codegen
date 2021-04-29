@@ -85,21 +85,17 @@ import { getProperties } from '@/api/gen/templateproperty'
 
 export default {
   name: 'CodeGenTips',
-  props: {
-    templateGroupId: {
-      type: Number,
-      required: true
-    }
-  },
   data() {
     return {
       properties: []
     }
   },
-  mounted() {
-    getProperties(this.templateGroupId).then(res => {
-      this.properties = res.data
-    })
+  methods: {
+    init(templateGroupId){
+      getProperties(templateGroupId).then(res => {
+        this.properties = res.data
+      })
+    }
   }
 }
 </script>

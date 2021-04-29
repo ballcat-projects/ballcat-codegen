@@ -3,12 +3,12 @@
     :title="title"
     :visible="visible"
     :confirm-loading="submitLoading"
-    :ok-text="formAction === FORM_ACTION.CREATE ? '填写文件内容' : '保存'"
+    :ok-text="isCreateForm ? '填写文件内容' : '保存'"
     @ok="handleOk"
     @cancel="handleClose"
   >
     <a-form :form="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <template v-if="formAction === FORM_ACTION.CREATE">
+      <template v-if="isCreateForm">
         <a-form-item style="display: none">
           <a-input v-decorator="['groupId']" />
         </a-form-item>
@@ -22,7 +22,7 @@
           <span> {{ parentFileName }}</span>
         </a-form-item>
       </template>
-      <a-form-item v-if="formAction === FORM_ACTION.UPDATE" style="display: none">
+      <a-form-item v-if="isUpdateForm" style="display: none">
         <a-input v-decorator="['id']" />
       </a-form-item>
 
@@ -59,6 +59,15 @@ export default {
         update: putObj
       },
 
+      labelCol: {
+        sm: { span: 24 },
+        md: { span: 3 }
+      },
+      wrapperCol: {
+        sm: { span: 24 },
+        md: { span: 20 }
+      },
+
       parentFileName: ''
     }
   },
@@ -88,7 +97,7 @@ export default {
       })
     },
     handleOk(e) {
-      if (this.formAction === FORM_ACTION.UPDATE) {
+      if (this.isUpdateForm) {
         // 如果是修改，则直接提交表单数据
         this.handleSubmit(e)
       } else {

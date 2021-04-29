@@ -1,6 +1,11 @@
 import TablePageMixin from './tablePageMixin'
 import FormMixin from './formMixin'
-import FormPageMixin from './formPageMixin'
+import PageFormMixin from './pageFormMixin'
 import PopUpFormMixin from './popUpFormMixin'
 
-export { TablePageMixin, FormMixin, FormPageMixin, PopUpFormMixin }
+export {
+  TablePageMixin,
+  FormMixin,
+  PageFormMixin,
+  PopUpFormMixin
+}

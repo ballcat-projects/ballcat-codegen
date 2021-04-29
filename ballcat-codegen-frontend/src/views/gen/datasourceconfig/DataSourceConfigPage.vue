@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card v-show="tableShow" :bordered="false">
+    <a-card :bordered="false">
       <!-- 查询条件 -->
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -59,25 +59,18 @@
     </a-card>
 
     <!--表单页面-->
-    <a-card
-      v-if="formInited"
-      v-show="!tableShow"
-      :bordered="false"
-      :title="cardTitle"
-    >
-      <form-page ref="formPage" @backToPage="backToPage" />
-    </a-card>
+    <data-source-config-modal-form ref="formModal" @reload-page-table="reloadTable" />
   </div>
 </template>
 
 <script>
 import { getPage, delObj } from '@/api/gen/datasourceconfig'
-import FormPage from './DataSourceConfigForm'
+import DataSourceConfigModalForm from './DataSourceConfigModalForm'
 import { TablePageMixin } from '@/mixins'
 
 export default {
   name: 'DataSourceConfigPage',
-  components: { FormPage },
+  components: { DataSourceConfigModalForm },
   mixins: [TablePageMixin],
   data() {
     return {
@@ -93,6 +86,7 @@ export default {
         {
           title: '数据源名称',
           dataIndex: 'name',
+          ellipsis: true,
           width: '100px'
         },
         {
@@ -120,12 +114,21 @@ export default {
         {
           title: '操作',
           dataIndex: 'action',
-          width: '150px',
+          width: 120,
           scopedSlots: { customRender: 'action-slot' }
         }
       ]
     }
   },
-  methods: {}
+  methods: {
+    // 新建数据源
+    handleAdd () {
+      this.$refs.formModal.add({title: '新建数据源'})
+    },
+    // 编辑数据源
+    handleEdit (record) {
+      this.$refs.formModal.update(record, {title: '编辑数据源'})
+    }
+  }
 }
 </script>

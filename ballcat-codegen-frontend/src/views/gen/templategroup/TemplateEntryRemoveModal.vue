@@ -33,7 +33,15 @@ export default {
       formAction: 'delete',
       reqFunctions: {
         delete: this.deleteFunction
-      }
+      },
+      labelCol: {
+        sm: { span: 24 },
+        md: { span: 3 }
+      },
+      wrapperCol: {
+        sm: { span: 24 },
+        md: { span: 20 }
+      },
     }
   },
   methods: {

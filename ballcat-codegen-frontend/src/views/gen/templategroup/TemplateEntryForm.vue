@@ -52,7 +52,7 @@
       </template>
       <template slot="paneR" style="padding:0;">
         <div ref="paneR" class="right-pane">
-          <code-gen-tips v-show="showTips" :template-group-id="templateGroupId" />
+          <code-gen-tips v-show="showTips" ref="codeGenTips" />
           <div v-show="!showTips">
             <a-tabs
               v-model="activeKey"
@@ -116,14 +116,10 @@ export default {
     removeModel,
     CodeGenTips
   },
-  props: {
-    templateGroupId: {
-      type: Number,
-      required: true
-    }
-  },
   data() {
     return {
+      // 模板组ID
+      templateGroupId: null,
       // 属性
       showTips: true,
 
@@ -200,15 +196,13 @@ export default {
       }
     }
   },
-  watch: {
-    templateGroupId() {
-      this.initPage()
-    }
-  },
-  created() {
-    this.initPage()
-  },
   methods: {
+    show(templateGroupId, cardTitle){
+      this.templateGroupId = templateGroupId
+      this.cardTitle = cardTitle
+      this.initPage()
+      this.$refs.codeGenTips.init(templateGroupId)
+    },
     handlePaneChange(activeKey) {
       const data = this.templateInfoMap.get(activeKey)
       data && (this.content = data.content)
@@ -298,16 +292,18 @@ export default {
      * 2. 更新自定义属性展示
      */
     initPage() {
-      this.treeLoad(true)
-      this.showTips = true
-      // 代码编辑模块置空
-      this.templateInfoMap = new Map()
-      this.content = ''
-      this.activeKey = null
-      // 页面高度
-      this.heightClient = document.documentElement.clientHeight || document.body.clientHeight
-      this.heightClient = this.heightClient - 165
-      this.splitPaneStyle.height = this.heightClient + 'px'
+      if(this.templateGroupId){
+        this.treeLoad(true)
+        this.showTips = true
+        // 代码编辑模块置空
+        this.templateInfoMap = new Map()
+        this.content = ''
+        this.activeKey = null
+        // 页面高度
+        this.heightClient = document.documentElement.clientHeight || document.body.clientHeight
+        this.heightClient = this.heightClient - 165
+        this.splitPaneStyle.height = this.heightClient + 'px'
+      }
     },
     /**
      * 加载 Entry Tree

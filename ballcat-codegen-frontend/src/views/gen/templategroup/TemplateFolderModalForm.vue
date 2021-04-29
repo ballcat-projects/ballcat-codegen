@@ -7,7 +7,7 @@
     @cancel="handleClose"
   >
     <a-form :form="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <template v-if="formAction === FORM_ACTION.CREATE">
+      <template v-if="isCreateForm">
         <a-form-item style="display: none">
           <a-input v-decorator="['groupId']" />
         </a-form-item>
@@ -21,7 +21,7 @@
           <span> {{ parentFileName }}</span>
         </a-form-item>
       </template>
-      <template v-if="formAction === FORM_ACTION.UPDATE">
+      <template v-if="isUpdateForm">
         <a-form-item style="display: none">
           <a-input v-decorator="['id']" />
         </a-form-item>
@@ -45,6 +45,15 @@ export default {
       reqFunctions: {
         create: addObj,
         update: putObj
+      },
+
+      labelCol: {
+        sm: { span: 24 },
+        md: { span: 3 }
+      },
+      wrapperCol: {
+        sm: { span: 24 },
+        md: { span: 20 }
       },
 
       // 父级文件名

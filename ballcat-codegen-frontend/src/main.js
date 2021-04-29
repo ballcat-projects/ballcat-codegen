@@ -58,12 +58,6 @@ Vue.use(Tabs)
 Vue.use(Badge)
 Vue.prototype.$message = message
 
-Vue.prototype.FORM_ACTION = {
-  NONE: '',
-  CREATE: 'create',
-  UPDATE: 'update'
-}
-
 new Vue({
   router,
   store,

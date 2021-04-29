@@ -6,9 +6,8 @@
     :mask-closable="false"
     :footer="null"
     :body-style="{ padding: '12px 18px' }"
-    width="75%"
+    :width="800"
     :centered="true"
-    @ok="handleOk"
     @cancel="handleClose"
   >
     <div v-show="tableShow" :bordered="false">
@@ -41,25 +40,18 @@
     </div>
 
     <!--表单页面-->
-    <div
-      v-if="formInited"
-      v-show="!tableShow"
-      :bordered="false"
-      :title="cardTitle"
-    >
-      <form-page ref="formPage" @backToPage="backToPage" />
-    </div>
+    <page-form v-show="!tableShow" ref="pageForm" @back-to-page="backToPage" />
   </a-modal>
 </template>
 
 <script>
 import { getPage, delObj } from '@/api/gen/templateproperty'
-import FormPage from './TemplatePropertyForm'
+import PageForm from './TemplatePropertyForm'
 import { TablePageMixin } from '@/mixins'
 
 export default {
   name: 'TemplatePropertyPage',
-  components: { FormPage },
+  components: { PageForm },
   mixins: [TablePageMixin],
   data() {
     return {
@@ -92,8 +84,7 @@ export default {
         },
         {
           title: '操作',
-          dataIndex: 'action',
-          width: '150px',
+          width: 100,
           scopedSlots: { customRender: 'action-slot' }
         }
       ],
@@ -117,8 +108,15 @@ export default {
       }
       this.loadData()
     },
-    handleOk() {
-      this.confirmLoading = true
+    // 新建模板属性
+    handleAdd () {
+      this.switchPage()
+      this.$refs.pageForm.add({title: '新建模板属性', groupId: this.groupId})
+    },
+    // 编辑模板属性
+    handleEdit (record) {
+      this.switchPage()
+      this.$refs.pageForm.update(record, {title: '编辑模板属性', groupId: this.groupId})
     },
     handleClose() {
       this.visible = false
