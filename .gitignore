@@ -30,7 +30,7 @@ build/
 
 ### VS Code ###
 .vscode/
-/**/application-hccake.yml
+/**/application-local.yml
 /**/application-preview.yml
 /aty/
 /ballcat-job/logs/ballcat-job/
