@@ -28,6 +28,9 @@
       <a-descriptions-item label="className">
         类名，大驼峰形式，首字母大写
       </a-descriptions-item>
+      <a-descriptions-item label="path">
+        类名，全字母小写，多个单词间使用 - 分割
+      </a-descriptions-item>
       <a-descriptions-item label="pathName">
         类名，全字母小写
       </a-descriptions-item>

@@ -1,3 +1,5 @@
+import { littleCamelToUnderline } from '@/utils/strUtil'
+
 export default {
   data () {
     return {
@@ -59,12 +61,11 @@ export default {
     !this.lazyLoad && this.reloadTable()
   },
   methods: {
-
     /**
      * 默认排序规则
      */
     initDefaultSort () {
-      this.sortField = 'id'
+      this.sortField = littleCamelToUnderline(this.rowKey)
       this.sortOrder = 'desc'
     },
     /**
@@ -72,7 +73,7 @@ export default {
      * 如果参数为 true, 则强制刷新到第一页
      * @param bool
      */
-    reloadTable (bool = false) {
+    reloadTable (bool = true) {
       bool && (this.pagination.current = 1)
       this.loadData()
     },
@@ -192,4 +193,5 @@ export default {
       needRefresh && this.reloadTable(false)
     }
   }
+
 }
