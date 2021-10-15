@@ -32,7 +32,7 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @return 是否存在
 	 */
 	default boolean existSameName(Integer entryId, String name) {
-		Integer count = this.selectCount(Wrappers.<TemplateDirectoryEntry>lambdaQuery()
+		Long count = this.selectCount(Wrappers.<TemplateDirectoryEntry>lambdaQuery()
 				.eq(TemplateDirectoryEntry::getParentId, entryId).eq(TemplateDirectoryEntry::getFileName, name));
 		return count != null && count > 0;
 	}
@@ -43,7 +43,7 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @return boolean 存在：true
 	 */
 	default boolean existEntryId(Integer entryId) {
-		Integer count = this
+		Long count = this
 				.selectCount(Wrappers.<TemplateDirectoryEntry>lambdaQuery().eq(TemplateDirectoryEntry::getId, entryId));
 		return count != null && count > 0;
 	}

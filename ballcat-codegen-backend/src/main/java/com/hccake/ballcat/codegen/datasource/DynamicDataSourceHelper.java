@@ -1,7 +1,7 @@
 package com.hccake.ballcat.codegen.datasource;
 
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
-import com.baomidou.dynamic.datasource.creator.DataSourceCreator;
+import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class DynamicDataSourceHelper {
 	/**
 	 * 数据连接池创建者
 	 */
-	private final DataSourceCreator dataSourceCreator;
+	private final DefaultDataSourceCreator dataSourceCreator;
 
 	/**
 	 * 动态路由数据连接
