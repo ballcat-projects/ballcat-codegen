@@ -4,6 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoService;
 import com.hccake.ballcat.common.model.domain.PageParam;
@@ -13,10 +14,15 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 代码生成器
@@ -63,11 +69,11 @@ public class GenerateController {
 
 	/**
 	 * 生成预览代码
-	 * @param preGenerateOptionDTO
-	 * @return
+	 * @param preGenerateOptionDTO 预览
+	 * @return R<List<TemplateDirectory>>
 	 */
 	@PostMapping("/preview")
-	public R<Map<String, String>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
+	public R<List<TemplateEntryTree>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
 		return R.ok(generatorService.previewCode(preGenerateOptionDTO));
 	}
 

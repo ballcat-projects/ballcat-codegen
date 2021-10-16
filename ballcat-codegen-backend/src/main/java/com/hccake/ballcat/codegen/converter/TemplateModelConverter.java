@@ -5,7 +5,7 @@ import com.hccake.ballcat.codegen.model.dto.TemplateInfoDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
-import com.hccake.ballcat.codegen.model.vo.TemplateDirectory;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.model.vo.TemplateDirectoryEntryVO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import org.mapstruct.Mapper;
@@ -47,7 +47,7 @@ public interface TemplateModelConverter {
 	 * @param templateDirectoryEntry templateDirectoryEntry
 	 * @return TemplateDirectoryTree
 	 */
-	TemplateDirectory entryPoToTree(TemplateDirectoryEntry templateDirectoryEntry);
+	TemplateEntryTree entryPoToTree(TemplateDirectoryEntry templateDirectoryEntry);
 
 	/**
 	 * TemplateInfoDto 转换为 TemplateInfo

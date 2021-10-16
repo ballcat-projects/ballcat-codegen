@@ -13,7 +13,7 @@ import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryUpdateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateInfoDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
-import com.hccake.ballcat.codegen.model.vo.TemplateDirectory;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
 import com.hccake.ballcat.codegen.service.TemplateInfoService;
 import com.hccake.ballcat.common.core.constant.GlobalConstants;
@@ -137,7 +137,7 @@ public class TemplateDirectoryEntryServiceImpl
 				// 1. 获取所有目录项（目录项不会太多，一次查询比较方便）
 				List<TemplateDirectoryEntry> entryList = baseMapper.listByTemplateGroupId(groupId);
 				// 2. 获取当前删除目录项的孩子节点列表
-				List<TemplateDirectory> treeList = TreeUtils.buildTree(entryList, entryId,
+				List<TemplateEntryTree> treeList = TreeUtils.buildTree(entryList, entryId,
 						TemplateModelConverter.INSTANCE::entryPoToTree);
 				// 3. 获取当前删除目录项的孩子节点Id
 				List<Integer> treeNodeIds = TreeUtils.getTreeNodeIds(treeList);
@@ -226,14 +226,14 @@ public class TemplateDirectoryEntryServiceImpl
 
 	/**
 	 * 获取模板文件
-	 * @param groupId 模板组Id
+	 * @param templateGroupId 模板组Id
 	 * @param templateFileIds 指定的文件id
 	 * @return List 模板文件
 	 */
 	@Override
-	public List<TemplateFile> listTemplateFiles(Integer groupId, Set<Integer> templateFileIds) {
+	public List<TemplateFile> listTemplateFiles(Integer templateGroupId, Set<Integer> templateFileIds) {
 		// 获取模板目录项
-		List<TemplateDirectoryEntry> list = baseMapper.listByTemplateGroupId(groupId);
+		List<TemplateDirectoryEntry> list = baseMapper.listByTemplateGroupId(templateGroupId);
 		// 当没有指定时，不生成该文件
 		if (CollectionUtil.isNotEmpty(templateFileIds)) {
 			list.removeIf(entry -> DirectoryEntryTypeEnum.FILE.getType().equals(entry.getType())
@@ -241,12 +241,12 @@ public class TemplateDirectoryEntryServiceImpl
 		}
 
 		// 转树形目录结构
-		List<TemplateDirectory> treeList = TreeUtils.buildTree(list, GlobalConstants.TREE_ROOT_ID,
+		List<TemplateEntryTree> treeList = TreeUtils.buildTree(list, GlobalConstants.TREE_ROOT_ID,
 				TemplateModelConverter.INSTANCE::entryPoToTree);
 
 		// 填充模板文件
 		List<TemplateFile> templateFiles = new ArrayList<>();
-		for (TemplateDirectory tree : treeList) {
+		for (TemplateEntryTree tree : treeList) {
 			fillTemplateFiles(tree, templateFiles, "");
 		}
 		return templateFiles;
@@ -259,14 +259,14 @@ public class TemplateDirectoryEntryServiceImpl
 	 * @param path 当前目录路径
 	 */
 	@SuppressWarnings("unchecked")
-	private void fillTemplateFiles(TemplateDirectory current, List<TemplateFile> list, String path) {
+	private void fillTemplateFiles(TemplateEntryTree current, List<TemplateFile> list, String path) {
 
 		// 文件夹类型则递归子节点
 		if (DirectoryEntryTypeEnum.FOLDER.getType().equals(current.getType())) {
-			List<TemplateDirectory> children = (List<TemplateDirectory>) current.getChildren();
+			List<TemplateEntryTree> children = (List<TemplateEntryTree>) current.getChildren();
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
-				for (TemplateDirectory child : children) {
+				for (TemplateEntryTree child : children) {
 					fillTemplateFiles(child, list, path + current.getFileName() + File.separator);
 				}
 			}

@@ -71,11 +71,11 @@ public interface TemplateDirectoryEntryService extends ExtendService<TemplateDir
 
 	/**
 	 * 获取模板文件
-	 * @param groupId 模板组Id
+	 * @param templateGroupId 模板组Id
 	 * @param templateFileIds 模板文件ID集合
 	 * @return List 模板文件
 	 */
-	List<TemplateFile> listTemplateFiles(Integer groupId, Set<Integer> templateFileIds);
+	List<TemplateFile> listTemplateFiles(Integer templateGroupId, Set<Integer> templateFileIds);
 
 	/**
 	 * 复制模板目录项文件

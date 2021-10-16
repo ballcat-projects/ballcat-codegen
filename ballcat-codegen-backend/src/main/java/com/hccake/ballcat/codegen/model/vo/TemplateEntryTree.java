@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TemplateDirectory extends SimpleTreeNode<Integer> {
+public class TemplateEntryTree extends SimpleTreeNode<Integer> {
 
 	/**
 	 * 模板组Id
@@ -31,5 +31,11 @@ public class TemplateDirectory extends SimpleTreeNode<Integer> {
 	 */
 	@ApiModelProperty(value = "文件类型 1：文件夹 2：模板文件")
 	private Integer type;
+
+	/**
+	 * 文件内容
+	 */
+	@ApiModelProperty(value = "文件内容")
+	private String content;
 
 }

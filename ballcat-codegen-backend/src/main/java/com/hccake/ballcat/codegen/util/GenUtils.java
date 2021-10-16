@@ -4,12 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
 import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -77,10 +79,9 @@ public class GenUtils {
 	 * 预览代码
 	 */
 	@SneakyThrows
-	public Map<String, String> previewCode(String tablePrefix, Map<String, String> customProperties,
-			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {
-		// 预览结果存放
-		Map<String, String> previewData = new HashMap<>();
+	public void previewCode(String tablePrefix, Map<String, String> customProperties, TableInfo tableInfo,
+			List<ColumnInfo> columnInfos, List<TemplateEntryTree> templateEntryTreeList) {
+
 		// 根据表信息和字段信息获取对应的配置属性
 		GenerateProperties generateProperties = getGenerateProperties(tableInfo, columnInfos, tablePrefix);
 		// 转换generateProperties为map，模板数据
@@ -89,14 +90,18 @@ public class GenUtils {
 		map.putAll(customProperties);
 		// 模板渲染
 		VelocityContext context = new VelocityContext(map);
-		for (TemplateFile templateFile : templateFiles) {
-			StringWriter sw = new StringWriter();
-			Velocity.evaluate(context, sw, tableInfo.getTableName() + templateFile.getFilePath(),
-					templateFile.getContent());
-			// 模板内容填充
-			previewData.put(StrUtil.format(templateFile.getFileName(), map), sw.toString());
+		for (TemplateEntryTree templateEntryTree : templateEntryTreeList) {
+			// 文件名处理
+			templateEntryTree.setFileName(StrUtil.format(templateEntryTree.getFileName(), map));
+			if (DirectoryEntryTypeEnum.FILE.getType().equals(templateEntryTree.getType())
+					&& StrUtil.isNotEmpty(templateEntryTree.getContent())) {
+				// 模板内容填充
+				StringWriter sw = new StringWriter();
+				Velocity.evaluate(context, sw, tableInfo.getTableName() + templateEntryTree.getFileName(),
+						templateEntryTree.getContent());
+				templateEntryTree.setContent(sw.toString());
+			}
 		}
-		return previewData;
 	}
 
 	/**
