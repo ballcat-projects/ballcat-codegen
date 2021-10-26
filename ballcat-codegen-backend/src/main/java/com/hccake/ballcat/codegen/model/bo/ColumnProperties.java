@@ -36,9 +36,14 @@ public class ColumnProperties {
 	private String capitalizedAttrName;
 
 	/**
-	 * 属性类型
+	 * 属性类型 - Java
 	 */
 	private String attrType;
+
+	/**
+	 * 属性类型 - ts
+	 */
+	private String tsAttrType;
 
 	/**
 	 * 其他信息

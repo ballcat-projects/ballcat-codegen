@@ -12,6 +12,15 @@ import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
+import java.io.File;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +29,6 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-
-import java.io.File;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 代码生成器 工具类
@@ -155,8 +157,9 @@ public class GenUtils {
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
 			// 列的数据类型，转换成Java类型
-			String attrType = MysqlDataTypeConverter.MAPPING.getOrDefault(columnProperties.getDataType(), "unknowType");
-			columnProperties.setAttrType(attrType);
+			columnProperties.setAttrType(MysqlDataTypeConverter.getJavaOfMysql(columnProperties.getDataType()));
+			// 列的 ts数据类型
+			columnProperties.setTsAttrType(MysqlDataTypeConverter.getTsOfMysql(columnProperties.getDataType()));
 
 			// 是否主键
 			if ("PRI".equalsIgnoreCase(columnInfo.getColumnKey()) && generateProperties.getPk() == null) {
