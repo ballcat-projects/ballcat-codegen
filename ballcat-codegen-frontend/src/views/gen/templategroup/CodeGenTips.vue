@@ -66,6 +66,9 @@
       <a-descriptions-item label="attrType">
         列对应Java类型
       </a-descriptions-item>
+      <a-descriptions-item label="tsAttrType">
+        列对应TypeScript类型
+      </a-descriptions-item>
       <a-descriptions-item label="extra">
         列的额外属性，如自增
       </a-descriptions-item>
