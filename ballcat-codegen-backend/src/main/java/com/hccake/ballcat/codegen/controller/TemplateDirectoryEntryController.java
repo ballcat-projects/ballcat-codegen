@@ -8,10 +8,19 @@ import com.hccake.ballcat.codegen.model.vo.TemplateDirectoryEntryVO;
 import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gen/template/directory-entry")
-@Api(value = "/gen/template/directory-entry", tags = "模板文件目录项管理")
+@Tag(name = "模板文件目录项管理")
 public class TemplateDirectoryEntryController {
 
 	private final TemplateDirectoryEntryService templateDirectoryEntryService;
@@ -35,7 +44,7 @@ public class TemplateDirectoryEntryController {
 	 * @param templateGroupId 模板组ID
 	 * @return R
 	 */
-	@ApiOperation(value = "指定模板组的文件目录项", notes = "指定模板组的文件目录项")
+	@Operation(summary = "指定模板组的文件目录项")
 	@GetMapping("/list/{templateGroupId}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:read')" )
 	public R<List<TemplateDirectoryEntryVO>> getTemplateDirectoryEntryPage(@PathVariable Integer templateGroupId) {
@@ -52,7 +61,7 @@ public class TemplateDirectoryEntryController {
 	 * @param targetEntryId 目标目录项ID
 	 * @return R
 	 */
-	@ApiOperation(value = "移动目录项", notes = "移动目录项")
+	@Operation(summary = "移动目录项")
 	@PatchMapping("/{entryId}/position")
 	public R<?> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
 			@RequestParam Integer targetEntryId) {
@@ -65,11 +74,11 @@ public class TemplateDirectoryEntryController {
 	 * @param templateDirectoryCreateDTO 模板目录项
 	 * @return R
 	 */
-	@ApiOperation(value = "新增模板目录项", notes = "新增模板目录项")
+	@Operation(summary = "新增模板目录项")
 	// @CreateOperationLogging(msg = "新增模板文件目录项" )
 	@PostMapping
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:add')" )
-	public R<?> save(@RequestBody TemplateDirectoryCreateDTO templateDirectoryCreateDTO) {
+	public R<Integer> save(@RequestBody TemplateDirectoryCreateDTO templateDirectoryCreateDTO) {
 		Integer entryId = templateDirectoryEntryService.createEntry(templateDirectoryCreateDTO);
 		return entryId != null ? R.ok(entryId) : R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增模板目录项失败");
 	}
@@ -79,9 +88,9 @@ public class TemplateDirectoryEntryController {
 	 * @param templateDirectoryUpdateDTO 模板目录项
 	 * @return R
 	 */
-	@ApiOperation(value = "修改目录项", notes = "修改目录项")
+	@Operation(summary = "修改目录项")
 	@PutMapping
-	public R<?> updateEntry(@RequestBody TemplateDirectoryUpdateDTO templateDirectoryUpdateDTO) {
+	public R<Void> updateEntry(@RequestBody TemplateDirectoryUpdateDTO templateDirectoryUpdateDTO) {
 		return templateDirectoryEntryService.updateEntry(templateDirectoryUpdateDTO) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "重命名目录项");
 	}
@@ -92,11 +101,11 @@ public class TemplateDirectoryEntryController {
 	 * @param mode 删除模式， 1：只删除本身，将子节点上移 2. 删除自身及其所有子节点
 	 * @return R
 	 */
-	@ApiOperation(value = "通过id删除模板文件目录项", notes = "通过id删除模板文件目录项")
+	@Operation(summary = "通过id删除模板文件目录项")
 	// @DeleteOperationLogging(msg = "通过id删除模板文件目录项" )
 	@DeleteMapping("/{id}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:del')" )
-	public R<?> removeById(@PathVariable Integer id, @RequestParam Integer mode) {
+	public R<Void> removeById(@PathVariable Integer id, @RequestParam Integer mode) {
 		return templateDirectoryEntryService.removeEntry(id, mode) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除模板文件目录项失败");
 	}

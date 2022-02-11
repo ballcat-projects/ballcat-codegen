@@ -1,6 +1,6 @@
 package com.hccake.ballcat.codegen.model.qo;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2020/6/17 15:21
  */
 @Data
-@ApiModel(value = "表信息查询对象")
+@Schema(title = "表信息查询对象")
 public class TableInfoQO {
 
 	/**

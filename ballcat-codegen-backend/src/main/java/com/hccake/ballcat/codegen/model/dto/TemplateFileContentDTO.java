@@ -1,7 +1,6 @@
 package com.hccake.ballcat.codegen.model.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,16 +8,16 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
-@ApiModel(value = "模板文件内容DTO")
+@Schema(title = "模板文件内容DTO")
 public class TemplateFileContentDTO {
 
-	@ApiModelProperty(value = "目录项ID")
+	@Schema(title = "目录项ID")
 	private Integer directoryEntryId;
 
 	/**
 	 * 模板内容
 	 */
-	@ApiModelProperty(value = "模板内容")
+	@Schema(title = "模板内容")
 	private String content;
 
 }

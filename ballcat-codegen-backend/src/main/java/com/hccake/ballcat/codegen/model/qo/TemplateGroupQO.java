@@ -1,7 +1,6 @@
 package com.hccake.ballcat.codegen.model.qo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -11,7 +10,7 @@ import lombok.Data;
  * @date 2020-06-19 19:11:41
  */
 @Data
-@ApiModel(value = "模板组查询对象")
+@Schema(title = "模板组查询对象")
 public class TemplateGroupQO {
 
 	private static final long serialVersionUID = 1L;
@@ -19,7 +18,7 @@ public class TemplateGroupQO {
 	/**
 	 * ID
 	 */
-	@ApiModelProperty(value = "ID")
+	@Schema(title = "ID")
 	private Integer id;
 
 }

@@ -10,9 +10,9 @@ import com.hccake.ballcat.codegen.service.TableInfoService;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.result.R;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,6 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
+@Tag(name = "代码生成")
 public class GenerateController {
 
 	private final GeneratorService generatorService;
@@ -46,7 +48,7 @@ public class GenerateController {
 	 * @param tableInfoQO 表信息查询对象
 	 * @return R
 	 */
-	@ApiOperation(value = "表信息分页查询", notes = "表信息分页查询")
+	@Operation(summary = "表信息分页查询")
 	@GetMapping("/table-info/page")
 	public R<PageResult<TableInfo>> getDataSourceConfigPage(PageParam pageParam, TableInfoQO tableInfoQO) {
 		return R.ok(tableInfoService.queryPage(pageParam, tableInfoQO));
@@ -55,9 +57,10 @@ public class GenerateController {
 	/**
 	 * 生成代码
 	 */
-	@SneakyThrows
+	@Operation(summary = "生成代码")
 	@PostMapping("/generate")
-	public void generateCode(@RequestBody GeneratorOptionDTO generatorOptionDTO, HttpServletResponse response) {
+	public void generateCode(@RequestBody GeneratorOptionDTO generatorOptionDTO, HttpServletResponse response)
+			throws IOException {
 		byte[] data = generatorService.generatorCode(generatorOptionDTO);
 		response.reset();
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"ballcat.zip\"");
@@ -72,6 +75,7 @@ public class GenerateController {
 	 * @param preGenerateOptionDTO 预览
 	 * @return R<List<TemplateDirectory>>
 	 */
+	@Operation(summary = "生成预览代码")
 	@PostMapping("/preview")
 	public R<List<TemplateEntryTree>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
 		return R.ok(generatorService.previewCode(preGenerateOptionDTO));

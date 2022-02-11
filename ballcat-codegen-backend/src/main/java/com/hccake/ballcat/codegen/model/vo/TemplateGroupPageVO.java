@@ -1,7 +1,6 @@
 package com.hccake.ballcat.codegen.model.vo;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
  * @date 2020-06-19 19:11:41
  */
 @Data
-@ApiModel(value = "模板组分页VO")
+@Schema(title = "模板组分页VO")
 public class TemplateGroupPageVO {
 
 	private static final long serialVersionUID = 1L;
@@ -21,31 +20,31 @@ public class TemplateGroupPageVO {
 	/**
 	 * ID
 	 */
-	@ApiModelProperty(value = "ID")
+	@Schema(title = "ID")
 	private Integer id;
 
 	/**
 	 * 名称
 	 */
-	@ApiModelProperty(value = "名称")
+	@Schema(title = "名称")
 	private String name;
 
 	/**
 	 * 备注
 	 */
-	@ApiModelProperty(value = "备注")
+	@Schema(title = "备注")
 	private String remarks;
 
 	/**
 	 * 创建时间
 	 */
-	@ApiModelProperty(value = "创建时间")
+	@Schema(title = "创建时间")
 	private LocalDateTime createTime;
 
 	/**
 	 * 修改时间
 	 */
-	@ApiModelProperty(value = "修改时间")
+	@Schema(title = "修改时间")
 	private LocalDateTime updateTime;
 
 }
