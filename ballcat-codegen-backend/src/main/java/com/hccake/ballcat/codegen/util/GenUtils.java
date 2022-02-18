@@ -12,15 +12,6 @@ import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
-import java.io.File;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +20,18 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+
+import java.io.File;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 代码生成器 工具类
@@ -50,6 +53,7 @@ public class GenUtils {
 	/**
 	 * 生成代码
 	 */
+	@SuppressWarnings({ "java:S3011", "unchecked" })
 	@SneakyThrows
 	public void generatorCode(String tablePrefix, Map<String, String> customProperties, TableInfo tableInfo,
 			List<ColumnInfo> columnInfos, ZipOutputStream zip, List<TemplateFile> templateFiles) {
@@ -63,17 +67,32 @@ public class GenUtils {
 		map.putAll(customProperties);
 		// 模板渲染
 		VelocityContext context = new VelocityContext(map);
+
+		// 获取 zip 流中已写入的文件名集合
+		Field namesField = ZipOutputStream.class.getDeclaredField("names");
+		namesField.setAccessible(true);
+		// SuppressWarnings
+		HashSet<String> names = (HashSet<String>) namesField.get(zip);
+
 		for (TemplateFile templateFile : templateFiles) {
 			StringWriter sw = new StringWriter();
 			Velocity.evaluate(context, sw, tableInfo.getTableName() + templateFile.getFilePath(),
 					templateFile.getContent());
 			// 替换路径中的占位符
 			String realFilePath = getRealFilePath(templateFile.getFilePath(), templateFile.getFileName(), map);
+
+			// 检查文件名
+			if (names.contains(realFilePath)) {
+				log.warn("发现同名文件：{}，跳过生成", realFilePath);
+				continue;
+			}
+
 			// 添加到zip
 			zip.putNextEntry(new ZipEntry(realFilePath));
 			IoUtil.write(zip, StandardCharsets.UTF_8, false, sw.toString());
 			IoUtil.close(sw);
 			zip.closeEntry();
+
 		}
 	}
 
