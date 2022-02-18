@@ -75,24 +75,23 @@ public class GenUtils {
 		HashSet<String> names = (HashSet<String>) namesField.get(zip);
 
 		for (TemplateFile templateFile : templateFiles) {
-			StringWriter sw = new StringWriter();
-			Velocity.evaluate(context, sw, tableInfo.getTableName() + templateFile.getFilePath(),
-					templateFile.getContent());
-			// 替换路径中的占位符
-			String realFilePath = getRealFilePath(templateFile.getFilePath(), templateFile.getFileName(), map);
+			try (StringWriter sw = new StringWriter()) {
+				Velocity.evaluate(context, sw, tableInfo.getTableName() + templateFile.getFilePath(),
+						templateFile.getContent());
+				// 替换路径中的占位符
+				String realFilePath = getRealFilePath(templateFile.getFilePath(), templateFile.getFileName(), map);
 
-			// 检查文件名
-			if (names.contains(realFilePath)) {
-				log.warn("发现同名文件：{}，跳过生成", realFilePath);
-				continue;
+				// 检查文件名
+				if (names.contains(realFilePath)) {
+					log.warn("发现同名文件：{}，跳过生成", realFilePath);
+					continue;
+				}
+
+				// 添加到zip
+				zip.putNextEntry(new ZipEntry(realFilePath));
+				IoUtil.write(zip, StandardCharsets.UTF_8, false, sw.toString());
+				zip.closeEntry();
 			}
-
-			// 添加到zip
-			zip.putNextEntry(new ZipEntry(realFilePath));
-			IoUtil.write(zip, StandardCharsets.UTF_8, false, sw.toString());
-			IoUtil.close(sw);
-			zip.closeEntry();
-
 		}
 	}
 
