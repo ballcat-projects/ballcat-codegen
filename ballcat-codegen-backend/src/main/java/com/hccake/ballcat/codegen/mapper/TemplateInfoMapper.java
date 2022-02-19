@@ -6,8 +6,6 @@ import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
 
 import java.util.List;
 
-;
-
 /**
  * 模板信息
  *

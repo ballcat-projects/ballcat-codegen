@@ -39,8 +39,8 @@ public interface TemplateGroupMapper extends ExtendMapper<TemplateGroup> {
 
 	/**
 	 * 获取SelectData数据
-	 * @return List<SelectData<?>>
+	 * @return List<SelectData<Void>>
 	 */
-	List<SelectData<?>> listSelectData();
+	List<SelectData<Void>> listSelectData();
 
 }

@@ -11,8 +11,8 @@ import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.extend.mybatis.plus.service.impl.ExtendServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 模板属性配置
@@ -54,12 +54,14 @@ public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePrope
 	public void copy(Integer resourceGroupId, Integer targetGroupId) {
 		List<TemplateProperty> templateProperties = baseMapper.listByTemplateGroupId(resourceGroupId);
 		if (CollectionUtil.isNotEmpty(templateProperties)) {
-			List<TemplateProperty> list = templateProperties.stream().peek(x -> {
+			List<TemplateProperty> list = new ArrayList<>();
+			for (TemplateProperty x : templateProperties) {
 				x.setId(null);
 				x.setCreateTime(null);
 				x.setUpdateTime(null);
 				x.setGroupId(targetGroupId);
-			}).collect(Collectors.toList());
+				list.add(x);
+			}
 			baseMapper.insertBatchSomeColumn(list);
 		}
 	}

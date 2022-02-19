@@ -63,7 +63,7 @@ public class TemplateDirectoryEntryController {
 	 */
 	@Operation(summary = "移动目录项")
 	@PatchMapping("/{entryId}/position")
-	public R<?> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
+	public R<Void> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
 			@RequestParam Integer targetEntryId) {
 		return templateDirectoryEntryService.move(horizontalMove, entryId, targetEntryId) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "移动目录项失败");

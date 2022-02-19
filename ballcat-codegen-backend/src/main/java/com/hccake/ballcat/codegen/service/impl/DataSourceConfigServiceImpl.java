@@ -53,7 +53,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 	 * @return List<SelectData <?>> SelectData 集合
 	 */
 	@Override
-	public List<SelectData<?>> listSelectData() {
+	public List<SelectData<Void>> listSelectData() {
 		return baseMapper.listSelectData();
 	}
 

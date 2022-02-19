@@ -126,7 +126,7 @@ public class TemplateGroupController {
 	// @DeleteOperationLogging(msg = "通过id删除模板组" )
 	@GetMapping("/select")
 	// @PreAuthorize("@per.hasPermission('codegen:templategroup:del')" )
-	public R<List<SelectData<?>>> listSelectData() {
+	public R<List<SelectData<Void>>> listSelectData() {
 		return R.ok(templateGroupService.listSelectData());
 	}
 

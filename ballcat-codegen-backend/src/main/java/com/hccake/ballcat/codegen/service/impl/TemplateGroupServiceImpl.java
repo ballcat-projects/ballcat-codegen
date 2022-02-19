@@ -50,7 +50,7 @@ public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMap
 	 * @return List<SelectData<?>>
 	 */
 	@Override
-	public List<SelectData<?>> listSelectData() {
+	public List<SelectData<Void>> listSelectData() {
 		return baseMapper.listSelectData();
 	}
 

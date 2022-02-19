@@ -39,8 +39,8 @@ public interface DataSourceConfigMapper extends ExtendMapper<DataSourceConfig> {
 
 	/**
 	 * 获取SelectData集合
-	 * @return List<SelectData<?>>
+	 * @return List<SelectData<Void>>
 	 */
-	List<SelectData<?>> listSelectData();
+	List<SelectData<Void>> listSelectData();
 
 }

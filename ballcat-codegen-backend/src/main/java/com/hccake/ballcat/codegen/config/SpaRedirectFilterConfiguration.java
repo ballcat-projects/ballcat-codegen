@@ -25,10 +25,16 @@ import java.util.regex.Pattern;
 @Configuration
 public class SpaRedirectFilterConfiguration {
 
-	private final static AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+	private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
+
+	/**
+	 * Forwards all routes except '/index.html', '/200.html', '/favicon.ico', '/sw.js'
+	 * '/api/', '/api/**'
+	 */
+	private static final String REGEX = "(?!/actuator|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js).*$";
 
 	@Bean
-	public FilterRegistrationBean<?> spaRedirectFiler() {
+	public FilterRegistrationBean<OncePerRequestFilter> spaRedirectFiler() {
 		FilterRegistrationBean<OncePerRequestFilter> registration = new FilterRegistrationBean<>();
 		registration.setFilter(createRedirectFilter());
 		registration.addUrlPatterns("/*");
@@ -39,10 +45,6 @@ public class SpaRedirectFilterConfiguration {
 
 	private OncePerRequestFilter createRedirectFilter() {
 		return new OncePerRequestFilter() {
-
-			// Forwards all routes except '/index.html', '/200.html', '/favicon.ico',
-			// '/sw.js' '/api/', '/api/**'
-			private final String REGEX = "(?!/actuator|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js).*$";
 
 			private final Pattern pattern = Pattern.compile(REGEX);
 

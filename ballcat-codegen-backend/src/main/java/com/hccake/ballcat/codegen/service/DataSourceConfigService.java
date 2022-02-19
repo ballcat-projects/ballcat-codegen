@@ -31,7 +31,7 @@ public interface DataSourceConfigService extends ExtendService<DataSourceConfig>
 	 * 获取 SelectData 集合
 	 * @return List<SelectData<?>> SelectData 集合
 	 */
-	List<SelectData<?>> listSelectData();
+	List<SelectData<Void>> listSelectData();
 
 	/**
 	 * 保存数据源配置

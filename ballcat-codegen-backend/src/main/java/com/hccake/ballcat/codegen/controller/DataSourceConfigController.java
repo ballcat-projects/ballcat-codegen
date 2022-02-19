@@ -66,7 +66,7 @@ public class DataSourceConfigController {
 	// @CreateOperationLogging(msg = "新增数据源" )
 	@PostMapping
 	// @PreAuthorize("@per.hasPermission('gen:datasourcecofig:add')" )
-	public R save(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
+	public R<Void> save(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
 		return dataSourceConfigService.save(dataSourceConfigDTO) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增数据源失败");
 	}
@@ -80,7 +80,7 @@ public class DataSourceConfigController {
 	// @UpdateOperationLogging(msg = "修改数据源" )
 	@PutMapping
 	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:edit')" )
-	public R updateById(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
+	public R<Void> updateById(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
 		return dataSourceConfigService.update(dataSourceConfigDTO) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改数据源失败");
 	}
@@ -94,7 +94,7 @@ public class DataSourceConfigController {
 	// @DeleteOperationLogging(msg = "通过id删除数据源" )
 	@DeleteMapping("/{id}")
 	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:del')" )
-	public R removeById(@PathVariable Integer id) {
+	public R<Void> removeById(@PathVariable Integer id) {
 		return dataSourceConfigService.removeById(id) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除数据源失败");
 	}
@@ -105,8 +105,8 @@ public class DataSourceConfigController {
 	 */
 	@Operation(summary = "获取selectData数据")
 	@GetMapping("/select")
-	public R<List<SelectData<?>>> listSelectData() {
-		List<SelectData<?>> selectDataList = dataSourceConfigService.listSelectData();
+	public R<List<SelectData<Void>>> listSelectData() {
+		List<SelectData<Void>> selectDataList = dataSourceConfigService.listSelectData();
 		return R.ok(selectDataList);
 	}
 
