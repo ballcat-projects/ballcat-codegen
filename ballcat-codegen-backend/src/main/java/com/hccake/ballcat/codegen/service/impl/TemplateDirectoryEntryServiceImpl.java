@@ -344,7 +344,7 @@ public class TemplateDirectoryEntryServiceImpl
 			templateInfo.setDirectoryEntryId(entryId);
 			// 在这里是不更新 content 的
 			templateInfo.setContent(null);
-			return templateInfoService.save(templateInfo);
+			return templateInfoService.updateById(templateInfo);
 		}
 		return true;
 	}
