@@ -14,7 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
+		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 	</properties>
 
 	<build>
@@ -31,7 +31,7 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v12.12.0</nodeVersion>
+							<nodeVersion>v14.17.0</nodeVersion>
 						</configuration>
 					</execution>
 					<!-- Install all project dependencies -->
@@ -49,12 +49,12 @@
 					</execution>
 					<!-- Build and minify static files -->
 					<execution>
-						<id>npm run build</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
+						<id>vite build</id>
+<!--						<goals>-->
+<!--							<goal>vite</goal>-->
+<!--						</goals>-->
 						<configuration>
-							<arguments>run build</arguments>
+							<arguments>vite build</arguments>
 						</configuration>
 					</execution>
 				</executions>

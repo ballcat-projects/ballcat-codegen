@@ -1,27 +1,29 @@
-<template functional>
-  <a-sub-menu :key="props.menuInfo.path">
-    <span slot="title">
-      <a-icon v-if="props.menuInfo.meta.icon" :type="props.menuInfo.meta.icon" />
-      <span>{{ props.menuInfo.meta.title }}</span>
-    </span>
-    <template v-for="item in props.menuInfo.children">
-      <a-menu-item v-if="!item.children" :key="item.path" @click="parent.$router.push({ path: item.path })">
-        <a-icon v-if="item.meta.icon" :type="item.meta.icon" />
-        <span>{{ item.meta.title }}</span>
-      </a-menu-item>
-      <sub-menu v-else :key="item.path" :menu-info="item" />
+<template>
+  <a-sub-menu :key="menuInfo.path">
+    <template v-if="menuInfo.meta.icon" #icon>
+      <icon :type="menuInfo.meta.icon" />
+    </template>
+    <template #title>{{ menuInfo.meta.title }}</template>
+    <template v-for="item in menuInfo.children" :key="item.path">
+      <template v-if="!item.children">
+        <a-menu-item :key="item.path" @click="$router.push({ path: item.path })">
+          <template v-if="item.meta.icon" #icon>
+            <icon :type="item.meta.icon" />
+          </template>
+          {{ item.meta.title }}
+        </a-menu-item>
+      </template>
+      <template v-else>
+        <sub-menu :key="item.path" :menu-info="item" />
+      </template>
     </template>
   </a-sub-menu>
 </template>
-<script>
-export default {
-  name: 'SubMenu',
-  isSubMenu: true,
-  props: {
-    menuInfo: {
-      type: Object,
-      default: () => ({})
-    }
-  }
-}
+
+<script setup lang="ts">
+  defineProps<{
+    menuInfo: object
+  }>()
 </script>
+
+<style scoped></style>

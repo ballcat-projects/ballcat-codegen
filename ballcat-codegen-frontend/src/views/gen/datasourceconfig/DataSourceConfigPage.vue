@@ -1,134 +1,121 @@
 <template>
-  <div>
-    <a-card :bordered="false">
-      <!-- 查询条件 -->
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="ID">
-                <a-input v-model="queryParam.id" placeholder="" />
-              </a-form-item>
-            </a-col>
+  <a-card :bordered="false">
+    <!-- 操作按钮区域 -->
+    <div class="table-list-toolbar">
+      <add-button @click="handleAdd" />
+    </div>
 
-            <!-- <template v-if="advanced">
-            </template>-->
-            <a-col :md="(!advanced && 8) || 24" :sm="24">
-              <span
-                class="table-page-search-submitButtons"
-                :style="(advanced && { float: 'right', overflow: 'hidden' }) || {}"
-              >
-                <a-button type="primary" @click="reloadTable">查询</a-button>
-                <a-button style="margin-left: 8px" @click="resetSearchForm">重置</a-button>
-                <!--<a @click="toggleAdvanced" style="margin-left: 8px">
-                  {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>-->
-              </span>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
+    <!--数据表格区域-->
+    <a-table
+      ref="table"
+      size="middle"
+      row-key="id"
+      :columns="columns"
+      :data-source="dataSource"
+      :pagination="pagination"
+      :loading="loading"
+      :scroll="{ x: 1000 }"
+      @change="tableHooks.handleTableChange"
+    >
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
+            <a href="javascript:">删除</a>
+          </a-popconfirm>
+        </template>
+      </template>
+    </a-table>
+  </a-card>
 
-      <!-- 操作按钮区域 -->
-      <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd()">新建</a-button>
-      </div>
-
-      <!--数据表格区域-->
-      <div class="table-wrapper">
-        <a-table
-          ref="table"
-          size="middle"
-          :row-key="rowKey"
-          :columns="columns"
-          :data-source="dataSource"
-          :pagination="pagination"
-          :loading="loading"
-          @change="handleTableChange"
-        >
-          <template #action-slot="text, record">
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a-popconfirm title="确认要删除吗？" @confirm="() => handleDel(record)">
-              <a href="javascript:;">删除</a>
-            </a-popconfirm>
-          </template>
-        </a-table>
-      </div>
-    </a-card>
-
-    <!--表单页面-->
-    <data-source-config-modal-form ref="formModal" @reload-page-table="reloadTable" />
-  </div>
+  <!-- 编辑弹窗 -->
+  <data-source-config-edit-modal
+    ref="editModal"
+    title="新建表单"
+    @done="tableHooks.reloadTable(false)"
+  />
 </template>
 
-<script>
-import { getPage, delObj } from '@/api/gen/datasourceconfig'
-import DataSourceConfigModalForm from './DataSourceConfigModalForm'
-import { TablePageMixin } from '@/mixins'
+<script setup lang="ts">
+  import { reactive, ref } from 'vue'
+  import useTable from '@/hooks/tableHooks'
+  import { doRequest } from '@/utils/axios/request'
+  import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasourceconfig'
+  import { DataSourceConfig } from '@/api/gen/model/datasourceconfig'
+  import DataSourceConfigEditModal from '@/views/gen/datasourceconfig/DataSourceConfigEditModal.vue'
+  import { DataSourceConfigEditModalInstance } from './types'
+  import AddButton from '@/components/button/AddButton.vue'
 
-export default {
-  name: 'DataSourceConfigPage',
-  components: { DataSourceConfigModalForm },
-  mixins: [TablePageMixin],
-  data() {
-    return {
-      getPage: getPage,
-      delObj: delObj,
+  // 编辑弹窗
+  const editModal = ref<DataSourceConfigEditModalInstance>()
 
-      columns: [
-        {
-          title: '#',
-          dataIndex: 'id',
-          width: '50px'
-        },
-        {
-          title: '数据源名称',
-          dataIndex: 'name',
-          ellipsis: true,
-          width: '100px'
-        },
-        {
-          title: '用户名',
-          dataIndex: 'username',
-          width: '80px'
-        },
-        {
-          title: '密码',
-          dataIndex: 'password',
-          ellipsis: true,
-          width: '200px'
-        },
-        {
-          title: '连接地址',
-          dataIndex: 'url',
-          ellipsis: true
-        },
-        {
-          title: '创建时间',
-          dataIndex: 'createTime',
-          width: '150px',
-          sorter: true
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          width: 120,
-          scopedSlots: { customRender: 'action-slot' }
-        }
-      ]
-    }
-  },
-  methods: {
-    // 新建数据源
-    handleAdd () {
-      this.$refs.formModal.add({title: '新建数据源'})
+  // 表格列设置
+  const columns = [
+    {
+      title: '#',
+      dataIndex: 'id',
+      width: '50px'
     },
-    // 编辑数据源
-    handleEdit (record) {
-      this.$refs.formModal.update(record, {title: '编辑数据源'})
+    {
+      title: '数据源名称',
+      dataIndex: 'name',
+      ellipsis: true,
+      width: '100px'
+    },
+    {
+      title: '用户名',
+      dataIndex: 'username',
+      width: '80px'
+    },
+    {
+      title: '密码',
+      dataIndex: 'password',
+      ellipsis: true,
+      width: '200px'
+    },
+    {
+      title: '连接地址',
+      dataIndex: 'url',
+      ellipsis: true
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      width: '150px',
+      sorter: true
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      width: 120,
+      scopedSlots: { customRender: 'action-slot' }
     }
+  ]
+
+  // 查询参数
+  const queryParam = reactive({})
+  // 数据表格
+  let tableHooks = useTable<DataSourceConfig>({
+    pageRequest: queryDatasourceConfigPage,
+    queryParam: queryParam
+  })
+  const { dataSource, pagination, loading } = tableHooks
+  // 立刻加载数据
+  tableHooks.loadData()
+
+  /* 新建数据源配置 */
+  const handleAdd = () => {
+    editModal.value?.add()
   }
-}
+
+  /* 编辑数据源配置 */
+  const handleEdit = (record: DataSourceConfig) => {
+    editModal.value?.update(record)
+  }
+
+  /* 删除数据源配置 */
+  const handleDel = (record: DataSourceConfig) => {
+    doRequest<void>(removeDatasourceConfig(record.id))
+  }
 </script>
