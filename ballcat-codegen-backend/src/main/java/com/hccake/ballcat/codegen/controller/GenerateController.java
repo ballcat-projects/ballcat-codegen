@@ -1,10 +1,10 @@
 package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.io.IoUtil;
+import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
-import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoService;
 import com.hccake.ballcat.common.model.domain.PageParam;
@@ -77,7 +77,7 @@ public class GenerateController {
 	 */
 	@Operation(summary = "生成预览代码")
 	@PostMapping("/preview")
-	public R<List<TemplateEntryTree>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
+	public R<List<FileEntry>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
 		return R.ok(generatorService.previewCode(preGenerateOptionDTO));
 	}
 

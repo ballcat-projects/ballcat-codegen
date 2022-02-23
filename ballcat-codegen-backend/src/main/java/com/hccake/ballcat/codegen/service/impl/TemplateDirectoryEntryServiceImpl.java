@@ -16,6 +16,7 @@ import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
 import com.hccake.ballcat.codegen.service.TemplateInfoService;
+import com.hccake.ballcat.codegen.util.GenUtils;
 import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
@@ -25,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -267,19 +267,21 @@ public class TemplateDirectoryEntryServiceImpl
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
 				for (TemplateEntryTree child : children) {
-					fillTemplateFiles(child, list, path + current.getFileName() + File.separator);
+					fillTemplateFiles(child, list, GenUtils.concatFilePath(path, current.getFileName()));
 				}
 			}
 		}
 
+		TemplateFile templateFile = new TemplateFile().setFileName(current.getFileName()).setFilePath(path)
+				.setType(current.getType());
 		// 目录项类型为文件则记录（文件必然是叶子节点）
 		if (DirectoryEntryTypeEnum.FILE.getType().equals(current.getType())) {
 			// 查找对应的模板文件详情信息
 			TemplateInfo templateInfo = templateInfoService.getById(current.getId());
-			TemplateFile templateFile = new TemplateFile().setFileName(current.getFileName()).setFilePath(path)
-					.setContent(templateInfo.getContent()).setEngineType(templateInfo.getEngineType());
-			list.add(templateFile);
+			templateFile.setContent(templateInfo.getContent()).setEngineType(templateInfo.getEngineType());
 		}
+
+		list.add(templateFile);
 	}
 
 	/**

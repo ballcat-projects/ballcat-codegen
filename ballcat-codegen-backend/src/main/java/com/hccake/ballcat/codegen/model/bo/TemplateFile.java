@@ -30,6 +30,11 @@ public class TemplateFile {
 	private String filePath;
 
 	/**
+	 * 类型 1：文件夹 2：文件
+	 */
+	private Integer type;
+
+	/**
 	 * 模板内容
 	 */
 	@Schema(title = "模板内容")

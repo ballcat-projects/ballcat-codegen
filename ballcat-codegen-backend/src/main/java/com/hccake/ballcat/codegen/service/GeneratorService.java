@@ -1,7 +1,7 @@
 package com.hccake.ballcat.codegen.service;
 
+import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
-import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +24,6 @@ public interface GeneratorService {
 	 * @param preGenerateOptionDTO {@code preGenerateOptionDTO}
 	 * @return {@code Map<String, String>}
 	 */
-	List<TemplateEntryTree> previewCode(GeneratorOptionDTO preGenerateOptionDTO);
+	List<FileEntry> previewCode(GeneratorOptionDTO preGenerateOptionDTO);
 
 }

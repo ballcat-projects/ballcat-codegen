@@ -7,11 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
 import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
+import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
-import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class GenUtils {
 	 * 生成代码
 	 */
 	@SuppressWarnings({ "java:S3011", "unchecked" })
-	@SneakyThrows
+	@SneakyThrows(Exception.class)
 	public void generatorCode(String tablePrefix, Map<String, String> customProperties, TableInfo tableInfo,
 			List<ColumnInfo> columnInfos, ZipOutputStream zip, List<TemplateFile> templateFiles) {
 
@@ -97,31 +98,51 @@ public class GenUtils {
 
 	/**
 	 * 预览代码
+	 * @return
 	 */
-	@SneakyThrows
-	public void previewCode(String tablePrefix, Map<String, String> customProperties, TableInfo tableInfo,
-			List<ColumnInfo> columnInfos, List<TemplateEntryTree> templateEntryTreeList) {
+	public Map<String, FileEntry> previewCode(String tablePrefix, Map<String, String> customProperties,
+			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {
+
+		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 根据表信息和字段信息获取对应的配置属性
 		GenerateProperties generateProperties = getGenerateProperties(tableInfo, columnInfos, tablePrefix);
 		// 转换generateProperties为map，模板数据
-		Map<String, Object> map = BeanUtil.beanToMap(generateProperties);
+		Map<String, Object> context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
-		map.putAll(customProperties);
+		context.putAll(customProperties);
 		// 模板渲染
-		VelocityContext context = new VelocityContext(map);
-		for (TemplateEntryTree templateEntryTree : templateEntryTreeList) {
-			// 文件名处理
-			templateEntryTree.setFileName(StrUtil.format(templateEntryTree.getFileName(), map));
-			if (DirectoryEntryTypeEnum.FILE.getType().equals(templateEntryTree.getType())
-					&& StrUtil.isNotEmpty(templateEntryTree.getContent())) {
-				// 模板内容填充
+		VelocityContext velocityContext = new VelocityContext(context);
+		for (TemplateFile templateFile : templateFiles) {
+			FileEntry fileEntry = new FileEntry();
+			fileEntry.setType(templateFile.getType());
+
+			// 替换路径中的占位符
+			String filename = StrUtil.format(templateFile.getFileName(), context);
+			fileEntry.setFilename(filename);
+
+			String parentFilePath = evaluateRealPath(templateFile.getFilePath(), context);
+			fileEntry.setParentFilePath(parentFilePath);
+
+			// 如果是文件
+			if (DirectoryEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
+				fileEntry.setFilePath(concatFilePath(parentFilePath, filename));
+
+				// 文件内容处理
 				StringWriter sw = new StringWriter();
-				Velocity.evaluate(context, sw, tableInfo.getTableName() + templateEntryTree.getFileName(),
-						templateEntryTree.getContent());
-				templateEntryTree.setContent(sw.toString());
+				Velocity.evaluate(velocityContext, sw, tableInfo.getTableName() + templateFile.getFileName(),
+						templateFile.getContent());
+				fileEntry.setContent(sw.toString());
 			}
+			else {
+				String currentPath = evaluateRealPath(templateFile.getFileName(), context);
+				fileEntry.setFilePath(concatFilePath(parentFilePath, currentPath));
+			}
+
+			map.put(fileEntry.getFilePath(), fileEntry);
 		}
+
+		return map;
 	}
 
 	/**
@@ -203,16 +224,44 @@ public class GenUtils {
 	 * @param map 模板属性
 	 * @return filePath 文件路径
 	 */
-	private String getRealFilePath(String filePathMaker, String fileNameMaker, Map<String, Object> map) {
+	private static String getRealFilePath(String filePathMaker, String fileNameMaker, Map<String, Object> map) {
 		// 占位符替换
 		String realFileName = StrUtil.format(fileNameMaker, map);
+		String realFilePath = evaluateRealPath(filePathMaker, map);
+		return concatFilePath(realFilePath, realFileName);
+	}
+
+	/**
+	 * 路径拼接
+	 * @param parentPath 父级路径
+	 * @param subPath 子路径
+	 * @return 完整路径
+	 */
+	public static String concatFilePath(String parentPath, String subPath) {
+		if (StrUtil.isEmpty(parentPath)) {
+			return subPath;
+		}
+		return parentPath.endsWith(File.separator) ? parentPath + subPath : parentPath + File.separator + subPath;
+	}
+
+	/**
+	 * 获取真实的文件全路径
+	 * @param filePathMaker 文件路径模板
+	 * @param map 模板属性
+	 * @return filePath 文件路径
+	 */
+	private static String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
+		// 占位符替换
 		String realFilePath = StrUtil.format(filePathMaker, map);
+		if (StrUtil.isEmpty(realFilePath)) {
+			return realFilePath;
+		}
 		// 用 . 标识文件夹合并，所以需要替换成 /
 		realFilePath = realFilePath.replace(StrUtil.DOT, File.separator);
 		// 防止多写了 /
 		realFilePath = realFilePath.replace(File.separator + File.separator, File.separator);
-		return realFilePath.endsWith(File.separator) ? realFilePath + realFileName
-				: realFilePath + File.separator + realFileName;
+
+		return realFilePath;
 	}
 
 	/**
@@ -220,7 +269,7 @@ public class GenUtils {
 	 * @param className 类名
 	 * @return 表别名
 	 */
-	private String prodAlias(String className) {
+	private static String prodAlias(String className) {
 		StringBuilder sb = new StringBuilder();
 		for (char c : className.toCharArray()) {
 			if (c >= 'A' && c <= 'Z') {
@@ -233,7 +282,7 @@ public class GenUtils {
 	/**
 	 * 列名转换成Java属性名
 	 */
-	public String underlineToCamel(String underlineStr) {
+	public static String underlineToCamel(String underlineStr) {
 		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
 	}
 

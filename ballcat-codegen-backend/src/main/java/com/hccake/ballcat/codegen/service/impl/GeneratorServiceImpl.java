@@ -4,10 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ArrayUtil;
 import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
-import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
+import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
@@ -17,9 +16,7 @@ import com.hccake.ballcat.codegen.service.TableInfoService;
 import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
 import com.hccake.ballcat.codegen.service.TemplateInfoService;
 import com.hccake.ballcat.codegen.util.GenUtils;
-import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.ballcat.common.util.tree.TreeNode;
-import com.hccake.ballcat.common.util.tree.TreeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,12 +24,13 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 
@@ -63,7 +61,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 			// 根据tableName 查询最新的表单配置
 			List<TemplateFile> templateFiles = templateDirectoryEntryService.listTemplateFiles(
 					generatorOptionDTO.getTemplateGroupId(), generatorOptionDTO.getTemplateFileIds());
-			Assert.notEmpty(templateFiles, "模板组中模板文件为空！");
+			// 过滤仅获取文件
+			List<TemplateFile> files = templateFiles.stream()
+					.filter(x -> x.getType().equals(DirectoryEntryTypeEnum.FILE.getType()))
+					.collect(Collectors.toList());
+			Assert.notEmpty(files, "模板组中模板文件为空！");
 
 			for (String tableName : generatorOptionDTO.getTableNames()) {
 				// 查询表信息
@@ -72,7 +74,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 				List<ColumnInfo> columnInfoList = tableInfoService.listColumnInfo(tableName);
 				// 生成代码
 				GenUtils.generatorCode(generatorOptionDTO.getTablePrefix(), generatorOptionDTO.getGenProperties(),
-						tableInfo, columnInfoList, zip, templateFiles);
+						tableInfo, columnInfoList, zip, files);
 			}
 			// 手动结束 zip，防止文件末端未被写入
 			zip.finish();
@@ -81,40 +83,29 @@ public class GeneratorServiceImpl implements GeneratorService {
 	}
 
 	@Override
-	public List<TemplateEntryTree> previewCode(GeneratorOptionDTO preGenerateOptionDTO) {
-		// 只能单表预览
-		String[] tableNames = preGenerateOptionDTO.getTableNames();
-		Assert.isTrue(ArrayUtil.isNotEmpty(tableNames) && tableNames.length == 1, "预览仅支持单表");
-
+	public List<FileEntry> previewCode(GeneratorOptionDTO preGenerateOptionDTO) {
 		// 获取指定生成的文件信息
 		List<TemplateInfo> templateInfos = templateInfoService.listByIds(preGenerateOptionDTO.getTemplateFileIds());
 		Assert.isTrue(ArrayUtil.isNotEmpty(templateInfos), "至少选择一个需要生成的文件");
-		Map<Integer, TemplateInfo> templateInfoMap = templateInfos.stream()
-				.collect(Collectors.toMap(TemplateInfo::getDirectoryEntryId, Function.identity()));
+		// 根据模板组和模板文件获取对应的模板文件列表
+		List<TemplateFile> templateFiles = templateDirectoryEntryService.listTemplateFiles(
+				preGenerateOptionDTO.getTemplateGroupId(), preGenerateOptionDTO.getTemplateFileIds());
 
-		// 获取当前模板组下的所有文件目录
-		List<TemplateDirectoryEntry> entryList = templateDirectoryEntryService
-				.listByTemplateGroupId(preGenerateOptionDTO.getTemplateGroupId());
-		// 转树形目录结构
-		List<TemplateEntryTree> treeList = TreeUtils.buildTree(entryList, GlobalConstants.TREE_ROOT_ID,
-				TemplateModelConverter.INSTANCE::entryPoToTree);
-		// 剪枝 & 填充文件信息
-		treeList = treeList.stream().map(node -> pruningAndFillContent(node, templateInfoMap)).filter(Objects::nonNull)
-				.collect(Collectors.toList());
-		// 树转list, 平铺树结构
-		List<TemplateEntryTree> list = treeToList(treeList);
+		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
-		// 获取表名
-		String tableName = tableNames[0];
-		// 查询表信息
-		TableInfo tableInfo = tableInfoService.queryTableInfo(tableName);
-		// 查询列信息
-		List<ColumnInfo> columnInfoList = tableInfoService.listColumnInfo(tableName);
-		// 生成代码
-		GenUtils.previewCode(preGenerateOptionDTO.getTablePrefix(), preGenerateOptionDTO.getGenProperties(), tableInfo,
-				columnInfoList, list);
+		String[] tableNames = preGenerateOptionDTO.getTableNames();
+		for (String tableName : tableNames) {
+			// 查询表信息
+			TableInfo tableInfo = tableInfoService.queryTableInfo(tableName);
+			// 查询列信息
+			List<ColumnInfo> columnInfoList = tableInfoService.listColumnInfo(tableName);
+			// 生成代码
+			Map<String, FileEntry> fileEntryMap = GenUtils.previewCode(preGenerateOptionDTO.getTablePrefix(),
+					preGenerateOptionDTO.getGenProperties(), tableInfo, columnInfoList, templateFiles);
+			map.putAll(fileEntryMap);
+		}
 
-		return list;
+		return CollectionUtil.sort(map.values(), Comparator.comparing(FileEntry::getFilename));
 	}
 
 	private List<TemplateEntryTree> treeToList(List<TemplateEntryTree> treeList) {
