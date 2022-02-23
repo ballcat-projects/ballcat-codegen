@@ -98,7 +98,7 @@ public class GenUtils {
 
 	/**
 	 * 预览代码
-	 * @return
+	 * @return Map<String, FileEntry>
 	 */
 	public Map<String, FileEntry> previewCode(String tablePrefix, Map<String, String> customProperties,
 			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {

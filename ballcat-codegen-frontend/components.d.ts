@@ -43,6 +43,7 @@ declare module 'vue' {
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
+    ATree: typeof import('ant-design-vue/es')['Tree']
     Icon: typeof import('./src/components/Icon/index.vue')['default']
   }
 }

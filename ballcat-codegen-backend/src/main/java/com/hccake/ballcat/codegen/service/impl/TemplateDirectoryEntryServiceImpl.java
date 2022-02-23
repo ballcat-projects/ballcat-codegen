@@ -224,6 +224,20 @@ public class TemplateDirectoryEntryServiceImpl
 		templateInfoService.removeByGroupId(groupId);
 	}
 
+	@Override
+	public List<TemplateFile> convertToTemplateFile(List<TemplateDirectoryEntry> templateEntryList) {
+		// 转树形目录结构
+		List<TemplateEntryTree> treeList = TreeUtils.buildTree(templateEntryList, GlobalConstants.TREE_ROOT_ID,
+				TemplateModelConverter.INSTANCE::entryPoToTree);
+
+		// 填充模板文件
+		List<TemplateFile> templateFiles = new ArrayList<>();
+		for (TemplateEntryTree tree : treeList) {
+			fillTemplateFiles(tree, templateFiles, "");
+		}
+		return templateFiles;
+	}
+
 	/**
 	 * 获取模板文件
 	 * @param templateGroupId 模板组Id
@@ -236,8 +250,7 @@ public class TemplateDirectoryEntryServiceImpl
 		List<TemplateDirectoryEntry> list = baseMapper.listByTemplateGroupId(templateGroupId);
 		// 当没有指定时，不生成该文件
 		if (CollectionUtil.isNotEmpty(templateFileIds)) {
-			list.removeIf(entry -> DirectoryEntryTypeEnum.FILE.getType().equals(entry.getType())
-					&& !templateFileIds.contains(entry.getId()));
+			list.removeIf(entry -> !templateFileIds.contains(entry.getId()));
 		}
 
 		// 转树形目录结构
@@ -278,7 +291,8 @@ public class TemplateDirectoryEntryServiceImpl
 		if (DirectoryEntryTypeEnum.FILE.getType().equals(current.getType())) {
 			// 查找对应的模板文件详情信息
 			TemplateInfo templateInfo = templateInfoService.getById(current.getId());
-			templateFile.setContent(templateInfo.getContent()).setEngineType(templateInfo.getEngineType());
+			String content = templateInfo.getContent() == null ? "" : templateInfo.getContent();
+			templateFile.setContent(content).setEngineType(templateInfo.getEngineType());
 		}
 
 		list.add(templateFile);

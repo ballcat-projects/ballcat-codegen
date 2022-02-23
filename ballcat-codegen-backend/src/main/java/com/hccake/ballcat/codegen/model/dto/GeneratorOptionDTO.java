@@ -29,9 +29,9 @@ public class GeneratorOptionDTO {
 	private String[] tableNames;
 
 	/**
-	 * 生成文件Ids
+	 * 需要生成的的模板目录项
 	 */
-	private Set<Integer> templateFileIds;
+	private Set<Integer> templateEntryIds;
 
 	/**
 	 * 配置

@@ -6,6 +6,7 @@
     :body-style="{ paddingBottom: '8px' }"
     :confirm-loading="submitLoading"
     :width="900"
+    :centered="true"
     @ok="generateCode"
     @cancel="handleClose"
   >
@@ -14,7 +15,6 @@
         <a-col :span="10">
           <a-form-item
             label="模板组"
-            :label-col="labelCol"
             :wrapper-col="wrapperCol"
             v-bind="validateInfos.templateGroupId"
           >
@@ -24,31 +24,22 @@
               </a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item label="生成文件选择">
-            <div :style="{ borderBottom: '1px solid #E9E9E9' }">
+          <a-form-item>
+            <div :style="{ borderBottom: '1px solid #E9E9E9', marginBottom: '5px' }">
               <a-checkbox
-                :indeterminate="templateFileIdsState.indeterminate"
-                :checked="templateFileIdsState.checkAll"
+                :indeterminate="templateEntryIdsState.indeterminate"
+                :checked="templateEntryIdsState.checkAll"
                 @change="onCheckAllChange"
               >
-                Check all
+                <b>生成文件选择</b>
               </a-checkbox>
             </div>
-            <a-checkbox-group
-              v-model:value="modelRef.templateFileIds"
-              style="width: 100%"
-              @change="onTemplateFileIdsChange"
-            >
-              <a-row>
-                <template v-for="item in templateFiles" :key="item.id">
-                  <a-col :span="12">
-                    <a-checkbox :value="item.directoryEntryId">
-                      {{ item.title }}
-                    </a-checkbox>
-                  </a-col>
-                </template>
-              </a-row>
-            </a-checkbox-group>
+            <a-directory-tree
+              v-model:checkedKeys="templateEntryIdsState.checkedKeys"
+              :tree-data="templateEntryTree"
+              :checkable="true"
+              @check="onTemplateEntryIdsChange"
+            ></a-directory-tree>
           </a-form-item>
         </a-col>
         <a-col :span="14">
@@ -60,7 +51,7 @@
             />
           </a-form-item>
           <a-divider orientation="left"> 自定义属性 </a-divider>
-          <template v-for="item in properties" :key="item.id">
+          <template v-for="item in templateProperties" :key="item.id">
             <a-form-item
               :label="item.propKey"
               :label-col="labelCol"
@@ -92,7 +83,6 @@
   import { usePopup } from '@/hooks/popupHooks'
   import { listSelectData } from '@/api/gen/templategroup'
   import { listProperty } from '@/api/gen/templateproperty'
-  import { listTemplateInfo } from '@/api/gen/templateinfo'
   import { generate, preview } from '@/api/gen/generate'
   import { doRequest } from '@/utils/axios/request'
   import { remoteFileDownload } from '@/utils/fileUtil'
@@ -103,6 +93,11 @@
   import { TemplateProperty } from '@/api/gen/model/templateproperty'
   import { Props } from 'ant-design-vue/es/form/useForm'
   import { GenerateModalInstance, PreviewModalInstance } from '@/views/gen/codegen/types'
+  import { listTemplateEntry } from '@/api/gen/templatedirectoryentry'
+  import { TemplateDirectoryEntry } from '@/api/gen/model/templatedirectoryentry'
+  import { listToTree } from '@/utils/treeUtil'
+  import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
+  import { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
 
   const labelCol = {
     xs: { span: 12 },
@@ -118,6 +113,10 @@
   // 弹窗属性
   const { visible, handleOpen, handleClose } = usePopup()
 
+  // 预览弹窗
+  const previewModal = ref<PreviewModalInstance>()
+
+  // 当前使用的数据库名称
   const dsName = ref<string>('')
 
   // 表单提交的 loading 控制
@@ -127,7 +126,7 @@
   const modelRef = reactive<GeneratorOption>({
     tableNames: [],
     templateGroupId: null,
-    templateFileIds: [],
+    templateEntryIds: [],
     tablePrefix: '',
     genProperties: {}
   })
@@ -137,6 +136,7 @@
   })
   const { validate, validateInfos } = Form.useForm(modelRef, rulesRef)
 
+  // 模板组的选择数据
   const templateGroupSelectData = ref<SelectData[]>([])
   doRequest(listSelectData(), {
     successMessage: false,
@@ -149,58 +149,65 @@
     }
   })
 
-  const templateFileIdsState = reactive({
+  const templateEntryIdsState = reactive({
     indeterminate: false,
     checkAll: true,
-    allTemplateFileIds: [] as number[]
+    allIds: [] as number[],
+    halfCheckedKeys: [] as number[],
+    checkedKeys: [] as number[]
   })
   const onCheckAllChange = (e: any): void => {
-    templateFileIdsState.indeterminate = false
-    templateFileIdsState.checkAll = e.target.checked
-    modelRef.templateFileIds = templateFileIdsState.checkAll
-      ? templateFileIdsState.allTemplateFileIds
+    templateEntryIdsState.indeterminate = false
+    templateEntryIdsState.checkAll = e.target.checked
+    templateEntryIdsState.checkedKeys = templateEntryIdsState.checkAll
+      ? templateEntryIdsState.allIds
       : []
   }
-  const onTemplateFileIdsChange = (checkedList: number[]): void => {
-    const allTemplateFileIds = templateFileIdsState.allTemplateFileIds
-    templateFileIdsState.indeterminate =
-      !!checkedList.length && checkedList.length < allTemplateFileIds.length
-    templateFileIdsState.checkAll = checkedList.length === allTemplateFileIds.length
+  const onTemplateEntryIdsChange = (checkedList: number[], info: CheckInfo): void => {
+    const allIds = templateEntryIdsState.allIds
+    templateEntryIdsState.halfCheckedKeys = info && (info.halfCheckedKeys as number[])
+    templateEntryIdsState.indeterminate = !!checkedList.length && checkedList.length < allIds.length
+    templateEntryIdsState.checkAll = checkedList.length === allIds.length
   }
 
-  const properties = ref<TemplateProperty[]>()
-  const templateFiles = ref()
+  const templateProperties = ref<TemplateProperty[]>()
+  const templateEntryTree = ref<TemplateDirectoryEntry[]>()
   watchEffect(() => {
     const templateGroupId = modelRef.templateGroupId
-    if (templateGroupId) {
-      doRequest(listProperty(templateGroupId), {
-        successMessage: false,
-        onSuccess: res => {
-          properties.value = res.data
-          if (properties.value && properties.value.length > 0) {
-            for (let property of properties.value) {
-              modelRef.genProperties[property.propKey as string] = property.defaultValue
-              rulesRef['genProperties.' + property.propKey] = [
-                {
-                  required: property.required === 1,
-                  message: property.title + '不能为空'
-                }
-              ]
-            }
+    if (!templateGroupId) {
+      return
+    }
+    doRequest(listProperty(templateGroupId), {
+      successMessage: false,
+      onSuccess: res => {
+        templateProperties.value = res.data
+        if (templateProperties.value && templateProperties.value.length > 0) {
+          for (let property of templateProperties.value) {
+            modelRef.genProperties[property.propKey as string] = property.defaultValue
+            rulesRef['genProperties.' + property.propKey] = [
+              {
+                required: property.required === 1,
+                message: property.title + '不能为空'
+              }
+            ]
           }
         }
-      })
-      doRequest(listTemplateInfo(templateGroupId), {
-        successMessage: false,
-        onSuccess: res => {
-          templateFiles.value = res.data
-          templateFileIdsState.allTemplateFileIds = res.data
-            ? res.data.map(x => x.directoryEntryId)
-            : []
-          modelRef.templateFileIds = templateFileIdsState.allTemplateFileIds
-        }
-      })
-    }
+      }
+    })
+    doRequest(listTemplateEntry(templateGroupId), {
+      successMessage: false,
+      onSuccess: res => {
+        templateEntryIdsState.checkAll = true
+        templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
+        templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
+        templateEntryTree.value = listToTree(res.data as TemplateDirectoryEntry[], 0, {
+          attributeMapping(treeNode) {
+            const dataNode = treeNode as unknown as DataNode
+            dataNode.title = treeNode.fileName
+          }
+        })
+      }
+    })
   })
 
   /* 代码生成 */
@@ -208,6 +215,11 @@
     validate()
       .then(() => {
         submitLoading.value = true
+        // 合并选中的数据和半选的数据
+        modelRef.templateEntryIds = [
+          ...templateEntryIdsState.halfCheckedKeys,
+          ...templateEntryIdsState.checkedKeys
+        ]
         generate(dsName.value, modelRef)
           .then(response => {
             remoteFileDownload(response, 'BallCat-CodeGen.zip')
@@ -224,14 +236,16 @@
       })
   }
 
-  // 预览弹窗
-  const previewModal = ref<PreviewModalInstance>()
-
   /* 代码预览 */
   const previewCode = () => {
     validate()
       .then(() => {
         submitLoading.value = true
+        // 合并选中的数据和半选的数据
+        modelRef.templateEntryIds = [
+          ...templateEntryIdsState.halfCheckedKeys,
+          ...templateEntryIdsState.checkedKeys
+        ]
         doRequest(preview(dsName.value, modelRef), {
           successMessage: false,
           onSuccess: res => {
@@ -255,4 +269,12 @@
   })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+  // 修改树选择后的背景色
+  :deep(.ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before) {
+    background: #ceb7ed;
+  }
+  :deep(.ant-tree.ant-tree-directory .ant-tree-treenode-selected::before) {
+    background: #ceb7ed;
+  }
+</style>

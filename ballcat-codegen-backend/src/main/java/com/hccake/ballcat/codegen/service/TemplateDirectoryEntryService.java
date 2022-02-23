@@ -70,6 +70,13 @@ public interface TemplateDirectoryEntryService extends ExtendService<TemplateDir
 	boolean removeEntry(Integer entryId, Integer mode);
 
 	/**
+	 * 转换为模板文件
+	 * @param templateEntryList 模板目录项集合
+	 * @return List<TemplateFile>
+	 */
+	List<TemplateFile> convertToTemplateFile(List<TemplateDirectoryEntry> templateEntryList);
+
+	/**
 	 * 获取模板文件
 	 * @param templateGroupId 模板组Id
 	 * @param templateFileIds 模板文件ID集合

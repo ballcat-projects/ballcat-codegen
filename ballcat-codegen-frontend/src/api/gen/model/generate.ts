@@ -30,8 +30,8 @@ export interface GeneratorOption {
   tableNames: string[]
   // 模板组Id
   templateGroupId: number | null
-  // 模板文件Ids
-  templateFileIds: number[]
+  // 模板项Ids
+  templateEntryIds: number[]
   // 表前缀
   tablePrefix?: string
   // 生成的一些配置
