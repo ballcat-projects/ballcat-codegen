@@ -26,11 +26,19 @@
         </a-menu-item>
       </template>
       <template v-if="!selectedEntry || selectedEntry.type !== 2">
-        <a-menu-item key="3" :style="menuItemStyle" @click="createdEntry(TemplateEntryTypeEnum.FOLDER)">
+        <a-menu-item
+          key="3"
+          :style="menuItemStyle"
+          @click="createdEntry(TemplateEntryTypeEnum.FOLDER)"
+        >
           <diff-outlined />
           <span>新建文件夹</span>
         </a-menu-item>
-        <a-menu-item key="4" :style="menuItemStyle" @click="createdEntry(TemplateEntryTypeEnum.FILE)">
+        <a-menu-item
+          key="4"
+          :style="menuItemStyle"
+          @click="createdEntry(TemplateEntryTypeEnum.FILE)"
+        >
           <file-add-outlined />
           <span>新建文件</span>
         </a-menu-item>
@@ -49,7 +57,10 @@
   import { listToTree } from '@/utils/treeUtil'
   import { doRequest } from '@/utils/axios/request'
   import { listTemplateEntry, moveEntry } from '@/api/gen/templatedirectoryentry'
-  import { TemplateDirectoryEntry, TemplateEntryTypeEnum } from '@/api/gen/model/templatedirectoryentry'
+  import {
+    TemplateDirectoryEntry,
+    TemplateEntryTypeEnum
+  } from '@/api/gen/model/templatedirectoryentry'
   import { DataNode, EventDataNode, Key } from 'ant-design-vue/lib/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {

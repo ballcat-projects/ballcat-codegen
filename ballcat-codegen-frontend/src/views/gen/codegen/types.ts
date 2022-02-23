@@ -1,4 +1,4 @@
-import { TemplateEntryTree } from '@/api/gen/model/generate'
+import { FileEntry } from '@/api/gen/model/templatedirectoryentry'
 
 export interface GenerateModalInstance {
   open: (dsName: string, tableNames: string[]) => void
@@ -6,5 +6,5 @@ export interface GenerateModalInstance {
 }
 
 export interface PreviewModalInstance {
-  open: (templateEntryTreeList?: TemplateEntryTree[]) => void
+  open: (fileEntryList?: FileEntry[]) => void
 }

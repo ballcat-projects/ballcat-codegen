@@ -3,6 +3,7 @@ import type { R } from '@/utils/axios/types'
 import type { PageResult } from '@/api/types'
 import type { TableInfo, TableInfoPageParam } from '@/api/gen/model/generate'
 import { GeneratorOption, TemplateEntryTree } from '@/api/gen/model/generate'
+import { FileEntry } from "@/api/gen/model/templatedirectoryentry";
 
 /**
  * 获取表信息
@@ -34,7 +35,7 @@ export function generate(dsName: string, generatorOption: GeneratorOption) {
  * @param generatorOption 生成配置
  */
 export function preview(dsName: string, generatorOption: GeneratorOption) {
-  return request.post<R<TemplateEntryTree[]>>('/preview', generatorOption, {
+  return request.post<R<FileEntry[]>>('/preview', generatorOption, {
     headers: { dsName: dsName }
   })
 }

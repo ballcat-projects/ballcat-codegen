@@ -13,7 +13,7 @@
       <a-col :span="6" class="template-entry-tree-wrapper">
         <a-directory-tree
           class="template-entry-tree"
-          :tree-data="templateEntryTree"
+          :tree-data="fileEntryTree"
           :show-icon="true"
           style="overflow: initial"
           @dblclick="ondblclick"
@@ -32,9 +32,9 @@
   import { usePopup } from '@/hooks/popupHooks'
   import { listToTree } from '@/utils/treeUtil'
   import 'highlight.js/styles/github.css'
-  import { TemplateEntryTree } from '@/api/gen/model/generate'
   import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
   import { PreviewModalInstance } from './types'
+  import { FileEntry } from '@/api/gen/model/templatedirectoryentry'
 
   // 不能删除
   const highlightjs = defineComponent(hljsVuePlugin.component)
@@ -44,31 +44,35 @@
   const language = ref<string>('javascript')
   const code = ref<string>('双击文件查看代码信息')
   const modalTitle = ref<string>('代码预览')
-  const templateEntryTree = ref<TemplateEntryTree[]>()
+  const fileEntryTree = ref<FileEntry[]>()
 
-  const ondblclick = (e: Event, node: { dataRef: TemplateEntryTree }) => {
+  const ondblclick = (e: Event, node: { dataRef: FileEntry }) => {
     // 非文件类型不加载
     const entry = node.dataRef
     if (entry.type === 2) {
-      language.value = entry.fileName
+      language.value = entry.filename
       code.value = entry.content ? entry.content : ''
-      modalTitle.value = '代码预览 - ' + entry.fileName
+      modalTitle.value = '代码预览 - ' + entry.filename
     }
   }
 
-  function buildTree(templateEntryList: TemplateEntryTree[]) {
-    return listToTree(templateEntryList, 0, {
+  function buildTree(fileEntryList: FileEntry[]) {
+    return listToTree(fileEntryList, '', {
+      idKey: 'filePath',
+      parentIdKey: 'parentFilePath',
       attributeMapping: treeNode => {
         const dataNode = treeNode as unknown as DataNode
+        dataNode.key = treeNode.filePath
         dataNode.isLeaf = treeNode.type === 2
-        dataNode.title = treeNode.fileName
+        dataNode.title = treeNode.filename
       }
     })
   }
 
   defineExpose<PreviewModalInstance>({
-    open: (templateEntryList?: TemplateEntryTree[]) => {
-      templateEntryTree.value = templateEntryList ? buildTree(templateEntryList) : []
+    open: (fileEntryList?: FileEntry[]) => {
+      fileEntryTree.value = fileEntryList ? buildTree(fileEntryList) : []
+      console.log(fileEntryTree.value)
       handleOpen()
     }
   })

@@ -36,3 +36,26 @@ export interface TemplateDirectoryEntry {
 export interface TemplateDirectoryEntryDTO extends TemplateDirectoryEntry {
   templateInfo?: TemplateInfo
 }
+
+/**
+ * 模板目录项
+ */
+export interface FileEntry {
+  // 文件名
+  filename: string
+
+  // 完全文件路径
+  filePath: string
+
+  // 父级的完全文件路径
+  parentFilePath: string
+
+  // 类型 1：文件夹 2：文件
+  type: TemplateEntryTypeEnum
+
+  // 文件内容
+  content: string
+
+  // 子文件
+  children?: FileEntry[]
+}

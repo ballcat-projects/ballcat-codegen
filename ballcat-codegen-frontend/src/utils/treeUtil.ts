@@ -47,12 +47,7 @@ export const listToTree = <T>(
  * @param parentId 父ID
  * @param options 转换选项
  */
-export const fillTree = <T>(
-  list: T[],
-  tree: T[],
-  parentId: Key,
-  options: ListToTreeOptions<T>
-) => {
+export const fillTree = <T>(list: T[], tree: T[], parentId: Key, options: ListToTreeOptions<T>) => {
   const idField = options.idKey || 'id'
   const parentIdField = options.parentIdKey || 'parentId'
   const childrenField = options.childrenKey || 'children'
@@ -77,10 +72,7 @@ export const fillTree = <T>(
       // 迭代 list， 找到当前菜单相符合的所有子菜单
       fillTree(list, treeNode[childrenField], data[idField], options)
       // 删掉不存在 children 值的属性
-      if (
-        treeNode[childrenField] &&
-        (treeNode[childrenField] as T[]).length <= 0
-      ) {
+      if (treeNode[childrenField] && (treeNode[childrenField] as T[]).length <= 0) {
         delete treeNode[childrenField]
       }
       // 加入到树中
