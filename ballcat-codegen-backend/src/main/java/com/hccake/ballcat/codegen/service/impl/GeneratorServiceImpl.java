@@ -105,7 +105,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 			map.putAll(fileEntryMap);
 		}
 
-		return CollectionUtil.sort(map.values(), Comparator.comparing(FileEntry::getFilename));
+		return CollectionUtil.sort(map.values(),
+				Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER));
 	}
 
 	private List<TemplateEntryTree> treeToList(List<TemplateEntryTree> treeList) {
