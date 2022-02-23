@@ -9,8 +9,8 @@
     wrap-class-name="preview-modal-wrapper"
     @cancel="handleClose"
   >
-    <a-row>
-      <a-col :span="6" class="template-entry-tree-wrapper">
+    <splitpanes class="preview-splitpanes">
+      <pane size="25" class="template-entry-tree-wrapper">
         <a-directory-tree
           class="template-entry-tree"
           :tree-data="fileEntryTree"
@@ -18,11 +18,11 @@
           style="overflow: initial"
           @dblclick="ondblclick"
         />
-      </a-col>
-      <a-col :span="18" class="template-content-wrapper">
+      </pane>
+      <pane size="75" class="template-content-wrapper">
         <highlightjs :language="language" :code="code" style="overflow: initial" />
-      </a-col>
-    </a-row>
+      </pane>
+    </splitpanes>
   </a-modal>
 </template>
 <script setup lang="ts">
@@ -35,6 +35,8 @@
   import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
   import { PreviewModalInstance } from './types'
   import { FileEntry } from '@/api/gen/model/templatedirectoryentry'
+  import { Splitpanes, Pane } from 'splitpanes'
+  import 'splitpanes/dist/splitpanes.css'
 
   // 不能删除
   const highlightjs = defineComponent(hljsVuePlugin.component)
@@ -79,6 +81,28 @@
 </script>
 
 <style lang="less">
+  pre code.hljs {
+    overflow-x: visible;
+  }
+
+  // 分割器
+  .preview-splitpanes.splitpanes--vertical > .splitpanes__splitter {
+    min-width: 5px;
+    cursor: col-resize;
+  }
+</style>
+
+<style scoped lang="less">
+  :deep(.ant-tree.ant-tree-block-node .ant-tree-list-holder-inner .ant-tree-node-content-wrapper) {
+    white-space: nowrap;
+  }
+
+  :deep(.template-entry-tree) {
+    background: #fbfbfb;
+    width: 100%;
+    min-width: 200px;
+  }
+
   .preview-modal-wrapper {
     .ant-modal-header {
       padding: 8px 24px !important;
@@ -89,26 +113,17 @@
     }
   }
 
-  .template-entry-tree {
-    background: #f5f5f5;
-  }
-
   .template-entry-tree-wrapper {
     height: 650px;
     overflow: auto;
     border-right-style: solid;
     border-right-width: 1px;
     border-right-color: #dcdcdc;
-    background: #f5f5f5;
+    background: #fbfbfb;
   }
 
   .template-content-wrapper {
-    padding-left: 8px;
     height: 650px;
     overflow: auto;
-  }
-
-  pre code.hljs {
-    overflow-x: visible;
   }
 </style>
