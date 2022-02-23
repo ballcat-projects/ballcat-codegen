@@ -50,9 +50,9 @@
 					<!-- Build and minify static files -->
 					<execution>
 						<id>vite build</id>
-<!--						<goals>-->
-<!--							<goal>vite</goal>-->
-<!--						</goals>-->
+						<goals>
+							<goal>npx</goal>
+						</goals>
 						<configuration>
 							<arguments>vite build</arguments>
 						</configuration>
