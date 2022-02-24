@@ -57,7 +57,7 @@
       return
     }
     Modal.confirm({
-      content: '部分文件已修改但未保存，确定放弃修改内容？',
+      content: '部分文件已修改但未保存，确定放弃修改内容吗？ (选中文件编辑器后，按 Ctrl+S 保存）',
       onOk: () => emits('go-back')
     })
   }

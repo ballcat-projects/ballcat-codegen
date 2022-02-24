@@ -78,16 +78,7 @@
     editor = new Editor(editorBox.value, '', handleUpdate, [
       {
         // 保存快捷键
-        key: 'MOD-S',
-        preventDefault: true,
-        run: () => {
-          save()
-          return true
-        }
-      },
-      {
-        // 保存快捷键，由于 CTRL + S, 偶尔无法绑定，所以留个备份用
-        key: 'F2',
+        key: 'MOD-s',
         preventDefault: true,
         run: () => {
           save()
