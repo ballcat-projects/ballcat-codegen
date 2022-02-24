@@ -1,8 +1,6 @@
 /**
  * 模板目录项类型
  */
-import { TemplateInfo } from '@/api/gen/model/templateinfo'
-
 export enum TemplateEntryTypeEnum {
   // 文件夹
   FOLDER = 1,
@@ -11,9 +9,19 @@ export enum TemplateEntryTypeEnum {
 }
 
 /**
+ * 节点的删除模式枚举
+ */
+export enum TemplateEntryRemoveModeEnum {
+  // 仅删除本身
+  ONLY_ITSELF = 1,
+  // 删除自己和所有子节点
+  ITSELF_AND_CHILD = 2
+}
+
+/**
  * 模板目录项
  */
-export interface TemplateDirectoryEntry {
+export interface TemplateEntry {
   // ID
   id?: number
   // 模板组Id
@@ -24,6 +32,12 @@ export interface TemplateDirectoryEntry {
   type?: TemplateEntryTypeEnum
   // 父级Id
   parentId?: number
+  // 模板内容
+  content?: string
+  // 引擎类型
+  engineType?: 1
+  // 备注信息
+  remarks?: ''
   // 创建时间
   createTime?: string
   // 更新时间
@@ -33,9 +47,7 @@ export interface TemplateDirectoryEntry {
 /**
  * 模板目录项
  */
-export interface TemplateDirectoryEntryDTO extends TemplateDirectoryEntry {
-  templateInfo?: TemplateInfo
-}
+export interface TemplateEntryDTO extends TemplateEntry {}
 
 /**
  * 模板目录项

@@ -11,12 +11,15 @@ import lombok.Data;
  */
 @Data
 @Schema(title = "模板文件目录项")
-public class TemplateDirectoryUpdateDTO {
+public class TemplateEntryCreateDTO {
 
 	private static final long serialVersionUID = 1L;
 
-	@Schema(title = "ID")
-	private Integer id;
+	/**
+	 * 模板组Id
+	 */
+	@Schema(title = "模板组Id")
+	private Integer groupId;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）
@@ -31,9 +34,21 @@ public class TemplateDirectoryUpdateDTO {
 	private Integer type;
 
 	/**
-	 * 模板详情信息
+	 * 父级Id
 	 */
-	@Schema(title = "模板信息")
-	private TemplateInfoDTO templateInfo;
+	@Schema(title = "父级Id")
+	private Integer parentId;
+
+	/**
+	 * 模板引擎类型 1：velocity
+	 */
+	@Schema(title = "模板引擎类型 1：velocity")
+	private Integer engineType;
+
+	/**
+	 * 备注
+	 */
+	@Schema(title = "备注")
+	private String remarks;
 
 }

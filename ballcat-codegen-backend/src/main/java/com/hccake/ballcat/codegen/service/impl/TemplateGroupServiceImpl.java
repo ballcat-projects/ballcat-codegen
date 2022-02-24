@@ -6,7 +6,7 @@ import com.hccake.ballcat.codegen.mapper.TemplateGroupMapper;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
-import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
+import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
 import com.hccake.ballcat.codegen.service.TemplatePropertyService;
 import com.hccake.ballcat.common.model.domain.PageParam;
@@ -30,7 +30,7 @@ import java.util.List;
 public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMapper, TemplateGroup>
 		implements TemplateGroupService {
 
-	private final TemplateDirectoryEntryService templateDirectoryEntryService;
+	private final TemplateEntryService templateEntryService;
 
 	private final TemplatePropertyService templatePropertyService;
 
@@ -70,7 +70,7 @@ public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMap
 		// 获取落库成功后的自增ID
 		Integer groupId = templateGroup.getId();
 		// 复制模板目录文件
-		templateDirectoryEntryService.copy(resourceGroupId, groupId);
+		templateEntryService.copy(resourceGroupId, groupId);
 		// 复制模板属性配置
 		templatePropertyService.copy(resourceGroupId, groupId);
 
@@ -88,7 +88,7 @@ public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMap
 		// 删除模板组
 		baseMapper.deleteById(groupId);
 		// 删除关联文件
-		templateDirectoryEntryService.removeByGroupId(groupId);
+		templateEntryService.removeByGroupId(groupId);
 		// 删除模板属性
 		templatePropertyService.removeByGroupId(groupId);
 		return true;

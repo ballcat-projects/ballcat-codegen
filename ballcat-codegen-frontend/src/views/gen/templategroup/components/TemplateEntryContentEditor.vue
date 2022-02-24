@@ -1,8 +1,8 @@
 <template>
-  <div v-show="templateInfoMap.size === 0" class="pane-content pane-scroll">
+  <div v-show="templateEntryMap.size === 0" class="pane-content pane-scroll">
     <code-gen-tips :template-group-id="templateGroupId" />
   </div>
-  <div v-show="templateInfoMap.size !== 0" class="pane-scroll">
+  <div v-show="templateEntryMap.size !== 0" class="pane-scroll">
     <a-spin tip="保存中..." :spinning="fileSaving">
       <a-tabs
         v-model:activeKey="activeKey"
@@ -13,7 +13,7 @@
         @change="handlePaneChange"
         @edit="handlePaneEdit"
       >
-        <a-tab-pane v-for="[key, info] in templateInfoMap" :key="key">
+        <a-tab-pane v-for="[key, info] in templateEntryMap" :key="key">
           <template #tab>
             <a-badge
               v-if="info.content !== contentStage.get(key)"
@@ -34,31 +34,27 @@
 <script setup lang="ts">
   import { onMounted, reactive, ref, watch } from 'vue'
   import { doRequest } from '@/utils/axios/request'
-  import { getTemplateInfo, updateTemplateInfoContent } from '@/api/gen/templateinfo'
-  import { TemplateInfo } from '@/api/gen/model/templateinfo'
-  import { TemplateDirectoryEntry } from '@/api/gen/model/templatedirectoryentry'
+  import { TemplateEntry } from '@/api/gen/model/templateEntry'
   import CodeGenTips from '@/views/gen/templategroup/components/CodeGenTips.vue'
   import Editor from '@/components/editor'
   import { ViewUpdate } from '@codemirror/view'
   import { message, Modal } from 'ant-design-vue'
-  import {
-    TemplateContent,
-    TemplateInfoEditorInstance
-  } from '@/views/gen/templategroup/components/types'
+  import { TemplateContentEditorInstance } from '@/views/gen/templategroup/components/types'
+  import { updateTemplateEntryContent } from '@/api/gen/templateentry'
 
   let props = defineProps<{
     templateGroupId?: number
   }>()
 
   // 模板信息存储 map
-  const templateInfoMap = reactive(new Map<number, TemplateContent>())
+  const templateEntryMap = reactive(new Map<number, TemplateEntry>())
   // 内容暂存区
   const contentStage = reactive(new Map<number, string>())
   // 切换模板组时清空以上两项
   watch(
     () => props.templateGroupId,
     () => {
-      templateInfoMap.clear()
+      templateEntryMap.clear()
       contentStage.clear()
     }
   )
@@ -128,7 +124,7 @@
 
   function handlePaneEdit(targetKey: number, action: string) {
     if (action === 'remove') {
-      if (templateInfoMap.get(targetKey)?.content === contentStage.get(targetKey)) {
+      if (templateEntryMap.get(targetKey)?.content === contentStage.get(targetKey)) {
         handleRemove(targetKey)
       } else {
         Modal.confirm({
@@ -145,7 +141,7 @@
     // 获取关闭标签的前一个标签
     let preKey = null
     if (closeCurrent) {
-      for (let key of templateInfoMap.keys()) {
+      for (let key of templateEntryMap.keys()) {
         if (key === targetKey) {
           break
         }
@@ -153,14 +149,14 @@
       }
     }
     // 删除标签
-    templateInfoMap.delete(targetKey)
+    templateEntryMap.delete(targetKey)
     contentStage.delete(targetKey)
     // 当全部标签删除时，显示提示
-    if (templateInfoMap.size === 0) {
+    if (templateEntryMap.size === 0) {
       activeKey.value = 0
     } else if (closeCurrent) {
       // 当关闭标签为第一个的时候，默认打开现在的第一个标签
-      activeKey.value = preKey ? preKey : templateInfoMap.keys().next().value
+      activeKey.value = preKey ? preKey : templateEntryMap.keys().next().value
     }
   }
 
@@ -174,19 +170,18 @@
     }
 
     // 文件内容没改，则不更新
-    const templateInfo = templateInfoMap.get(id) as TemplateContent
-    if (content === templateInfo.content) {
+    const templateEntry = templateEntryMap.get(id) as TemplateEntry
+    if (content === templateEntry.content) {
       return
     }
 
     // 服务端发起请求保存
     fileSaving.value = true
-    const formData = { directoryEntryId: id, content: content }
-    doRequest(updateTemplateInfoContent(formData), {
+    doRequest(updateTemplateEntryContent(id, content), {
       successMessage: '保存成功！',
       onSuccess() {
         // 同步更新本地内容
-        templateInfo.content = content
+        templateEntry.content = content
       },
       onFinally() {
         fileSaving.value = false
@@ -194,38 +189,26 @@
     })
   }
 
-  defineExpose<TemplateInfoEditorInstance>({
+  defineExpose<TemplateContentEditorInstance>({
     checkSaveState(): boolean {
       // 检查是否有未保存的文件
       for (let key of contentStage.keys()) {
-        let templateInfo = templateInfoMap.get(key)
-        if (templateInfo && templateInfo.content !== contentStage.get(key)) {
+        let templateEntry = templateEntryMap.get(key)
+        if (templateEntry && templateEntry.content !== contentStage.get(key)) {
           return false
         }
       }
       return true
     },
-    editTemplateInfo(entry: TemplateDirectoryEntry): void {
+    editContent(entry: TemplateEntry): void {
       const targetKey = entry.id as number
-      if (templateInfoMap.has(targetKey)) {
+      if (templateEntryMap.has(targetKey)) {
         activeKey.value = targetKey
         return
       }
-      // 远程加载模板文件详情信息
-      doRequest(getTemplateInfo(entry.id), {
-        successMessage: false,
-        onSuccess(res) {
-          const templateInfo = res.data as TemplateInfo
-          const content = templateInfo.content || ''
-          templateInfoMap.set(targetKey, {
-            id: entry.id as number,
-            content: content,
-            fileName: entry.fileName as string
-          })
-          contentStage.set(targetKey, content)
-          activeKey.value = targetKey
-        }
-      })
+      templateEntryMap.set(targetKey, entry)
+      contentStage.set(targetKey, entry.content || '')
+      activeKey.value = targetKey
     }
   })
 </script>
@@ -279,10 +262,10 @@
   }
 
   :deep(.cm-content) {
-    min-height: 467px !important;
+    min-height: 100% !important;
   }
   :deep(.cm-gutter) {
-    min-height: 467px !important;
+    min-height: 100% !important;
   }
 
   .editor-fullscreen {

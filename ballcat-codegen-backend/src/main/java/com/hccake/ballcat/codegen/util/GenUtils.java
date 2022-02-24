@@ -3,7 +3,7 @@ package com.hccake.ballcat.codegen.util;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
@@ -65,16 +65,16 @@ public class GenUtils {
 			String filename = StrUtil.format(templateFile.getFileName(), context);
 			fileEntry.setFilename(filename);
 
-			String parentFilePath = evaluateRealPath(templateFile.getFilePath(), context);
+			String parentFilePath = evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
 			// 如果是文件
-			if (DirectoryEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
+			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
 				fileEntry.setFilePath(concatFilePath(parentFilePath, filename));
 
 				// 文件内容处理
 				StringWriter sw = new StringWriter();
-				Velocity.evaluate(velocityContext, sw, templateFile.getFilePath(), templateFile.getContent());
+				Velocity.evaluate(velocityContext, sw, templateFile.getParentFilePath(), templateFile.getContent());
 				fileEntry.setContent(sw.toString());
 			}
 			else {

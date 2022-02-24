@@ -93,8 +93,8 @@
   import { TemplateProperty } from '@/api/gen/model/templateproperty'
   import { Props } from 'ant-design-vue/es/form/useForm'
   import { GenerateModalInstance, PreviewModalInstance } from '@/views/gen/codegen/types'
-  import { listTemplateEntry } from '@/api/gen/templatedirectoryentry'
-  import { TemplateDirectoryEntry } from '@/api/gen/model/templatedirectoryentry'
+  import { listTemplateEntry } from '@/api/gen/templateentry'
+  import { TemplateEntry } from '@/api/gen/model/templateEntry'
   import { listToTree } from '@/utils/treeUtil'
   import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
   import { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
@@ -171,7 +171,7 @@
   }
 
   const templateProperties = ref<TemplateProperty[]>()
-  const templateEntryTree = ref<TemplateDirectoryEntry[]>()
+  const templateEntryTree = ref<TemplateEntry[]>()
   watchEffect(() => {
     const templateGroupId = modelRef.templateGroupId
     if (!templateGroupId) {
@@ -200,7 +200,7 @@
         templateEntryIdsState.checkAll = true
         templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
         templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
-        templateEntryTree.value = listToTree(res.data as TemplateDirectoryEntry[], 0, {
+        templateEntryTree.value = listToTree(res.data as TemplateEntry[], 0, {
           attributeMapping(treeNode) {
             const dataNode = treeNode as unknown as DataNode
             dataNode.title = treeNode.fileName

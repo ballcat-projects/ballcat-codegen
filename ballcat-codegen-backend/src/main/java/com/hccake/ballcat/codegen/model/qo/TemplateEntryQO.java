@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Schema(title = "模板文件目录项查询对象")
-public class TemplateDirectoryEntryQO {
+public class TemplateEntryQO {
 
 	private static final long serialVersionUID = 1L;
 

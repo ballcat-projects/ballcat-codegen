@@ -34,7 +34,7 @@
   import 'highlight.js/styles/github.css'
   import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
   import { PreviewModalInstance } from './types'
-  import { FileEntry } from '@/api/gen/model/templatedirectoryentry'
+  import { FileEntry } from '@/api/gen/model/templateEntry'
   import { Splitpanes, Pane } from 'splitpanes'
   import 'splitpanes/dist/splitpanes.css'
 

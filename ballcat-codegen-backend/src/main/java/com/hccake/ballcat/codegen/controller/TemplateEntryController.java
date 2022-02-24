@@ -1,11 +1,11 @@
 package com.hccake.ballcat.codegen.controller;
 
 import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryCreateDTO;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryUpdateDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
-import com.hccake.ballcat.codegen.model.vo.TemplateDirectoryEntryVO;
-import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryVO;
+import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,11 +33,11 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/gen/template/directory-entry")
+@RequestMapping("/gen/template-entry")
 @Tag(name = "模板文件目录项管理")
-public class TemplateDirectoryEntryController {
+public class TemplateEntryController {
 
-	private final TemplateDirectoryEntryService templateDirectoryEntryService;
+	private final TemplateEntryService templateEntryService;
 
 	/**
 	 * 模板组的文件目录
@@ -47,9 +47,9 @@ public class TemplateDirectoryEntryController {
 	@Operation(summary = "指定模板组的文件目录项")
 	@GetMapping("/list/{templateGroupId}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:read')" )
-	public R<List<TemplateDirectoryEntryVO>> getTemplateDirectoryEntryPage(@PathVariable Integer templateGroupId) {
-		List<TemplateDirectoryEntry> entries = templateDirectoryEntryService.listByTemplateGroupId(templateGroupId);
-		List<TemplateDirectoryEntryVO> vos = entries.stream().map(TemplateModelConverter.INSTANCE::entryPoToVo)
+	public R<List<TemplateEntryVO>> getTemplateDirectoryEntryPage(@PathVariable Integer templateGroupId) {
+		List<TemplateEntry> entries = templateEntryService.listByTemplateGroupId(templateGroupId);
+		List<TemplateEntryVO> vos = entries.stream().map(TemplateModelConverter.INSTANCE::entryPoToVo)
 				.collect(Collectors.toList());
 		return R.ok(vos);
 	}
@@ -65,34 +65,34 @@ public class TemplateDirectoryEntryController {
 	@PatchMapping("/{entryId}/position")
 	public R<Void> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
 			@RequestParam Integer targetEntryId) {
-		return templateDirectoryEntryService.move(horizontalMove, entryId, targetEntryId) ? R.ok()
+		return templateEntryService.move(horizontalMove, entryId, targetEntryId) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "移动目录项失败");
 	}
 
 	/**
 	 * 新增模板目录项
-	 * @param templateDirectoryCreateDTO 模板目录项
+	 * @param templateEntryCreateDTO 模板目录项
 	 * @return R
 	 */
 	@Operation(summary = "新增模板目录项")
 	// @CreateOperationLogging(msg = "新增模板文件目录项" )
 	@PostMapping
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:add')" )
-	public R<Integer> save(@RequestBody TemplateDirectoryCreateDTO templateDirectoryCreateDTO) {
-		Integer entryId = templateDirectoryEntryService.createEntry(templateDirectoryCreateDTO);
+	public R<Integer> save(@RequestBody TemplateEntryCreateDTO templateEntryCreateDTO) {
+		Integer entryId = templateEntryService.createEntry(templateEntryCreateDTO);
 		return entryId != null ? R.ok(entryId) : R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增模板目录项失败");
 	}
 
 	/**
 	 * 修改目录项
-	 * @param templateDirectoryUpdateDTO 模板目录项
+	 * @param templateEntryUpdateDTO 模板目录项
 	 * @return R
 	 */
 	@Operation(summary = "修改目录项")
 	@PutMapping
-	public R<Void> updateEntry(@RequestBody TemplateDirectoryUpdateDTO templateDirectoryUpdateDTO) {
-		return templateDirectoryEntryService.updateEntry(templateDirectoryUpdateDTO) ? R.ok()
-				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "重命名目录项");
+	public R<Void> updateEntry(@RequestBody TemplateEntryUpdateDTO templateEntryUpdateDTO) {
+		return templateEntryService.updateEntry(templateEntryUpdateDTO) ? R.ok()
+				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改目录项失败");
 	}
 
 	/**
@@ -106,8 +106,21 @@ public class TemplateDirectoryEntryController {
 	@DeleteMapping("/{id}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:del')" )
 	public R<Void> removeById(@PathVariable Integer id, @RequestParam Integer mode) {
-		return templateDirectoryEntryService.removeEntry(id, mode) ? R.ok()
+		return templateEntryService.removeEntry(id, mode) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除模板文件目录项失败");
+	}
+
+	/**
+	 * 修改模板目录项内容
+	 * @param id 模板项id
+	 * @param content 模板内容
+	 * @return R
+	 */
+	@Operation(summary = "修改模板目录项内容")
+	@PatchMapping("/content")
+	public R<Void> updateContent(@RequestParam("id") Integer id, @RequestParam("content") String content) {
+		return templateEntryService.updateContent(id, content) ? R.ok()
+				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板目录项内容失败");
 	}
 
 }

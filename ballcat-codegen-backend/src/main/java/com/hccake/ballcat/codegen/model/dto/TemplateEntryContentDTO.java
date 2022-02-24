@@ -9,10 +9,10 @@ import lombok.Data;
  */
 @Data
 @Schema(title = "模板文件内容DTO")
-public class TemplateFileContentDTO {
+public class TemplateEntryContentDTO {
 
 	@Schema(title = "目录项ID")
-	private Integer directoryEntryId;
+	private Integer id;
 
 	/**
 	 * 模板内容

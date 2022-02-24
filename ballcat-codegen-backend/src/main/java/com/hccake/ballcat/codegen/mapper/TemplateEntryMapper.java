@@ -2,7 +2,7 @@ package com.hccake.ballcat.codegen.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
 
 import java.util.List;
@@ -13,16 +13,15 @@ import java.util.List;
  * @author hccake
  * @date 2020-06-19 19:11:41
  */
-public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirectoryEntry> {
+public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 根据模板组ID查询模板文件目录项集合
 	 * @param templateGroupId 模板组ID
 	 * @return List<TemplateDirectoryEntry>
 	 */
-	default List<TemplateDirectoryEntry> listByTemplateGroupId(Integer templateGroupId) {
-		return this.selectList(
-				Wrappers.<TemplateDirectoryEntry>lambdaQuery().eq(TemplateDirectoryEntry::getGroupId, templateGroupId));
+	default List<TemplateEntry> listByTemplateGroupId(Integer templateGroupId) {
+		return this.selectList(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getGroupId, templateGroupId));
 	}
 
 	/**
@@ -32,8 +31,8 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @return 是否存在
 	 */
 	default boolean existSameName(Integer entryId, String name) {
-		Long count = this.selectCount(Wrappers.<TemplateDirectoryEntry>lambdaQuery()
-				.eq(TemplateDirectoryEntry::getParentId, entryId).eq(TemplateDirectoryEntry::getFileName, name));
+		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getParentId, entryId)
+				.eq(TemplateEntry::getFileName, name));
 		return count != null && count > 0;
 	}
 
@@ -43,8 +42,7 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @return boolean 存在：true
 	 */
 	default boolean existEntryId(Integer entryId) {
-		Long count = this
-				.selectCount(Wrappers.<TemplateDirectoryEntry>lambdaQuery().eq(TemplateDirectoryEntry::getId, entryId));
+		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getId, entryId));
 		return count != null && count > 0;
 	}
 
@@ -55,9 +53,9 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @param newParentId 新增父级ID
 	 */
 	default void updateParentId(Integer groupId, Integer oldParentId, Integer newParentId) {
-		LambdaUpdateWrapper<TemplateDirectoryEntry> wrapper = Wrappers.<TemplateDirectoryEntry>lambdaUpdate()
-				.set(TemplateDirectoryEntry::getParentId, newParentId).eq(TemplateDirectoryEntry::getGroupId, groupId)
-				.eq(TemplateDirectoryEntry::getParentId, oldParentId);
+		LambdaUpdateWrapper<TemplateEntry> wrapper = Wrappers.<TemplateEntry>lambdaUpdate()
+				.set(TemplateEntry::getParentId, newParentId).eq(TemplateEntry::getGroupId, groupId)
+				.eq(TemplateEntry::getParentId, oldParentId);
 		this.update(null, wrapper);
 	}
 
@@ -66,7 +64,7 @@ public interface TemplateDirectoryEntryMapper extends ExtendMapper<TemplateDirec
 	 * @param groupId 模板组ID
 	 */
 	default void deleteByGroupId(Integer groupId) {
-		this.delete(Wrappers.lambdaQuery(TemplateDirectoryEntry.class).eq(TemplateDirectoryEntry::getGroupId, groupId));
+		this.delete(Wrappers.lambdaQuery(TemplateEntry.class).eq(TemplateEntry::getGroupId, groupId));
 	}
 
 }

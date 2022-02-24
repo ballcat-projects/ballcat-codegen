@@ -56,11 +56,11 @@
   import { reactive, ref, watchEffect } from 'vue'
   import { listToTree } from '@/utils/treeUtil'
   import { doRequest } from '@/utils/axios/request'
-  import { listTemplateEntry, moveEntry } from '@/api/gen/templatedirectoryentry'
+  import { listTemplateEntry, moveEntry } from '@/api/gen/templateentry'
   import {
-    TemplateDirectoryEntry,
+    TemplateEntry,
     TemplateEntryTypeEnum
-  } from '@/api/gen/model/templatedirectoryentry'
+  } from '@/api/gen/model/templateEntry'
   import { DataNode, EventDataNode, Key } from 'ant-design-vue/lib/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {
@@ -82,7 +82,7 @@
   }>()
 
   const emits = defineEmits<{
-    (e: 'edit-template-info', entry: TemplateDirectoryEntry): void
+    (e: 'edit-template-info', entry: TemplateEntry): void
   }>()
 
   // 删除弹窗
@@ -93,7 +93,7 @@
   // 是否是第一次加载目录项树
   let firstInitTree = false
   // 目录项的树结构数据
-  const treeData = ref<TemplateDirectoryEntry[]>([])
+  const treeData = ref<TemplateEntry[]>([])
   // 当切换模板组时，初始化该模板组对应的目录项
   watchEffect(() => {
     if (props.templateGroupId) {
@@ -107,7 +107,7 @@
   // 当前已展开的 keys
   const expandedKeys = ref<number[]>([])
   // 当前选中的目录项
-  const selectedEntry = ref<TemplateDirectoryEntry>()
+  const selectedEntry = ref<TemplateEntry>()
 
   // 右键菜单是否展示
   const menuVisible = ref<boolean>(false)
@@ -140,7 +140,7 @@
       doRequest(listTemplateEntry(templateGroupId), {
         successMessage: false,
         onSuccess(res) {
-          let list = res.data as TemplateDirectoryEntry[]
+          let list = res.data as TemplateEntry[]
           treeData.value = listToTree(list, 0, {
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
@@ -162,7 +162,7 @@
   function selectAndShowMenu(info: { event: MouseEvent; node: EventDataNode }) {
     const event = info.event
     const node = info.node
-    const dataRef = node.dataRef as TemplateDirectoryEntry
+    const dataRef = node.dataRef as TemplateEntry
     // 设置选中数据
     selectedKeys.value = [dataRef.id] as number[]
     selectedEntry.value = dataRef
@@ -200,7 +200,7 @@
    */
   function handleDblClick(e: MouseEvent, node: EventDataNode) {
     // 非文件类型不加载
-    const entry = node.dataRef as TemplateDirectoryEntry
+    const entry = node.dataRef as TemplateEntry
     if (entry.type === 2) {
       emits('edit-template-info', entry)
     }
@@ -218,9 +218,9 @@
     }
   ) {
     // 被移动的目录项
-    const entry = info.dragNode.dataRef as TemplateDirectoryEntry
+    const entry = info.dragNode.dataRef as TemplateEntry
     // 目标目录项
-    const targetEntry = info.node.dataRef as TemplateDirectoryEntry
+    const targetEntry = info.node.dataRef as TemplateEntry
     // 是否移动到其子节点，否则是平级
     const horizontalMove = info.dropToGap
     // 无需移动

@@ -1,4 +1,4 @@
-import { FileEntry } from '@/api/gen/model/templatedirectoryentry'
+import { FileEntry } from '@/api/gen/model/templateEntry'
 
 export interface GenerateModalInstance {
   open: (dsName: string, tableNames: string[]) => void

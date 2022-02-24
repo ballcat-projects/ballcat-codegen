@@ -38,4 +38,10 @@ public class TemplateEntryTree extends SimpleTreeNode<Integer> {
 	@Schema(title = "文件内容")
 	private String content;
 
+	/**
+	 * 模板引擎类型 1：velocity
+	 */
+	@Schema(title = "模板引擎类型 1：velocity")
+	private Integer engineType;
+
 }

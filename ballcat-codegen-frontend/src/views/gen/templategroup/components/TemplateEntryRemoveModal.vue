@@ -22,13 +22,11 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import { usePopup } from '@/hooks/popupHooks'
-  import { removeTemplateEntry } from '@/api/gen/templatedirectoryentry'
-  import {
-    TemplateEntryRemoveModalInstance,
-    TemplateEntryRemoveModeEnum
-  } from '@/views/gen/templategroup/components/types'
+  import { removeTemplateEntry } from '@/api/gen/templateentry'
+  import { TemplateEntryRemoveModalInstance } from '@/views/gen/templategroup/components/types'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'
+  import { TemplateEntryRemoveModeEnum } from '@/api/gen/model/templateEntry'
 
   const emits = defineEmits<{
     (e: 'done'): void
@@ -50,11 +48,7 @@
   const { visible, handleOpen, handleClose } = usePopup()
 
   // 表单的数据类型
-  interface FormModelType {
-    mode: TemplateEntryRemoveModeEnum
-  }
-
-  const modelRef = reactive<FormModelType>({
+  const modelRef = reactive({
     mode: TemplateEntryRemoveModeEnum.ONLY_ITSELF
   })
 

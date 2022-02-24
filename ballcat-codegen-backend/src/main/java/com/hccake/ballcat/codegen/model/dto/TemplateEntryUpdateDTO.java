@@ -1,9 +1,7 @@
-package com.hccake.ballcat.codegen.model.vo;
+package com.hccake.ballcat.codegen.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * 模板文件目录项
@@ -13,21 +11,12 @@ import java.time.LocalDateTime;
  */
 @Data
 @Schema(title = "模板文件目录项")
-public class TemplateDirectoryEntryVO {
+public class TemplateEntryUpdateDTO {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * ID
-	 */
 	@Schema(title = "ID")
 	private Integer id;
-
-	/**
-	 * 模板组Id
-	 */
-	@Schema(title = "模板组Id")
-	private Integer groupId;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）
@@ -42,21 +31,15 @@ public class TemplateDirectoryEntryVO {
 	private Integer type;
 
 	/**
-	 * 父级Id
+	 * 模板引擎类型 1：velocity
 	 */
-	@Schema(title = "父级Id")
-	private Integer parentId;
+	@Schema(title = "模板引擎类型 1：velocity")
+	private Integer engineType;
 
 	/**
-	 * 创建时间
+	 * 备注
 	 */
-	@Schema(title = "创建时间")
-	private LocalDateTime createTime;
-
-	/**
-	 * 更新时间
-	 */
-	@Schema(title = "更新时间")
-	private LocalDateTime updateTime;
+	@Schema(title = "备注")
+	private String remarks;
 
 }

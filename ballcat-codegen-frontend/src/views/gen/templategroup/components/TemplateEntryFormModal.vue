@@ -15,39 +15,34 @@
       </a-form-item>
       <!-- 模板文件需要以下额外属性 -->
       <template v-if="modelRef.type === 2">
-        <a-form-item label="标题">
-          <a-input v-model:value="modelRef.templateInfo.title" placeholder="标题" />
-        </a-form-item>
         <a-form-item label="引擎">
-          <a-select v-model:value="modelRef.templateInfo.engineType">
+          <a-select v-model:value="modelRef.engineType">
             <a-select-option :value="1">velocity</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="备注">
-          <a-textarea v-model:value="modelRef.templateInfo.remarks" placeholder="备注" />
-        </a-form-item>
       </template>
+      <a-form-item label="备注">
+        <a-textarea v-model:value="modelRef.remarks" placeholder="备注" />
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
 
 <script setup lang="ts">
-  import { usePopup } from '@/hooks/popupHooks'
   import { reactive, ref, toRaw } from 'vue'
-  import {
-    TemplateDirectoryEntry,
-    TemplateDirectoryEntryDTO,
-    TemplateEntryTypeEnum
-  } from '@/api/gen/model/templatedirectoryentry'
-  import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/templatedirectoryentry'
-  import { getTemplateInfo } from '@/api/gen/templateinfo'
+  import { usePopup } from '@/hooks/popupHooks'
   import { doRequest } from '@/utils/axios/request'
-  import { TemplateInfo } from '@/api/gen/model/templateinfo'
-  import { pick } from 'lodash-es'
-  import { TemplateEntryFormModalInstance } from '@/views/gen/templategroup/components/types'
   import { useForm } from 'ant-design-vue/es/form'
+  import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/templateentry'
+  import { pick } from 'lodash-es'
+  import {
+    TemplateEntry,
+    TemplateEntryDTO,
+    TemplateEntryTypeEnum
+  } from '@/api/gen/model/templateEntry'
+  import type { TemplateEntryFormModalInstance } from '@/views/gen/templategroup/components/types'
 
-  let emits = defineEmits<{
+  const emits = defineEmits<{
     (e: 'done'): void
   }>()
 
@@ -72,17 +67,14 @@
   //  弹窗相关
   const { visible, handleOpen, handleClose } = usePopup()
 
-  const modelRef = reactive<TemplateDirectoryEntryDTO>({
+  const modelRef = reactive<TemplateEntryDTO>({
     id: undefined,
     groupId: undefined,
     parentId: undefined,
     type: TemplateEntryTypeEnum.FOLDER,
     fileName: '',
-    templateInfo: {
-      title: '',
-      engineType: 1,
-      remarks: ''
-    }
+    engineType: 1,
+    remarks: ''
   })
 
   // 提交按钮的 loading 状态控制
@@ -107,7 +99,7 @@
   }
 
   defineExpose<TemplateEntryFormModalInstance>({
-    add(currentParentFileName: string, record: TemplateDirectoryEntry) {
+    add(currentParentFileName: string, record: TemplateEntry) {
       isCreate.value = true
       title.value = record.type === 1 ? '新建文件夹' : '新建模板文件'
       resetFields()
@@ -115,29 +107,12 @@
       parentFileName.value = currentParentFileName
       handleOpen()
     },
-    update(record: TemplateDirectoryEntry) {
+    update(record: TemplateEntry) {
       isCreate.value = false
       resetFields()
       Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
-
-      if (record.type === 1) {
-        title.value = '编辑文件夹'
-        handleOpen()
-      } else {
-        title.value = '编辑模板文件'
-        doRequest(getTemplateInfo(record.id), {
-          successMessage: false,
-          onSuccess(res) {
-            const fileInfo = res.data as TemplateInfo
-            modelRef.templateInfo = {
-              title: fileInfo.title,
-              engineType: fileInfo.engineType,
-              remarks: fileInfo.remarks
-            }
-            handleOpen()
-          }
-        })
-      }
+      title.value = record.type === 1 ? '编辑文件夹' : '编辑模板文件'
+      handleOpen()
     }
   })
 </script>

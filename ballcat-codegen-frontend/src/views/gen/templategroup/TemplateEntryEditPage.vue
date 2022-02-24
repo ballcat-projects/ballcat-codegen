@@ -19,7 +19,7 @@
         </div>
       </pane>
       <pane size="75" style="border-bottom-right-radius: 10px">
-        <template-info-editor ref="editorRef" :template-group-id="templateGroup?.id" />
+        <template-entry-content-editor ref="editorRef" :template-group-id="templateGroup?.id" />
       </pane>
     </splitpanes>
   </a-card>
@@ -31,10 +31,10 @@
   import TemplateEntryTree from '@/views/gen/templategroup/components/TemplateEntryTree.vue'
   import { TemplateGroup } from '@/api/gen/model/templategroup'
   import { ref, toRef } from 'vue'
-  import { TemplateDirectoryEntry } from '@/api/gen/model/templatedirectoryentry'
-  import TemplateInfoEditor from '@/views/gen/templategroup/components/TemplateInfoEditor.vue'
+  import { TemplateEntry } from '@/api/gen/model/templateEntry'
+  import TemplateEntryContentEditor from '@/views/gen/templategroup/components/TemplateEntryContentEditor.vue'
   import { Modal } from 'ant-design-vue'
-  import { TemplateInfoEditorInstance } from '@/views/gen/templategroup/components/types'
+  import { TemplateContentEditorInstance } from '@/views/gen/templategroup/components/types'
 
   const props = defineProps<{
     templateGroup: TemplateGroup
@@ -48,7 +48,7 @@
   const templateGroup = toRef(props, 'templateGroup')
 
   // 模板信息编辑器实例
-  const editorRef = ref<TemplateInfoEditorInstance>()
+  const editorRef = ref<TemplateContentEditorInstance>()
 
   /** 返回上级 */
   function handleGoBack() {
@@ -63,8 +63,8 @@
   }
 
   /** 编辑模板信息内容 */
-  function editTemplateInfo(entry: TemplateDirectoryEntry) {
-    editorRef.value?.editTemplateInfo(entry)
+  function editTemplateInfo(entry: TemplateEntry) {
+    editorRef.value?.editContent(entry)
   }
 </script>
 

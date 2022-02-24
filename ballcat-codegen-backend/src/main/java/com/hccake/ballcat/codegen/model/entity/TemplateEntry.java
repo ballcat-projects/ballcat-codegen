@@ -1,7 +1,6 @@
 package com.hccake.ballcat.codegen.model.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -12,24 +11,24 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 模板信息
+ * 模板目录项
  *
  * @author hccake
- * @date 2020-06-19 18:09:08
+ * @date 2020-06-19 19:11:41
  */
 @Data
-@TableName("gen_template_info")
-@Schema(title = "模板信息")
-public class TemplateInfo {
+@TableName("gen_template_entry")
+@Schema(title = "模板目录项")
+public class TemplateEntry {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 目录项ID
+	 * ID
 	 */
-	@TableId(type = IdType.INPUT)
-	@Schema(title = "目录项ID")
-	private Integer directoryEntryId;
+	@TableId
+	@Schema(title = "ID")
+	private Integer id;
 
 	/**
 	 * 模板组Id
@@ -38,10 +37,22 @@ public class TemplateInfo {
 	private Integer groupId;
 
 	/**
-	 * 模板名称
+	 * 文件夹全路径/模板文件名称（支持占位符）
 	 */
-	@Schema(title = "模板标题")
-	private String title;
+	@Schema(title = "文件夹路径/模板文件名称（支持占位符）")
+	private String fileName;
+
+	/**
+	 * 文件类型 1：文件夹 2：模板文件
+	 */
+	@Schema(title = "文件类型 1：文件夹 2：模板文件")
+	private Integer type;
+
+	/**
+	 * 父级Id
+	 */
+	@Schema(title = "父级Id")
+	private Integer parentId;
 
 	/**
 	 * 模板内容
@@ -77,10 +88,10 @@ public class TemplateInfo {
 	private LocalDateTime createTime;
 
 	/**
-	 * 修改时间
+	 * 更新时间
 	 */
 	@TableField(fill = FieldFill.INSERT_UPDATE)
-	@Schema(title = "修改时间")
+	@Schema(title = "更新时间")
 	private LocalDateTime updateTime;
 
 }

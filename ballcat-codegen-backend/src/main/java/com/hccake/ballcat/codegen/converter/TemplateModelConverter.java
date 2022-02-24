@@ -1,12 +1,11 @@
 package com.hccake.ballcat.codegen.converter;
 
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryCreateDTO;
-import com.hccake.ballcat.codegen.model.dto.TemplateInfoDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
-import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
-import com.hccake.ballcat.codegen.model.vo.TemplateDirectoryEntryVO;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryVO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -29,31 +28,31 @@ public interface TemplateModelConverter {
 	TemplateGroupPageVO groupPoToPageVo(TemplateGroup templateGroup);
 
 	/**
-	 * 转换 DirectoryEntryPO 为 DirectoryEntryVO
-	 * @param templateDirectoryEntry templateDirectoryEntry
+	 * 转换 TemplateEntry 为 TemplateEntryVO
+	 * @param templateEntry templateEntry
 	 * @return VO
 	 */
-	TemplateDirectoryEntryVO entryPoToVo(TemplateDirectoryEntry templateDirectoryEntry);
+	TemplateEntryVO entryPoToVo(TemplateEntry templateEntry);
 
 	/**
-	 * 转换 DirectoryEntryCreateDTO to DirectoryEntry
-	 * @param directoryCreateDTO directoryCreateDTO
+	 * 转换 TemplateEntryCreateDTO to TemplateEntry
+	 * @param entryCreateDTO entryCreateDTO
 	 * @return TemplateDirectoryEntry 持久对象
 	 */
-	TemplateDirectoryEntry entryCreateDtoToPo(TemplateDirectoryCreateDTO directoryCreateDTO);
+	TemplateEntry entryCreateDtoToPo(TemplateEntryCreateDTO entryCreateDTO);
+
+	/**
+	 * 转换 TemplateEntryUpdateDTO to TemplateEntry
+	 * @param entryUpdateDTO entryUpdateDTO
+	 * @return TemplateEntry 持久对象
+	 */
+	TemplateEntry entryUpdateDtoToPo(TemplateEntryUpdateDTO entryUpdateDTO);
 
 	/**
 	 * 转换为目录树
-	 * @param templateDirectoryEntry templateDirectoryEntry
+	 * @param templateEntry templateDirectoryEntry
 	 * @return TemplateDirectoryTree
 	 */
-	TemplateEntryTree entryPoToTree(TemplateDirectoryEntry templateDirectoryEntry);
-
-	/**
-	 * TemplateInfoDto 转换为 TemplateInfo
-	 * @param templateInfoDTO 模板详情信息DTO
-	 * @return TemplateInfo
-	 */
-	TemplateInfo infoDtoToPo(TemplateInfoDTO templateInfoDTO);
+	TemplateEntryTree entryPoToTree(TemplateEntry templateEntry);
 
 }

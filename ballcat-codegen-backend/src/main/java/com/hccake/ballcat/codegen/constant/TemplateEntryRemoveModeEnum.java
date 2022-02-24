@@ -10,16 +10,16 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public enum DirectoryEntryTypeEnum {
+public enum TemplateEntryRemoveModeEnum {
 
 	/**
-	 * 文件夹
+	 * 保留子节点（子节点上移）
 	 */
-	FOLDER(1),
+	RESERVED_CHILD_NODE(1),
 	/**
-	 * 文件
+	 * 同时删除子节点
 	 */
-	FILE(2);
+	REMOVE_CHILD_NODE(2);
 
 	private final Integer type;
 

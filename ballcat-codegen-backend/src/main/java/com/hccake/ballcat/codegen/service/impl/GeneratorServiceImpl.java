@@ -2,17 +2,16 @@ package com.hccake.ballcat.codegen.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
-import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoService;
-import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
-import com.hccake.ballcat.codegen.service.TemplateInfoService;
+import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.util.GenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +37,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	private final TableInfoService tableInfoService;
 
-	private final TemplateDirectoryEntryService templateDirectoryEntryService;
-
-	private final TemplateInfoService templateInfoService;
+	private final TemplateEntryService templateEntryService;
 
 	/**
 	 * 生成代码
@@ -58,7 +55,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			for (Map.Entry<String, FileEntry> entry : map.entrySet()) {
 				FileEntry fileEntry = entry.getValue();
 				// 只处理文件
-				if (DirectoryEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
+				if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
 					// 添加到zip
 					String filePath = entry.getKey();
 					zip.putNextEntry(new ZipEntry(filePath));
@@ -88,9 +85,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 */
 	private Map<String, FileEntry> getStringFileEntryMap(GeneratorOptionDTO generateOptionDTO) {
 		// 获取模板文件信息
-		List<TemplateDirectoryEntry> templateEntryList = templateDirectoryEntryService
-				.listByIds(generateOptionDTO.getTemplateEntryIds());
-		List<TemplateFile> templateFiles = templateDirectoryEntryService.convertToTemplateFile(templateEntryList);
+		List<TemplateEntry> templateEntryList = templateEntryService.listByIds(generateOptionDTO.getTemplateEntryIds());
+		List<TemplateFile> templateFiles = templateEntryService.convertToTemplateFile(templateEntryList);
 
 		return getStringFileEntryMap(generateOptionDTO, templateFiles);
 	}

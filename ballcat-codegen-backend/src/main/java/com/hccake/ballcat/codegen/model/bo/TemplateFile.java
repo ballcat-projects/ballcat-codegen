@@ -24,10 +24,10 @@ public class TemplateFile {
 	private String fileName;
 
 	/**
-	 * 文件路径
+	 * 父级文件路径
 	 */
-	@Schema(title = "文件路径")
-	private String filePath;
+	@Schema(title = "父级文件路径")
+	private String parentFilePath;
 
 	/**
 	 * 类型 1：文件夹 2：文件

@@ -3,19 +3,16 @@ package com.hccake.ballcat.codegen.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.hccake.ballcat.codegen.constant.DirectoryEntryRemoveModeEnum;
-import com.hccake.ballcat.codegen.constant.DirectoryEntryTypeEnum;
+import com.hccake.ballcat.codegen.constant.TemplateEntryRemoveModeEnum;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
-import com.hccake.ballcat.codegen.mapper.TemplateDirectoryEntryMapper;
+import com.hccake.ballcat.codegen.mapper.TemplateEntryMapper;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryCreateDTO;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryUpdateDTO;
-import com.hccake.ballcat.codegen.model.dto.TemplateInfoDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
-import com.hccake.ballcat.codegen.model.entity.TemplateInfo;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
-import com.hccake.ballcat.codegen.service.TemplateDirectoryEntryService;
-import com.hccake.ballcat.codegen.service.TemplateInfoService;
+import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.util.GenUtils;
 import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.ballcat.common.core.exception.BusinessException;
@@ -41,11 +38,8 @@ import java.util.Set;
  */
 @Service
 @RequiredArgsConstructor
-public class TemplateDirectoryEntryServiceImpl
-		extends ExtendServiceImpl<TemplateDirectoryEntryMapper, TemplateDirectoryEntry>
-		implements TemplateDirectoryEntryService {
-
-	private final TemplateInfoService templateInfoService;
+public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMapper, TemplateEntry>
+		implements TemplateEntryService {
 
 	/**
 	 * 查询指定模板组下所有的目录项
@@ -53,7 +47,7 @@ public class TemplateDirectoryEntryServiceImpl
 	 * @return 所有的目录项
 	 */
 	@Override
-	public List<TemplateDirectoryEntry> listByTemplateGroupId(Integer templateGroupId) {
+	public List<TemplateEntry> listByTemplateGroupId(Integer templateGroupId) {
 		return baseMapper.listByTemplateGroupId(templateGroupId);
 	}
 
@@ -67,14 +61,14 @@ public class TemplateDirectoryEntryServiceImpl
 	@Override
 	public boolean move(boolean horizontalMove, Integer entryId, Integer targetEntryId) {
 		// 目录项必须存在
-		TemplateDirectoryEntry entry = baseMapper.selectById(entryId);
+		TemplateEntry entry = baseMapper.selectById(entryId);
 		Assert.notNull(entry, "This is a nonexistent directory entry!");
 
-		TemplateDirectoryEntry targetEntry = baseMapper.selectById(targetEntryId);
+		TemplateEntry targetEntry = baseMapper.selectById(targetEntryId);
 		// 目标必须存
 		Assert.notNull(entry, "Target directory entry does not exist!");
 		// 非平级移动时，目标必须是文件夹
-		Assert.isTrue(horizontalMove || DirectoryEntryTypeEnum.FOLDER.getType().equals(targetEntry.getType()),
+		Assert.isTrue(horizontalMove || TemplateEntryTypeEnum.FOLDER.getType().equals(targetEntry.getType()),
 				"The target is not a folder");
 
 		// 平级移动则目标父节点就是其父节点
@@ -86,7 +80,7 @@ public class TemplateDirectoryEntryServiceImpl
 		this.duplicateNameCheck(parentId, entry.getFileName());
 
 		// 更新目录项
-		TemplateDirectoryEntry entity = new TemplateDirectoryEntry();
+		TemplateEntry entity = new TemplateEntry();
 		entity.setId(entryId);
 		entity.setParentId(parentId);
 		return SqlHelper.retBool(baseMapper.updateById(entity));
@@ -122,20 +116,20 @@ public class TemplateDirectoryEntryServiceImpl
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean removeEntry(Integer entryId, Integer mode) {
-		TemplateDirectoryEntry entry = baseMapper.selectById(entryId);
+		TemplateEntry entry = baseMapper.selectById(entryId);
 		Integer groupId = entry.getGroupId();
 		Assert.notNull(entry, "This is a nonexistent directory entry!");
 
 		// 如果是文件夹类型，则根据删除模式进行子节点删除或上移操作
-		if (DirectoryEntryTypeEnum.FOLDER.getType().equals(entry.getType())) {
-			if (DirectoryEntryRemoveModeEnum.RESERVED_CHILD_NODE.getType().equals(mode)) {
+		if (TemplateEntryTypeEnum.FOLDER.getType().equals(entry.getType())) {
+			if (TemplateEntryRemoveModeEnum.RESERVED_CHILD_NODE.getType().equals(mode)) {
 				// 子节点上移
 				baseMapper.updateParentId(groupId, entryId, entry.getParentId());
 			}
-			else if (DirectoryEntryRemoveModeEnum.REMOVE_CHILD_NODE.getType().equals(mode)) {
+			else if (TemplateEntryRemoveModeEnum.REMOVE_CHILD_NODE.getType().equals(mode)) {
 				// ==========删除所有子节点=============
 				// 1. 获取所有目录项（目录项不会太多，一次查询比较方便）
-				List<TemplateDirectoryEntry> entryList = baseMapper.listByTemplateGroupId(groupId);
+				List<TemplateEntry> entryList = baseMapper.listByTemplateGroupId(groupId);
 				// 2. 获取当前删除目录项的孩子节点列表
 				List<TemplateEntryTree> treeList = TreeUtils.buildTree(entryList, entryId,
 						TemplateModelConverter.INSTANCE::entryPoToTree);
@@ -145,17 +139,12 @@ public class TemplateDirectoryEntryServiceImpl
 				if (CollectionUtil.isNotEmpty(treeNodeIds)) {
 					baseMapper.deleteBatchIds(treeNodeIds);
 				}
-				// 5. 删除模板文件信息(Id一样)
-				templateInfoService.removeByIds(treeNodeIds);
 			}
 			else {
 				throw new BusinessException(BaseResultCode.LOGIC_CHECK_ERROR.getCode(), "error delete mode");
 			}
 		}
-		else {
-			// 关联文件信息删除
-			templateInfoService.removeById(entryId);
-		}
+
 		// 删除自身
 		return SqlHelper.retBool(baseMapper.deleteById(entryId));
 	}
@@ -169,12 +158,12 @@ public class TemplateDirectoryEntryServiceImpl
 	@Transactional(rollbackFor = Exception.class)
 	public void copy(Integer resourceGroupId, Integer targetGroupId) {
 		// 1. ===============获取模板目录项==================
-		List<TemplateDirectoryEntry> list = baseMapper.listByTemplateGroupId(resourceGroupId);
+		List<TemplateEntry> list = baseMapper.listByTemplateGroupId(resourceGroupId);
 
 		// 2. ============== 复制模板文件 ===================
 		Set<Integer> oldParentIdSet = new HashSet<>();
 		List<Integer> originEntryIds = new ArrayList<>();
-		for (TemplateDirectoryEntry entry : list) {
+		for (TemplateEntry entry : list) {
 			originEntryIds.add(entry.getId());
 			oldParentIdSet.add(entry.getParentId());
 
@@ -186,7 +175,7 @@ public class TemplateDirectoryEntryServiceImpl
 		this.saveBatchSomeColumn(list);
 
 		// 3. =============== 获取新老ID的映射表，key: oldId, value: newId ==========
-		Map<Integer, Integer> idMap = new HashMap<>();
+		Map<Integer, Integer> idMap = new HashMap<>(originEntryIds.size());
 		for (int i = 0; i < originEntryIds.size(); i++) {
 			idMap.put(originEntryIds.get(i), list.get(i).getId());
 		}
@@ -198,19 +187,6 @@ public class TemplateDirectoryEntryServiceImpl
 			baseMapper.updateParentId(targetGroupId, oldParentId, idMap.get(oldParentId));
 		}
 
-		// 5. ================保存模板文件详情信息===================
-		List<TemplateInfo> templateInfoList = templateInfoService.listByTemplateGroupId(resourceGroupId);
-		for (TemplateInfo templateInfo : templateInfoList) {
-			Integer oldId = templateInfo.getDirectoryEntryId();
-			Integer newId = idMap.get(oldId);
-			templateInfo.setDirectoryEntryId(newId);
-
-			templateInfo.setGroupId(targetGroupId);
-			templateInfo.setCreateTime(null);
-			templateInfo.setUpdateTime(null);
-		}
-		templateInfoService.saveBatchSomeColumn(templateInfoList);
-
 	}
 
 	/**
@@ -220,41 +196,20 @@ public class TemplateDirectoryEntryServiceImpl
 	@Override
 	public void removeByGroupId(Integer groupId) {
 		baseMapper.deleteByGroupId(groupId);
-		// 删除关联文件详情
-		templateInfoService.removeByGroupId(groupId);
 	}
 
 	@Override
-	public List<TemplateFile> convertToTemplateFile(List<TemplateDirectoryEntry> templateEntryList) {
+	public boolean updateContent(Integer id, String content) {
+		TemplateEntry entry = new TemplateEntry();
+		entry.setId(id);
+		entry.setContent(content);
+		return SqlHelper.retBool(baseMapper.updateById(entry));
+	}
+
+	@Override
+	public List<TemplateFile> convertToTemplateFile(List<TemplateEntry> templateEntryList) {
 		// 转树形目录结构
 		List<TemplateEntryTree> treeList = TreeUtils.buildTree(templateEntryList, GlobalConstants.TREE_ROOT_ID,
-				TemplateModelConverter.INSTANCE::entryPoToTree);
-
-		// 填充模板文件
-		List<TemplateFile> templateFiles = new ArrayList<>();
-		for (TemplateEntryTree tree : treeList) {
-			fillTemplateFiles(tree, templateFiles, "");
-		}
-		return templateFiles;
-	}
-
-	/**
-	 * 获取模板文件
-	 * @param templateGroupId 模板组Id
-	 * @param templateFileIds 指定的文件id
-	 * @return List 模板文件
-	 */
-	@Override
-	public List<TemplateFile> listTemplateFiles(Integer templateGroupId, Set<Integer> templateFileIds) {
-		// 获取模板目录项
-		List<TemplateDirectoryEntry> list = baseMapper.listByTemplateGroupId(templateGroupId);
-		// 当没有指定时，不生成该文件
-		if (CollectionUtil.isNotEmpty(templateFileIds)) {
-			list.removeIf(entry -> !templateFileIds.contains(entry.getId()));
-		}
-
-		// 转树形目录结构
-		List<TemplateEntryTree> treeList = TreeUtils.buildTree(list, GlobalConstants.TREE_ROOT_ID,
 				TemplateModelConverter.INSTANCE::entryPoToTree);
 
 		// 填充模板文件
@@ -275,7 +230,7 @@ public class TemplateDirectoryEntryServiceImpl
 	private void fillTemplateFiles(TemplateEntryTree current, List<TemplateFile> list, String path) {
 
 		// 文件夹类型则递归子节点
-		if (DirectoryEntryTypeEnum.FOLDER.getType().equals(current.getType())) {
+		if (TemplateEntryTypeEnum.FOLDER.getType().equals(current.getType())) {
 			List<TemplateEntryTree> children = (List<TemplateEntryTree>) current.getChildren();
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
@@ -285,14 +240,12 @@ public class TemplateDirectoryEntryServiceImpl
 			}
 		}
 
-		TemplateFile templateFile = new TemplateFile().setFileName(current.getFileName()).setFilePath(path)
+		TemplateFile templateFile = new TemplateFile().setFileName(current.getFileName()).setParentFilePath(path)
 				.setType(current.getType());
 		// 目录项类型为文件则记录（文件必然是叶子节点）
-		if (DirectoryEntryTypeEnum.FILE.getType().equals(current.getType())) {
+		if (TemplateEntryTypeEnum.FILE.getType().equals(current.getType())) {
 			// 查找对应的模板文件详情信息
-			TemplateInfo templateInfo = templateInfoService.getById(current.getId());
-			String content = templateInfo.getContent() == null ? "" : templateInfo.getContent();
-			templateFile.setContent(content).setEngineType(templateInfo.getEngineType());
+			templateFile.setContent(current.getContent()).setEngineType(current.getEngineType());
 		}
 
 		list.add(templateFile);
@@ -305,7 +258,7 @@ public class TemplateDirectoryEntryServiceImpl
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Integer createEntry(TemplateDirectoryCreateDTO entryDTO) {
+	public Integer createEntry(TemplateEntryCreateDTO entryDTO) {
 		// 若父节点不是根，则校验父级节点是否有效
 		Integer parentId = entryDTO.getParentId();
 		Assert.isTrue(GlobalConstants.TREE_ROOT_ID.equals(parentId) || this.exists(parentId),
@@ -313,19 +266,10 @@ public class TemplateDirectoryEntryServiceImpl
 		// 重名校验
 		this.duplicateNameCheck(parentId, entryDTO.getFileName());
 		// 转持久层对象
-		TemplateDirectoryEntry entity = TemplateModelConverter.INSTANCE.entryCreateDtoToPo(entryDTO);
+		TemplateEntry entity = TemplateModelConverter.INSTANCE.entryCreateDtoToPo(entryDTO);
 		// 落库
 		baseMapper.insert(entity);
-		Integer entityId = entity.getId();
-		// 如果是文件，需要同步存储info
-		if (DirectoryEntryTypeEnum.FILE.getType().equals(entity.getType())) {
-			TemplateInfoDTO templateInfoDTO = entryDTO.getTemplateInfo();
-			TemplateInfo templateInfo = TemplateModelConverter.INSTANCE.infoDtoToPo(templateInfoDTO);
-			templateInfo.setDirectoryEntryId(entityId);
-			templateInfo.setGroupId(entryDTO.getGroupId());
-			templateInfoService.save(templateInfo);
-		}
-		return entityId;
+		return entity.getId();
 	}
 
 	/**
@@ -335,34 +279,19 @@ public class TemplateDirectoryEntryServiceImpl
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean updateEntry(TemplateDirectoryUpdateDTO entryDTO) {
+	public boolean updateEntry(TemplateEntryUpdateDTO entryDTO) {
 		Integer entryId = entryDTO.getId();
 		String fileName = entryDTO.getFileName();
 		// 目录项必须存在
-		TemplateDirectoryEntry oldEntry = baseMapper.selectById(entryId);
+		TemplateEntry oldEntry = baseMapper.selectById(entryId);
 		Assert.notNull(oldEntry, "This is a nonexistent directory entry!");
 		// 如果更新了文件名，则进行重名校验
 		if (!fileName.equals(oldEntry.getFileName())) {
 			this.duplicateNameCheck(oldEntry.getParentId(), fileName);
 		}
 		// 更新 entry
-		TemplateDirectoryEntry entry = new TemplateDirectoryEntry();
-		entry.setId(entryId);
-		entry.setFileName(fileName);
-		int i = baseMapper.updateById(entry);
-		if (!SqlHelper.retBool(i)) {
-			return false;
-		}
-		// 更新 info
-		if (DirectoryEntryTypeEnum.FILE.getType().equals(entryDTO.getType())) {
-			TemplateInfoDTO templateInfoDTO = entryDTO.getTemplateInfo();
-			TemplateInfo templateInfo = TemplateModelConverter.INSTANCE.infoDtoToPo(templateInfoDTO);
-			templateInfo.setDirectoryEntryId(entryId);
-			// 在这里是不更新 content 的
-			templateInfo.setContent(null);
-			return templateInfoService.updateById(templateInfo);
-		}
-		return true;
+		TemplateEntry entry = TemplateModelConverter.INSTANCE.entryUpdateDtoToPo(entryDTO);
+		return SqlHelper.retBool(baseMapper.updateById(entry));
 	}
 
 }

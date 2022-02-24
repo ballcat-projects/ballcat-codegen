@@ -1,13 +1,12 @@
 package com.hccake.ballcat.codegen.service;
 
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryCreateDTO;
-import com.hccake.ballcat.codegen.model.dto.TemplateDirectoryUpdateDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateDirectoryEntry;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
+import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.extend.mybatis.plus.service.ExtendService;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 模板文件目录项
@@ -15,14 +14,14 @@ import java.util.Set;
  * @author hccake
  * @date 2020-06-19 19:11:41
  */
-public interface TemplateDirectoryEntryService extends ExtendService<TemplateDirectoryEntry> {
+public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 查询指定模板组下所有的目录项
 	 * @param templateGroupId 模板组ID
 	 * @return 所有的目录项
 	 */
-	List<TemplateDirectoryEntry> listByTemplateGroupId(Integer templateGroupId);
+	List<TemplateEntry> listByTemplateGroupId(Integer templateGroupId);
 
 	/**
 	 * 移动目录项
@@ -49,17 +48,17 @@ public interface TemplateDirectoryEntryService extends ExtendService<TemplateDir
 
 	/**
 	 * 新建一个目录项
-	 * @param templateDirectoryCreateDTO 目录项新建传输对象
+	 * @param templateEntryCreateDTO 目录项新建传输对象
 	 * @return entryId
 	 */
-	Integer createEntry(TemplateDirectoryCreateDTO templateDirectoryCreateDTO);
+	Integer createEntry(TemplateEntryCreateDTO templateEntryCreateDTO);
 
 	/**
 	 * 更新目录项
-	 * @param templateDirectoryUpdateDTO 目录项修改传输对象
+	 * @param templateEntryUpdateDTO 目录项修改传输对象
 	 * @return success:true
 	 */
-	boolean updateEntry(TemplateDirectoryUpdateDTO templateDirectoryUpdateDTO);
+	boolean updateEntry(TemplateEntryUpdateDTO templateEntryUpdateDTO);
 
 	/**
 	 * 删除目录项
@@ -74,15 +73,7 @@ public interface TemplateDirectoryEntryService extends ExtendService<TemplateDir
 	 * @param templateEntryList 模板目录项集合
 	 * @return List<TemplateFile>
 	 */
-	List<TemplateFile> convertToTemplateFile(List<TemplateDirectoryEntry> templateEntryList);
-
-	/**
-	 * 获取模板文件
-	 * @param templateGroupId 模板组Id
-	 * @param templateFileIds 模板文件ID集合
-	 * @return List 模板文件
-	 */
-	List<TemplateFile> listTemplateFiles(Integer templateGroupId, Set<Integer> templateFileIds);
+	List<TemplateFile> convertToTemplateFile(List<TemplateEntry> templateEntryList);
 
 	/**
 	 * 复制模板目录项文件
@@ -96,5 +87,13 @@ public interface TemplateDirectoryEntryService extends ExtendService<TemplateDir
 	 * @param groupId 模板组ID
 	 */
 	void removeByGroupId(Integer groupId);
+
+	/**
+	 * 修改目录项内容
+	 * @param id 目录项id
+	 * @param content 内容
+	 * @return 更新成功 true
+	 */
+	boolean updateContent(Integer id, String content);
 
 }
