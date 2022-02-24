@@ -1,6 +1,6 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
-import { TemplateProperty } from '@/api/gen/model/templateproperty'
+import { TemplateProperty } from '@/api/gen/template-property/types'
 import { PageParam, PageResult } from '@/api/types'
 
 /**

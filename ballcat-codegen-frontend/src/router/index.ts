@@ -22,13 +22,13 @@ const menuRouters: Array<RouteRecordRaw> = [
         path: '/gen/template/group',
         name: 'TemplateGroup',
         meta: { title: '模板组管理' },
-        component: () => import('@/views/gen/templategroup/TemplateGroupPage.vue')
+        component: () => import('@/views/gen/template-group/TemplateGroupPage.vue')
       },
       {
         path: '/gen/datasouce',
         name: 'DataSource',
         meta: { title: '数据源配置' },
-        component: () => import('@/views/gen/datasourceconfig/DataSourceConfigPage.vue')
+        component: () => import('@/views/gen/datasource-config/DataSourceConfigPage.vue')
       }
     ]
   },

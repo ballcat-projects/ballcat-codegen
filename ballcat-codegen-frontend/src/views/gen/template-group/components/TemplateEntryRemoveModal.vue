@@ -22,11 +22,11 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import { usePopup } from '@/hooks/popupHooks'
-  import { removeTemplateEntry } from '@/api/gen/templateentry'
-  import { TemplateEntryRemoveModalInstance } from '@/views/gen/templategroup/components/types'
+  import { removeTemplateEntry } from '@/api/gen/template-entry'
+  import { TemplateEntryRemoveModalInstance } from '@/views/gen/template-group/components/types'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'
-  import { TemplateEntryRemoveModeEnum } from '@/api/gen/model/templateEntry'
+  import { TemplateEntryRemoveModeEnum } from '@/api/gen/template-entry/types'
 
   const emits = defineEmits<{
     (e: 'done'): void

@@ -41,9 +41,9 @@
   import { reactive, ref } from 'vue'
   import useTable from '@/hooks/tableHooks'
   import { doRequest } from '@/utils/axios/request'
-  import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasourceconfig'
-  import { DataSourceConfig } from '@/api/gen/model/datasourceconfig'
-  import DataSourceConfigEditModal from '@/views/gen/datasourceconfig/DataSourceConfigEditModal.vue'
+  import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
+  import { DataSourceConfig } from '@/api/gen/datasource-config/types'
+  import DataSourceConfigEditModal from '@/views/gen/datasource-config/DataSourceConfigEditModal.vue'
   import { DataSourceConfigEditModalInstance } from './types'
   import AddButton from '@/components/button/AddButton.vue'
 

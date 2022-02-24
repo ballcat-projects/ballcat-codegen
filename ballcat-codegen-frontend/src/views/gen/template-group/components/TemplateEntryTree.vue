@@ -56,11 +56,8 @@
   import { reactive, ref, watchEffect } from 'vue'
   import { listToTree } from '@/utils/treeUtil'
   import { doRequest } from '@/utils/axios/request'
-  import { listTemplateEntry, moveEntry } from '@/api/gen/templateentry'
-  import {
-    TemplateEntry,
-    TemplateEntryTypeEnum
-  } from '@/api/gen/model/templateEntry'
+  import { listTemplateEntry, moveEntry } from '@/api/gen/template-entry'
+  import { TemplateEntry, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
   import { DataNode, EventDataNode, Key } from 'ant-design-vue/lib/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {
@@ -70,12 +67,12 @@
     FileAddOutlined
   } from '@ant-design/icons-vue'
   import type { NodeDragEventParams } from 'ant-design-vue/es/vc-tree/contextTypes'
-  import TemplateEntryRemoveModal from '@/views/gen/templategroup/components/TemplateEntryRemoveModal.vue'
-  import TemplateEntryFormModal from '@/views/gen/templategroup/components/TemplateEntryFormModal.vue'
+  import TemplateEntryRemoveModal from '@/views/gen/template-group/components/TemplateEntryRemoveModal.vue'
+  import TemplateEntryFormModal from '@/views/gen/template-group/components/TemplateEntryFormModal.vue'
   import {
     TemplateEntryFormModalInstance,
     TemplateEntryRemoveModalInstance
-  } from '@/views/gen/templategroup/components/types'
+  } from '@/views/gen/template-group/components/types'
 
   const props = defineProps<{
     templateGroupId?: number

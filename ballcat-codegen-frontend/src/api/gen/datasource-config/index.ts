@@ -1,7 +1,7 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
 import { PageResult, SelectData } from '@/api/types'
-import { DataSourceConfig, TableInfoPageParam } from '@/api/gen/model/datasourceconfig'
+import { DataSourceConfig, TableInfoPageParam } from '@/api/gen/datasource-config/types'
 
 /**
  * 分页查询

@@ -42,11 +42,11 @@
 
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue'
-  import { addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasourceconfig'
+  import { addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
   import { copyProperties } from '@/utils/beanUtil'
   import { usePopup } from '@/hooks/popupHooks'
   // 类型导入
-  import type { DataSourceConfig } from '@/api/gen/model/datasourceconfig'
+  import type { DataSourceConfig } from '@/api/gen/datasource-config/types'
   import type { DataSourceConfigEditModalInstance } from './types'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'

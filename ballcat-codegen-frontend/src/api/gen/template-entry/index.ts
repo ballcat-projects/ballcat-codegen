@@ -1,6 +1,6 @@
 import request from '@/utils/axios'
 import { R } from '@/utils/axios/types'
-import { TemplateEntry, TemplateEntryRemoveModeEnum } from '@/api/gen/model/templateEntry'
+import { TemplateEntry, TemplateEntryRemoveModeEnum } from '@/api/gen/template-entry/types'
 
 /**
  * 获取模板项列表

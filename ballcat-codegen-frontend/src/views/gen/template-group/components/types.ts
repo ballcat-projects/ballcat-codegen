@@ -1,4 +1,4 @@
-import { TemplateEntry } from '@/api/gen/model/templateEntry'
+import { TemplateEntry } from '@/api/gen/template-entry/types'
 
 /**
  * 模板项内容编辑器实例

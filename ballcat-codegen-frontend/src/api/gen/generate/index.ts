@@ -1,9 +1,9 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
 import type { PageResult } from '@/api/types'
-import type { TableInfo, TableInfoPageParam } from '@/api/gen/model/generate'
-import { GeneratorOption } from '@/api/gen/model/generate'
-import { FileEntry } from '@/api/gen/model/templateEntry'
+import type { TableInfo, TableInfoPageParam } from '@/api/gen/generate/types'
+import { GeneratorOption } from '@/api/gen/generate/types'
+import { FileEntry } from '@/api/gen/template-entry/types'
 
 /**
  * 获取表信息

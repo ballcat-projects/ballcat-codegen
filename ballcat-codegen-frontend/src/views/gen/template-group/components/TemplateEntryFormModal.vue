@@ -33,14 +33,14 @@
   import { usePopup } from '@/hooks/popupHooks'
   import { doRequest } from '@/utils/axios/request'
   import { useForm } from 'ant-design-vue/es/form'
-  import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/templateentry'
+  import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
   import { pick } from 'lodash-es'
   import {
     TemplateEntry,
     TemplateEntryDTO,
     TemplateEntryTypeEnum
-  } from '@/api/gen/model/templateEntry'
-  import type { TemplateEntryFormModalInstance } from '@/views/gen/templategroup/components/types'
+  } from '@/api/gen/template-entry/types'
+  import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
 
   const emits = defineEmits<{
     (e: 'done'): void

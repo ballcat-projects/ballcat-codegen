@@ -34,13 +34,13 @@
 <script setup lang="ts">
   import { onMounted, reactive, ref, watch } from 'vue'
   import { doRequest } from '@/utils/axios/request'
-  import { TemplateEntry } from '@/api/gen/model/templateEntry'
-  import CodeGenTips from '@/views/gen/templategroup/components/CodeGenTips.vue'
+  import { TemplateEntry } from '@/api/gen/template-entry/types'
+  import CodeGenTips from '@/views/gen/template-group/components/CodeGenTips.vue'
   import Editor from '@/components/editor'
   import { ViewUpdate } from '@codemirror/view'
   import { message, Modal } from 'ant-design-vue'
-  import { TemplateContentEditorInstance } from '@/views/gen/templategroup/components/types'
-  import { updateTemplateEntryContent } from '@/api/gen/templateentry'
+  import { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
+  import { updateTemplateEntryContent } from '@/api/gen/template-entry'
 
   let props = defineProps<{
     templateGroupId?: number

@@ -78,7 +78,7 @@
 <script setup lang="ts">
   import { reactive, ref, UnwrapRef } from 'vue'
   import { usePopup } from '@/hooks/popupHooks'
-  import { TemplateGroup } from '@/api/gen/model/templategroup'
+  import { TemplateGroup } from '@/api/gen/template-group/types'
   import AddButton from '@/components/button/AddButton.vue'
   import cloneDeep from 'lodash-es/cloneDeep'
   import useTable from '@/hooks/tableHooks'
@@ -87,14 +87,14 @@
     queryTemplatePropertyPage,
     removeTemplateProperty,
     updateTemplateProperty
-  } from '@/api/gen/templateproperty'
+  } from '@/api/gen/template-property'
   import { PageParam } from '@/api/types'
   import { doRequest } from '@/utils/axios/request'
 
   // import type
-  import type { TemplateProperty } from '@/api/gen/model/templateproperty'
+  import type { TemplateProperty } from '@/api/gen/template-property/types'
   import { message } from 'ant-design-vue'
-  import { TemplatePropertyModalInstance } from '@/views/gen/templategroup/types'
+  import { TemplatePropertyModalInstance } from '@/views/gen/template-group/types'
 
   const { visible, handleOpen, handleClose } = usePopup()
 

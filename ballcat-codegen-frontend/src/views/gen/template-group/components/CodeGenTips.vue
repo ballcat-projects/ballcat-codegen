@@ -56,10 +56,10 @@
 
 <script setup lang="ts">
   import { ref, watchEffect } from 'vue'
-  import { listProperty } from '@/api/gen/templateproperty'
+  import { listProperty } from '@/api/gen/template-property'
   import { doRequest } from '@/utils/axios/request'
   // 类型导入
-  import type { TemplateProperty } from '@/api/gen/model/templateproperty'
+  import type { TemplateProperty } from '@/api/gen/template-property/types'
 
   let props = defineProps<{
     templateGroupId?: number

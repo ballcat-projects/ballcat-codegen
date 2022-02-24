@@ -30,13 +30,17 @@
   import { computed, reactive, ref } from 'vue'
   import { usePopup } from '@/hooks/popupHooks'
   import { copyProperties } from '@/utils/beanUtil'
-  import { addTemplateGroup, updateTemplateGroup, copyTemplateGroup } from '@/api/gen/templategroup'
+  import {
+    addTemplateGroup,
+    updateTemplateGroup,
+    copyTemplateGroup
+  } from '@/api/gen/template-group'
 
   // 类型引入
   import type { AxiosResponse } from 'axios'
   import type { R } from '@/utils/axios/types'
-  import type { TemplateGroup } from '@/api/gen/model/templategroup'
-  import { TemplateGroupFormModalInstance } from '@/views/gen/templategroup/types'
+  import type { TemplateGroup } from '@/api/gen/template-group/types'
+  import { TemplateGroupFormModalInstance } from '@/views/gen/template-group/types'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'
 

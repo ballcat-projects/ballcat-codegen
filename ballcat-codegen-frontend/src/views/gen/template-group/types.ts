@@ -1,4 +1,4 @@
-import { TemplateGroup } from '@/api/gen/model/templategroup'
+import { TemplateGroup } from '@/api/gen/template-group/types'
 
 /**
  * 模板配置弹窗实例接口

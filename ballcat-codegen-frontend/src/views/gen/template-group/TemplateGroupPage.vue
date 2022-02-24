@@ -56,13 +56,13 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import useTable from '@/hooks/tableHooks'
-  import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/templategroup'
+  import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/template-group'
   import AddButton from '@/components/button/AddButton.vue'
-  import TemplateEntryEditPage from '@/views/gen/templategroup/TemplateEntryEditPage.vue'
-  import TemplatePropertyModal from '@/views/gen/templategroup/TemplatePropertyModal.vue'
-  import TemplateGroupFormModal from '@/views/gen/templategroup/TemplateGroupFormModal.vue'
+  import TemplateEntryEditPage from '@/views/gen/template-group/TemplateEntryEditPage.vue'
+  import TemplatePropertyModal from '@/views/gen/template-group/TemplatePropertyModal.vue'
+  import TemplateGroupFormModal from '@/views/gen/template-group/TemplateGroupFormModal.vue'
   import { doRequest } from '@/utils/axios/request'
-  import type { TemplateGroup } from '@/api/gen/model/templategroup'
+  import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance, TemplatePropertyModalInstance } from './types'
 
   const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
