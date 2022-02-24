@@ -25,32 +25,34 @@
             </a-select>
           </a-form-item>
           <a-form-item>
-            <div :style="{ borderBottom: '1px solid #E9E9E9', marginBottom: '5px' }">
-              <a-checkbox
-                :indeterminate="templateEntryIdsState.indeterminate"
-                :checked="templateEntryIdsState.checkAll"
-                @change="onCheckAllChange"
-              >
-                <b>生成文件选择</b>
-              </a-checkbox>
-            </div>
-            <a-directory-tree
-              v-model:checkedKeys="templateEntryIdsState.checkedKeys"
-              :tree-data="templateEntryTree"
-              :checkable="true"
-              @check="onTemplateEntryIdsChange"
-            ></a-directory-tree>
+            <a-spin :spinning="treeLoading">
+              <div :style="{ borderBottom: '1px solid #E9E9E9', marginBottom: '5px' }">
+                <a-checkbox
+                  :indeterminate="templateEntryIdsState.indeterminate"
+                  :checked="templateEntryIdsState.checkAll"
+                  @change="onCheckAllChange"
+                >
+                  <b>生成文件选择</b>
+                </a-checkbox>
+              </div>
+              <a-directory-tree
+                v-model:checkedKeys="templateEntryIdsState.checkedKeys"
+                :tree-data="templateEntryTree"
+                :checkable="true"
+                @check="onTemplateEntryIdsChange"
+              ></a-directory-tree>
+            </a-spin>
           </a-form-item>
         </a-col>
         <a-col :span="14">
-          <a-divider orientation="left"> 系统属性 </a-divider>
+          <a-divider orientation="left"> <b>系统属性</b> </a-divider>
           <a-form-item label="表前缀" :label-col="labelCol" :wrapper-col="wrapperCol">
             <a-input
               v-model:value="modelRef.tablePrefix"
               placeholder="填写则会将表名的前缀截取后，再生成类名"
             />
           </a-form-item>
-          <a-divider orientation="left"> 自定义属性 </a-divider>
+          <a-divider orientation="left"> <b>自定义属性</b> </a-divider>
           <template v-for="item in templateProperties" :key="item.id">
             <a-form-item
               :label="item.propKey"
@@ -79,10 +81,10 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, watchEffect } from 'vue'
+  import { nextTick, reactive, ref, watchEffect } from 'vue'
   import { usePopup } from '@/hooks/popupHooks'
   import { listSelectData } from '@/api/gen/template-group'
-  import { listProperty } from '@/api/gen/template-property'
+  import { listTemplateProperty } from '@/api/gen/template-property'
   import { generate, preview } from '@/api/gen/generate'
   import { doRequest } from '@/utils/axios/request'
   import { remoteFileDownload } from '@/utils/fileUtil'
@@ -170,14 +172,19 @@
     templateEntryIdsState.checkAll = checkedList.length === allIds.length
   }
 
+  // 模板属性集合
   const templateProperties = ref<TemplateProperty[]>()
+  // 模板项的树
   const templateEntryTree = ref<TemplateEntry[]>()
+  // EntryTree 加载状态
+  const treeLoading = ref(false)
+
   watchEffect(() => {
     const templateGroupId = modelRef.templateGroupId
     if (!templateGroupId) {
       return
     }
-    doRequest(listProperty(templateGroupId), {
+    doRequest(listTemplateProperty(templateGroupId), {
       successMessage: false,
       onSuccess: res => {
         templateProperties.value = res.data
@@ -194,18 +201,26 @@
         }
       }
     })
+    treeLoading.value = true
     doRequest(listTemplateEntry(templateGroupId), {
       successMessage: false,
       onSuccess: res => {
-        templateEntryIdsState.checkAll = true
-        templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
-        templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
         templateEntryTree.value = listToTree(res.data as TemplateEntry[], 0, {
           attributeMapping(treeNode) {
             const dataNode = treeNode as unknown as DataNode
             dataNode.title = treeNode.fileName
           }
         })
+        // 延迟绑定，抑制控制台警告
+        templateEntryIdsState.checkedKeys = []
+        nextTick(() => {
+          templateEntryIdsState.checkAll = true
+          templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
+          templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
+        })
+      },
+      onFinally() {
+        treeLoading.value = false
       }
     })
   })

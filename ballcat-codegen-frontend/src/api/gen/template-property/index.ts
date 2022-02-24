@@ -37,6 +37,6 @@ export function removeTemplateProperty(templatePropertyId: number) {
  * 获取模板组对应的配置列表
  * @param groupId 模板组id
  */
-export function listProperty(groupId: number) {
+export function listTemplateProperty(groupId: number) {
   return request.get<R<TemplateProperty[]>>(`/gen/template/property/list/${groupId}`)
 }

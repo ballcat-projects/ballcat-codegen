@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
   import { ref, watchEffect } from 'vue'
-  import { listProperty } from '@/api/gen/template-property'
+  import { listTemplateProperty } from '@/api/gen/template-property'
   import { doRequest } from '@/utils/axios/request'
   // 类型导入
   import type { TemplateProperty } from '@/api/gen/template-property/types'
@@ -71,7 +71,7 @@
   // 当模板组 id 改变时，刷新对应的模板信息
   watchEffect(() => {
     props.templateGroupId &&
-      doRequest(listProperty(props.templateGroupId), {
+      doRequest(listTemplateProperty(props.templateGroupId), {
         successMessage: false,
         onSuccess(res) {
           properties.value = res.data as TemplateProperty[]
