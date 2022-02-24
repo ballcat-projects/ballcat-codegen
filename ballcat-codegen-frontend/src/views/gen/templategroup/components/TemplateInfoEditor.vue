@@ -128,7 +128,7 @@
 
   function handlePaneEdit(targetKey: number, action: string) {
     if (action === 'remove') {
-      if (templateInfoMap.get(targetKey).content === contentStage.get(targetKey)) {
+      if (templateInfoMap.get(targetKey)?.content === contentStage.get(targetKey)) {
         handleRemove(targetKey)
       } else {
         Modal.confirm({
@@ -196,8 +196,10 @@
 
   defineExpose<TemplateInfoEditorInstance>({
     checkSaveState(): boolean {
+      // 检查是否有未保存的文件
       for (let key of contentStage.keys()) {
-        if (contentStage.get(key) !== templateInfoMap.get(key)?.content) {
+        let templateInfo = templateInfoMap.get(key)
+        if (templateInfo && templateInfo.content !== contentStage.get(key)) {
           return false
         }
       }
