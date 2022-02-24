@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
   import { reactive, ref, toRaw } from 'vue'
-  import { usePopup } from '@/hooks/popupHooks'
+  import { usePopup } from '@/hooks/popup'
   import { doRequest } from '@/utils/axios/request'
   import { useForm } from 'ant-design-vue/es/form'
   import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'

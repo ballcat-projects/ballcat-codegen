@@ -82,12 +82,12 @@
 
 <script setup lang="ts">
   import { nextTick, reactive, ref, watchEffect } from 'vue'
-  import { usePopup } from '@/hooks/popupHooks'
+  import { usePopup } from '@/hooks/popup'
   import { listSelectData } from '@/api/gen/template-group'
   import { listTemplateProperty } from '@/api/gen/template-property'
   import { generate, preview } from '@/api/gen/generate'
   import { doRequest } from '@/utils/axios/request'
-  import { remoteFileDownload } from '@/utils/fileUtil'
+  import { remoteFileDownload } from '@/utils/file-util'
   import { Form, message } from 'ant-design-vue'
   import GeneratePreviewModal from '@/views/gen/codegen/GeneratePreviewModal.vue'
   import type { SelectData } from '@/api/types'
@@ -97,7 +97,7 @@
   import { GenerateModalInstance, PreviewModalInstance } from '@/views/gen/codegen/types'
   import { listTemplateEntry } from '@/api/gen/template-entry'
   import { TemplateEntry } from '@/api/gen/template-entry/types'
-  import { listToTree } from '@/utils/treeUtil'
+  import { listToTree } from '@/utils/tree-util'
   import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
   import { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
 

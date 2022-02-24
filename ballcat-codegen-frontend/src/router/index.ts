@@ -16,19 +16,19 @@ const menuRouters: Array<RouteRecordRaw> = [
         path: '/gen/codegen',
         name: 'CodeGen',
         meta: { title: '代码生成器' },
-        component: () => import('@/views/gen/codegen/GeneratePage.vue')
+        component: () => import('@/views/gen/codegen/index.vue')
       },
       {
         path: '/gen/template/group',
         name: 'TemplateGroup',
         meta: { title: '模板组管理' },
-        component: () => import('@/views/gen/template-group/TemplateGroupPage.vue')
+        component: () => import('@/views/gen/template-group/index.vue')
       },
       {
         path: '/gen/datasouce',
         name: 'DataSource',
         meta: { title: '数据源配置' },
-        component: () => import('@/views/gen/datasource-config/DataSourceConfigPage.vue')
+        component: () => import('@/views/gen/datasource-config/index.vue')
       }
     ]
   },

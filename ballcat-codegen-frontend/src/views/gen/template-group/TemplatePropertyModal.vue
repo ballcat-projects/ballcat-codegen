@@ -24,7 +24,7 @@
       :pagination="pagination"
       :loading="loading"
       :scroll="{ x: 700 }"
-      @change="tableHooks.handleTableChange"
+      @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'required'">
@@ -77,11 +77,11 @@
 
 <script setup lang="ts">
   import { reactive, ref, UnwrapRef } from 'vue'
-  import { usePopup } from '@/hooks/popupHooks'
+  import { usePopup } from '@/hooks/popup'
   import { TemplateGroup } from '@/api/gen/template-group/types'
   import AddButton from '@/components/button/AddButton.vue'
   import cloneDeep from 'lodash-es/cloneDeep'
-  import useTable from '@/hooks/tableHooks'
+  import useTable from '@/hooks/table'
   import {
     addTemplateProperty,
     queryTemplatePropertyPage,
@@ -133,13 +133,13 @@
   // 所属模板组 id
   const templateGroupId = ref<number>()
   // 数据表格
-  let tableHooks = useTable<TemplateGroup>({
+  let tableState = useTable<TemplateGroup>({
     pageRequest: (query: PageParam) => {
       const params = Object.assign({ groupId: templateGroupId.value }, query)
       return queryTemplatePropertyPage(params)
     }
   })
-  const { dataSource, pagination, loading } = tableHooks
+  const { dataSource, pagination, loading } = tableState
 
   const editableData: UnwrapRef<Record<string, TemplateProperty>> = reactive({})
 
@@ -164,12 +164,12 @@
       delete editableDatum.id
       loading.value = true
       doRequest(addTemplateProperty(editableDatum), {
-        onSuccess: () => tableHooks.reloadTable(false)
+        onSuccess: () => tableState.reloadTable(false)
       })
     } else {
       loading.value = true
       doRequest(updateTemplateProperty(editableDatum), {
-        onSuccess: () => tableHooks.reloadTable(false)
+        onSuccess: () => tableState.reloadTable(false)
       })
       delete editableData[id]
     }
@@ -188,7 +188,7 @@
   function handleRemove(id: number) {
     doRequest(removeTemplateProperty(id), {
       onSuccess() {
-        tableHooks.reloadTable(false)
+        tableState.reloadTable(false)
       }
     })
   }
@@ -197,7 +197,7 @@
     open(templateGroup: TemplateGroup) {
       title.value = '属性配置-' + templateGroup.name
       templateGroupId.value = templateGroup.id
-      tableHooks.loadData()
+      tableState.loadData()
       handleOpen()
     }
   })

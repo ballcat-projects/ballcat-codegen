@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
-  import { usePopup } from '@/hooks/popupHooks'
+  import { usePopup } from '@/hooks/popup'
   import { removeTemplateEntry } from '@/api/gen/template-entry'
   import { TemplateEntryRemoveModalInstance } from '@/views/gen/template-group/components/types'
   import { useForm } from 'ant-design-vue/es/form'

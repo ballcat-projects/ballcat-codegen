@@ -7,7 +7,7 @@
             <a-select
               v-model:value="dsName"
               style="width: 100%"
-              @change="tableHooks.reloadTable(true)"
+              @change="tableState.reloadTable(true)"
             >
               <a-select-option key="master" value="master">master</a-select-option>
               <a-select-option v-for="item in dataSourceSelectData" :key="item.value">
@@ -21,7 +21,7 @@
             <a-input-search
               v-model:value="queryParam.tableName"
               placeholder="表名"
-              @search="tableHooks.reloadTable(true)"
+              @search="tableState.reloadTable(true)"
             />
           </a-form-item>
         </a-col>
@@ -45,11 +45,11 @@
       :pagination="pagination"
       :loading="loading"
       :row-selection="{
-        selectedRowKeys: tableHooks.selectedRowKeys,
-        onChange: tableHooks.onSelectChange
+        selectedRowKeys: tableState.selectedRowKeys,
+        onChange: tableState.onSelectChange
       }"
       :scroll="{ x: 1000 }"
-      @change="tableHooks.handleTableChange"
+      @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -71,7 +71,7 @@
   import { DownloadOutlined } from '@ant-design/icons-vue'
   import type { TableInfo } from '@/api/gen/generate/types'
   import { TableInfoPageParam } from '@/api/gen/generate/types'
-  import useTable from '@/hooks/tableHooks'
+  import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
   import { SelectData } from '@/api/types'
   import { message } from 'ant-design-vue'
@@ -112,15 +112,15 @@
 
   const queryParam = reactive({})
 
-  let tableHooks = useTable<TableInfo>({
+  let tableState = useTable<TableInfo>({
     queryParam: queryParam,
     pageRequest: (pageParams: TableInfoPageParam) => {
       return queryTableInfoPage(dsName.value, pageParams)
     }
   })
-  const { dataSource, pagination, loading } = tableHooks
+  const { dataSource, pagination, loading } = tableState
 
-  tableHooks.loadData()
+  tableState.loadData()
 
   const dataSourceSelectData = ref<SelectData[]>([])
   doRequest(listDatasourceConfigSelectData(), {
@@ -138,7 +138,7 @@
 
   /* 多表代码生成 */
   const multiGenerate = () => {
-    const tableNames = tableHooks.selectedRowKeys.value as string[]
+    const tableNames = tableState.selectedRowKeys.value as string[]
     if (tableNames && tableNames.length > 0) {
       generateModel.value?.open(dsName.value, tableNames)
     } else {

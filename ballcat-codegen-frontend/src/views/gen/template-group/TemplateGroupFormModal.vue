@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue'
-  import { usePopup } from '@/hooks/popupHooks'
-  import { copyProperties } from '@/utils/beanUtil'
+  import { usePopup } from '@/hooks/popup'
+  import { copyProperties } from '@/utils/bean-util'
   import {
     addTemplateGroup,
     updateTemplateGroup,

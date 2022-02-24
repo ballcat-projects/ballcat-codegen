@@ -15,7 +15,7 @@
       :pagination="pagination"
       :loading="loading"
       :scroll="{ x: 1000 }"
-      @change="tableHooks.handleTableChange"
+      @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'action'">
@@ -33,13 +33,13 @@
   <data-source-config-edit-modal
     ref="editModal"
     title="新建表单"
-    @done="tableHooks.reloadTable(false)"
+    @done="tableState.reloadTable(false)"
   />
 </template>
 
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
-  import useTable from '@/hooks/tableHooks'
+  import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
   import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
   import { DataSourceConfig } from '@/api/gen/datasource-config/types'
@@ -96,13 +96,13 @@
   // 查询参数
   const queryParam = reactive({})
   // 数据表格
-  let tableHooks = useTable<DataSourceConfig>({
+  let tableState = useTable<DataSourceConfig>({
     pageRequest: queryDatasourceConfigPage,
     queryParam: queryParam
   })
-  const { dataSource, pagination, loading } = tableHooks
+  const { dataSource, pagination, loading } = tableState
   // 立刻加载数据
-  tableHooks.loadData()
+  tableState.loadData()
 
   /* 新建数据源配置 */
   const handleAdd = () => {

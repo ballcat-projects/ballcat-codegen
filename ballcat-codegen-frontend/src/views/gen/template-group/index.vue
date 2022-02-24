@@ -15,7 +15,7 @@
       :pagination="pagination"
       :loading="loading"
       :scroll="{ x: 1000 }"
-      @change="tableHooks.handleTableChange"
+      @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'templateAction'">
@@ -46,7 +46,7 @@
   <!-- 模板组表单弹窗 -->
   <template-group-form-modal
     ref="templateGroupFormModalRef"
-    @done="tableHooks.reloadTable(false)"
+    @done="tableState.reloadTable(false)"
   />
 
   <!-- 模板组表单弹窗 -->
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
-  import useTable from '@/hooks/tableHooks'
+  import useTable from '@/hooks/table'
   import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/template-group'
   import AddButton from '@/components/button/AddButton.vue'
   import TemplateEntryEditPage from '@/views/gen/template-group/TemplateEntryEditPage.vue'
@@ -105,13 +105,13 @@
   // 查询参数
   const queryParam = reactive({})
   // 数据表格
-  let tableHooks = useTable<TemplateGroup>({
+  let tableState = useTable<TemplateGroup>({
     pageRequest: queryTemplateGroupPage,
     queryParam: queryParam
   })
-  const { dataSource, pagination, loading } = tableHooks
+  const { dataSource, pagination, loading } = tableState
   // 立刻加载数据
-  tableHooks.loadData()
+  tableState.loadData()
 
   function handleAdd() {
     templateGroupFormModalRef.value?.add()
@@ -125,7 +125,7 @@
   function handleRemove(recordId: number) {
     doRequest(removeTemplateGroup(recordId), {
       onSuccess() {
-        tableHooks.reloadTable(false)
+        tableState.reloadTable(false)
       }
     })
   }

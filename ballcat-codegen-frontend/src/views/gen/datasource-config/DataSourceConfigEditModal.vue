@@ -43,8 +43,8 @@
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue'
   import { addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
-  import { copyProperties } from '@/utils/beanUtil'
-  import { usePopup } from '@/hooks/popupHooks'
+  import { copyProperties } from '@/utils/bean-util'
+  import { usePopup } from '@/hooks/popup'
   // 类型导入
   import type { DataSourceConfig } from '@/api/gen/datasource-config/types'
   import type { DataSourceConfigEditModalInstance } from './types'

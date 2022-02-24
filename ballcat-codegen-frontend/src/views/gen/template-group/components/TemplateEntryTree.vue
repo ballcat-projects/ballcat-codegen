@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
   import { reactive, ref, watchEffect } from 'vue'
-  import { listToTree } from '@/utils/treeUtil'
+  import { listToTree } from '@/utils/tree-util'
   import { doRequest } from '@/utils/axios/request'
   import { listTemplateEntry, moveEntry } from '@/api/gen/template-entry'
   import { TemplateEntry, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
