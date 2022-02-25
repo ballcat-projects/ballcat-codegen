@@ -2,12 +2,16 @@
   <div class="header">
     <a href="http://www.ballcat.cn" target="_blank">
       <span>
-        <!--<a-icon type="github" />-->
+        <GithubOutlined />
         Github
       </span>
     </a>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { GithubOutlined } from '@ant-design/icons-vue'
+</script>
 
 <style scoped>
   .header {

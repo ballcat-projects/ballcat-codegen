@@ -73,7 +73,7 @@
     <template #footer>
       <a-button @click="handleClose"> 取消 </a-button>
       <a-button @click="previewCode"> 预览 </a-button>
-      <a-button type="primary" @click="generateCode"> 确认 </a-button>
+      <a-button type="primary" @click="generateCode"> 生成 </a-button>
     </template>
   </a-modal>
 
