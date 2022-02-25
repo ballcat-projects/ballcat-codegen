@@ -2,7 +2,10 @@ package com.hccake.ballcat.codegen.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
+import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
+import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
@@ -38,6 +41,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 	private final TableInfoService tableInfoService;
 
 	private final TemplateEntryService templateEntryService;
+
+	private final TemplateEngineDelegator templateEngineDelegator;
 
 	/**
 	 * 生成代码
@@ -107,10 +112,52 @@ public class GeneratorServiceImpl implements GeneratorService {
 			// 查询列信息
 			List<ColumnInfo> columnInfoList = tableInfoService.listColumnInfo(tableName);
 			// 生成代码
-			Map<String, FileEntry> fileEntryMap = GenUtils.generatorCode(generateOptionDTO.getTablePrefix(),
+			Map<String, FileEntry> fileEntryMap = generatorCode(generateOptionDTO.getTablePrefix(),
 					generateOptionDTO.getGenProperties(), tableInfo, columnInfoList, templateFiles);
 			map.putAll(fileEntryMap);
 		}
+		return map;
+	}
+
+	/**
+	 * 代码生成
+	 * @return Map<String, FileEntry>
+	 */
+	public Map<String, FileEntry> generatorCode(String tablePrefix, Map<String, String> customProperties,
+			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {
+
+		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
+
+		// 模板渲染
+		Map<String, Object> context = GenUtils.getContext(tablePrefix, customProperties, tableInfo, columnInfos);
+
+		for (TemplateFile templateFile : templateFiles) {
+			FileEntry fileEntry = new FileEntry();
+			fileEntry.setType(templateFile.getType());
+
+			// 替换路径中的占位符
+			String filename = StrUtil.format(templateFile.getFileName(), context);
+			fileEntry.setFilename(filename);
+
+			String parentFilePath = GenUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
+			fileEntry.setParentFilePath(parentFilePath);
+
+			// 如果是文件
+			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
+				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, filename));
+				// 文件内容渲染
+				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
+				String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
+				fileEntry.setContent(content);
+			}
+			else {
+				String currentPath = GenUtils.evaluateRealPath(templateFile.getFileName(), context);
+				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, currentPath));
+			}
+
+			map.put(fileEntry.getFilePath(), fileEntry);
+		}
+
 		return map;
 	}
 

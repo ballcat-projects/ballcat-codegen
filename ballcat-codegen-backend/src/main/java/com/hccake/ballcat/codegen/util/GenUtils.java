@@ -3,29 +3,20 @@ package com.hccake.ballcat.codegen.util;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
-import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
-import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.vo.TableInfo;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * 代码生成器 工具类
@@ -37,58 +28,7 @@ import java.util.Properties;
 @UtilityClass
 public class GenUtils {
 
-	static {
-		// 设置velocity资源加载器, 保留文件加载loader
-		Properties prop = new Properties();
-		prop.put("file.resource.loader.class", ClasspathResourceLoader.class.getName());
-		Velocity.init(prop);
-	}
-
-	/**
-	 * 代码生成
-	 * @return Map<String, FileEntry>
-	 */
-	public Map<String, FileEntry> generatorCode(String tablePrefix, Map<String, String> customProperties,
-			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {
-
-		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
-
-		// 模板渲染
-		Map<String, Object> context = getContext(tablePrefix, customProperties, tableInfo, columnInfos);
-		VelocityContext velocityContext = new VelocityContext(context);
-
-		for (TemplateFile templateFile : templateFiles) {
-			FileEntry fileEntry = new FileEntry();
-			fileEntry.setType(templateFile.getType());
-
-			// 替换路径中的占位符
-			String filename = StrUtil.format(templateFile.getFileName(), context);
-			fileEntry.setFilename(filename);
-
-			String parentFilePath = evaluateRealPath(templateFile.getParentFilePath(), context);
-			fileEntry.setParentFilePath(parentFilePath);
-
-			// 如果是文件
-			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				fileEntry.setFilePath(concatFilePath(parentFilePath, filename));
-
-				// 文件内容处理
-				StringWriter sw = new StringWriter();
-				Velocity.evaluate(velocityContext, sw, templateFile.getParentFilePath(), templateFile.getContent());
-				fileEntry.setContent(sw.toString());
-			}
-			else {
-				String currentPath = evaluateRealPath(templateFile.getFileName(), context);
-				fileEntry.setFilePath(concatFilePath(parentFilePath, currentPath));
-			}
-
-			map.put(fileEntry.getFilePath(), fileEntry);
-		}
-
-		return map;
-	}
-
-	private static Map<String, Object> getContext(String tablePrefix, Map<String, String> customProperties,
+	public static Map<String, Object> getContext(String tablePrefix, Map<String, String> customProperties,
 			TableInfo tableInfo, List<ColumnInfo> columnInfos) {
 		// 根据表信息和字段信息获取对应的配置属性
 		GenerateProperties generateProperties = getGenerateProperties(tableInfo, columnInfos, tablePrefix);
@@ -191,7 +131,7 @@ public class GenUtils {
 	 * @param map 模板属性
 	 * @return filePath 文件路径
 	 */
-	private static String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
+	public static String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
 		// 占位符替换
 		String realFilePath = StrUtil.format(filePathMaker, map);
 		if (StrUtil.isEmpty(realFilePath)) {
