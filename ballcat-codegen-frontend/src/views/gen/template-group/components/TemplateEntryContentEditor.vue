@@ -2,7 +2,11 @@
   <div v-show="templateEntryMap.size === 0" class="pane-content pane-scroll">
     <code-gen-tips :template-group-id="templateGroupId" />
   </div>
-  <div v-show="templateEntryMap.size !== 0" class="pane-scroll">
+  <div
+    v-show="templateEntryMap.size !== 0"
+    class="pane-scroll"
+    style="height: 100%; overflow: auto"
+  >
     <a-spin tip="保存中..." :spinning="fileSaving">
       <a-tabs
         v-model:activeKey="activeKey"
@@ -24,7 +28,7 @@
           </template>
         </a-tab-pane>
       </a-tabs>
-      <div style="height: 100%; overflow: auto">
+      <div>
         <div ref="editorBox" :class="fullScreen && 'editor-fullscreen'" />
       </div>
     </a-spin>
@@ -253,10 +257,13 @@
   }
 
   :deep(.cm-content) {
-    min-height: 100% !important;
+    min-height: 467px !important;
   }
   :deep(.cm-gutter) {
-    min-height: 100% !important;
+    min-height: 467px !important;
+  }
+  :deep(.cm-scroller) {
+    overflow: unset;
   }
 
   .editor-fullscreen {
