@@ -2,6 +2,12 @@
   <a-card :bordered="false">
     <!-- 操作按钮区域 -->
     <div class="table-list-toolbar">
+      <a-input-search
+        v-model:value="queryParam.name"
+        placeholder="数据源名称"
+        style="width: 250px"
+        @search="tableState.reloadTable(true)"
+      />
       <add-button @click="handleAdd" />
     </div>
 

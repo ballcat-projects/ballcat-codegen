@@ -2,6 +2,12 @@
   <a-card v-show="tableShow">
     <!-- 操作按钮区域 -->
     <div class="table-list-toolbar">
+      <a-input-search
+        v-model:value="queryParam.name"
+        placeholder="模板组名称"
+        style="width: 250px"
+        @search="tableState.reloadTable(true)"
+      />
       <add-button @click="handleAdd()" />
     </div>
 
@@ -64,6 +70,7 @@
   import { doRequest } from '@/utils/axios/request'
   import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance, TemplatePropertyModalInstance } from './types'
+  import { TemplateGroupPageParam } from "@/api/gen/template-group/types";
 
   const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
   const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()
@@ -103,7 +110,7 @@
   ]
 
   // 查询参数
-  const queryParam = reactive({})
+  const queryParam = reactive<TemplateGroupPageParam>({})
   // 数据表格
   let tableState = useTable<TemplateGroup>({
     pageRequest: queryTemplateGroupPage,

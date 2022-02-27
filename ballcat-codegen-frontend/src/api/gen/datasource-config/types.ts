@@ -4,8 +4,8 @@ import { PageParam } from '@/api/types'
  * 数据源配置查询对象
  */
 export interface TableInfoPageParam extends PageParam {
-  // ID
-  id?: number
+  // 数据源名称
+  name?: string
 }
 
 /**

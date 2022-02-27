@@ -4,8 +4,8 @@ import { PageParam } from '@/api/types'
  * 模板组查询对象
  */
 export interface TemplateGroupPageParam extends PageParam {
-  // ID
-  id?: number
+  // 模板组名称
+  name?: string
 }
 
 /**

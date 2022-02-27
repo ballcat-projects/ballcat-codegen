@@ -16,9 +16,9 @@ public class TemplateGroupQO {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * ID
+	 * 模板组名称
 	 */
-	@Schema(title = "ID")
-	private Integer id;
+	@Schema(title = "模板组名称")
+	private String name;
 
 }
