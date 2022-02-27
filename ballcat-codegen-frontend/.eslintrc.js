@@ -27,7 +27,11 @@ module.exports = defineConfig({
     '@typescript-eslint',
     'prettier'
   ],
-  rules: {},
+  rules: {
+    // 换行符检测关闭，避免跨系统时的冲突
+    "prettier/prettier": ["error", {"endOfLine": "auto"}],
+    'linebreak-style': 'off'
+  },
   globals: {
     defineProps: 'readonly',
     defineEmits: 'readonly',

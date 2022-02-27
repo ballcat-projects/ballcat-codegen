@@ -4,5 +4,6 @@
   "singleQuote": true,
   "trailingComma": "none",
   "arrowParens": "avoid",
-  "vueIndentScriptAndStyle": true
+  "vueIndentScriptAndStyle": true,
+  "endOfLine": "auto"
 }
