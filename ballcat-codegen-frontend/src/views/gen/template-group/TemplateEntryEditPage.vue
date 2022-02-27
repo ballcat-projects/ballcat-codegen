@@ -69,10 +69,10 @@
 <style lang="less">
   // 面板
   .splitpanes.default-theme .splitpanes__pane {
-    background-color: #ffffff;
-    height: calc(100vh - 154px);
-    min-height: 500px;
-    border-top: 1px solid #f2f2f2;
+    background-color: #ffffff !important;
+    height: calc(100vh - 154px) !important;
+    min-height: 500px !important;
+    border-top: 1px solid #f2f2f2 !important;
   }
 
   // 分割器的背景色
