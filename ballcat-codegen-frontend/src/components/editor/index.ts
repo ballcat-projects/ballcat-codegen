@@ -55,10 +55,8 @@ class Editor {
     dom.innerHTML = this.getToolTip()
     return {
       dom,
-      update: update => {
-        if (update.docChanged) {
-          dom.innerHTML = this.getToolTip()
-        }
+      update: () => {
+        dom.innerHTML = this.getToolTip()
       }
     }
   }
