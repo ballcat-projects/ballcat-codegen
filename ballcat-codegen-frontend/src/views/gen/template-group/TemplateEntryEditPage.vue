@@ -11,12 +11,10 @@
 
     <splitpanes class="default-theme">
       <pane size="25" style="border-bottom-left-radius: 10px">
-        <div class="pane-content pane-scroll">
-          <template-entry-tree
-            :template-group-id="templateGroup?.id"
-            @edit-template-info="editTemplateInfo"
-          />
-        </div>
+        <template-entry-tree
+          :template-group-id="templateGroup?.id"
+          @edit-template-info="editTemplateInfo"
+        />
       </pane>
       <pane size="75" style="border-bottom-right-radius: 10px">
         <template-entry-content-editor ref="editorRef" :template-group-id="templateGroup?.id" />

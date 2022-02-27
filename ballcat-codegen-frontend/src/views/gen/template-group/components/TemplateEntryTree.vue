@@ -1,5 +1,9 @@
 <template>
-  <div style="padding: 10px" @contextmenu.prevent="clearSelectAndShowMenu">
+  <div
+    class="pane-content pane-scroll"
+    style="padding: 10px"
+    @contextmenu.prevent="clearSelectAndShowMenu"
+  >
     <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>
 
     <a-directory-tree
