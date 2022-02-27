@@ -14,7 +14,7 @@ export interface TemplateContentEditorInstance {
  * 模板项表单弹窗实例
  */
 export interface TemplateEntryFormModalInstance {
-  add: (currentParentFileName: string, record: TemplateEntry) => void
+  add: (currentParentFilename: string, record: TemplateEntry) => void
   update: (record: TemplateEntry) => void
 }
 

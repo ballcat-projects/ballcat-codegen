@@ -77,7 +77,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.isFalse(parentId.equals(entry.getParentId()), "The entry do not need to be moved");
 
 		// 重名校验
-		this.duplicateNameCheck(parentId, entry.getFileName());
+		this.duplicateNameCheck(parentId, entry.getFilename());
 
 		// 更新目录项
 		TemplateEntry entity = new TemplateEntry();
@@ -235,12 +235,12 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
 				for (TemplateEntryTree child : children) {
-					fillTemplateFiles(child, list, GenUtils.concatFilePath(path, current.getFileName()));
+					fillTemplateFiles(child, list, GenUtils.concatFilePath(path, current.getFilename()));
 				}
 			}
 		}
 
-		TemplateFile templateFile = new TemplateFile().setFileName(current.getFileName()).setParentFilePath(path)
+		TemplateFile templateFile = new TemplateFile().setFilename(current.getFilename()).setParentFilePath(path)
 				.setType(current.getType());
 		// 目录项类型为文件则记录（文件必然是叶子节点）
 		if (TemplateEntryTypeEnum.FILE.getType().equals(current.getType())) {
@@ -264,7 +264,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.isTrue(GlobalConstants.TREE_ROOT_ID.equals(parentId) || this.exists(parentId),
 				"This is a nonexistent parent directory entry!");
 		// 重名校验
-		this.duplicateNameCheck(parentId, entryDTO.getFileName());
+		this.duplicateNameCheck(parentId, entryDTO.getFilename());
 		// 转持久层对象
 		TemplateEntry entity = TemplateModelConverter.INSTANCE.entryCreateDtoToPo(entryDTO);
 		// 落库
@@ -281,13 +281,13 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	@Transactional(rollbackFor = Exception.class)
 	public boolean updateEntry(TemplateEntryUpdateDTO entryDTO) {
 		Integer entryId = entryDTO.getId();
-		String fileName = entryDTO.getFileName();
+		String filename = entryDTO.getFilename();
 		// 目录项必须存在
 		TemplateEntry oldEntry = baseMapper.selectById(entryId);
 		Assert.notNull(oldEntry, "This is a nonexistent directory entry!");
 		// 如果更新了文件名，则进行重名校验
-		if (!fileName.equals(oldEntry.getFileName())) {
-			this.duplicateNameCheck(oldEntry.getParentId(), fileName);
+		if (!filename.equals(oldEntry.getFilename())) {
+			this.duplicateNameCheck(oldEntry.getParentId(), filename);
 		}
 		// 更新 entry
 		TemplateEntry entry = TemplateModelConverter.INSTANCE.entryUpdateDtoToPo(entryDTO);

@@ -208,7 +208,7 @@
         templateEntryTree.value = listToTree(res.data as TemplateEntry[], 0, {
           attributeMapping(treeNode) {
             const dataNode = treeNode as unknown as DataNode
-            dataNode.title = treeNode.fileName
+            dataNode.title = treeNode.filename
           }
         })
         // 延迟绑定，抑制控制台警告

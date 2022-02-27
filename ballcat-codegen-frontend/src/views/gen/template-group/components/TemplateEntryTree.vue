@@ -146,7 +146,7 @@
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
               dataNode.isLeaf = treeNode.type === 2
-              dataNode.title = treeNode.fileName
+              dataNode.title = treeNode.filename
               dataNode.style = { whiteSpace: 'nowrap' }
             }
           })
@@ -258,14 +258,14 @@
    */
   function createdEntry(entryType: TemplateEntryTypeEnum) {
     let parentId = 0
-    let parentFileName = '根目录'
+    let parentFilename = '根目录'
     if (selectedEntry.value) {
       const dataRef = selectedEntry.value
-      parentFileName = dataRef.fileName as string
+      parentFilename = dataRef?.filename as string
       parentId = dataRef.id as number
     }
     // 打开弹窗
-    templateEntryFormModalRef.value?.add(parentFileName, {
+    templateEntryFormModalRef.value?.add(parentFilename, {
       groupId: props.templateGroupId,
       parentId: parentId,
       type: entryType

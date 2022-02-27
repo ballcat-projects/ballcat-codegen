@@ -136,7 +136,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			fileEntry.setType(templateFile.getType());
 
 			// 替换路径中的占位符
-			String filename = StrUtil.format(templateFile.getFileName(), context);
+			String filename = StrUtil.format(templateFile.getFilename(), context);
 			fileEntry.setFilename(filename);
 
 			String parentFilePath = GenUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
@@ -151,7 +151,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 				fileEntry.setContent(content);
 			}
 			else {
-				String currentPath = GenUtils.evaluateRealPath(templateFile.getFileName(), context);
+				String currentPath = GenUtils.evaluateRealPath(templateFile.getFilename(), context);
 				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, currentPath));
 			}
 

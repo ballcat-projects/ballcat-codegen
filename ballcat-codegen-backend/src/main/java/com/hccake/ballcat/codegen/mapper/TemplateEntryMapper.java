@@ -32,7 +32,7 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 */
 	default boolean existSameName(Integer entryId, String name) {
 		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getParentId, entryId)
-				.eq(TemplateEntry::getFileName, name));
+				.eq(TemplateEntry::getFilename, name));
 		return count != null && count > 0;
 	}
 

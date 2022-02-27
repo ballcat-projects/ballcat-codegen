@@ -25,7 +25,7 @@ public class TemplateEntryCreateDTO {
 	 * 文件夹全路径/模板文件名称（支持占位符）
 	 */
 	@Schema(title = "文件夹路径/模板文件名称（支持占位符）")
-	private String fileName;
+	private String filename;
 
 	/**
 	 * 文件类型 1：文件夹 2：模板文件

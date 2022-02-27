@@ -21,7 +21,7 @@ public class TemplateFile {
 	 * 文件名称
 	 */
 	@Schema(title = "文件名称")
-	private String fileName;
+	private String filename;
 
 	/**
 	 * 父级文件路径

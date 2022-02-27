@@ -44,7 +44,7 @@ export interface TemplateEntry {
   // 模板组Id
   groupId?: number
   // 文件夹全路径/模板文件名称（支持占位符）
-  fileName?: string
+  filename?: string
   // 文件类型 1：文件夹 2：模板文件
   type?: TemplateEntryTypeEnum
   // 父级Id

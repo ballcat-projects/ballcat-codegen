@@ -24,7 +24,7 @@
               color="#978d8d"
               status="processing"
             />
-            {{ info.fileName }}
+            {{ info.filename }}
           </template>
         </a-tab-pane>
       </a-tabs>

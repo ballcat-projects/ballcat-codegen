@@ -8,10 +8,10 @@
   >
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item v-if="isCreate" label="父目录">
-        <span> {{ parentFileName }}</span>
+        <span> {{ parentFilename }}</span>
       </a-form-item>
       <a-form-item label="文件名">
-        <a-input v-model:value="modelRef.fileName" placeholder="请输入文件名" />
+        <a-input v-model:value="modelRef.filename" placeholder="请输入文件名" />
       </a-form-item>
       <!-- 模板文件需要以下额外属性 -->
       <template v-if="modelRef.type === 2">
@@ -63,7 +63,7 @@
   const title = ref<string>('')
 
   // 当前新建目录项的父文件名
-  const parentFileName = ref<string>('')
+  const parentFilename = ref<string>('')
 
   //  弹窗相关
   const { visible, handleOpen, handleClose } = usePopup()
@@ -73,7 +73,7 @@
     groupId: undefined,
     parentId: undefined,
     type: TemplateEntryTypeEnum.FOLDER,
-    fileName: '',
+    filename: '',
     engineType: 1,
     remarks: ''
   })
@@ -105,7 +105,7 @@
       title.value = record.type === 1 ? '新建文件夹' : '新建模板文件'
       resetFields()
       Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
-      parentFileName.value = currentParentFileName
+      parentFilename.value = currentParentFileName
       handleOpen()
     },
     update(record: TemplateEntry) {
