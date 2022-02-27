@@ -16,9 +16,10 @@
       <!-- 模板文件需要以下额外属性 -->
       <template v-if="modelRef.type === 2">
         <a-form-item label="引擎">
-          <a-select v-model:value="modelRef.engineType">
-            <a-select-option :value="1">velocity</a-select-option>
-          </a-select>
+          <a-radio-group v-model:value="modelRef.engineType">
+            <a-radio :value="1">Velocity</a-radio>
+            <a-radio :value="2">Freemarker</a-radio>
+          </a-radio-group>
         </a-form-item>
       </template>
       <a-form-item label="备注">
@@ -84,9 +85,9 @@
 
   function handleSubmit() {
     validate().then(() => {
-      // 如果是文件夹，则删除 templateInfo 属性
+      // 如果是文件夹，则删除 engineType 属性
       if (modelRef.type === TemplateEntryTypeEnum.FOLDER) {
-        delete modelRef.templateInfo
+        delete modelRef.engineType
       }
       const requestFunction = isCreate.value ? addTemplateEntry : updateTemplateEntry
       doRequest(requestFunction(modelRef), {

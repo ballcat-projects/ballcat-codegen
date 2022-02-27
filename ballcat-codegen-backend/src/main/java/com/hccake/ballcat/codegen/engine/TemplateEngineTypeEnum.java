@@ -17,7 +17,10 @@ import java.util.Map;
 public enum TemplateEngineTypeEnum {
 
 	// velocity 模板引擎
-	VELOCITY(1);
+	VELOCITY(1),
+
+	// Freemaker 模板引擎
+	FREEMARKER(2);
 
 	private final Integer type;
 
