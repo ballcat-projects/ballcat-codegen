@@ -217,6 +217,7 @@
           templateEntryIdsState.checkAll = true
           templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
           templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
+          templateEntryIdsState.indeterminate = false
         })
       },
       onFinally() {
