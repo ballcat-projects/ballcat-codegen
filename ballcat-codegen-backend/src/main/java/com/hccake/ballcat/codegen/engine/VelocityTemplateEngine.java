@@ -1,5 +1,6 @@
 package com.hccake.ballcat.codegen.engine;
 
+import com.hccake.ballcat.codegen.exception.TemplateRenderException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -32,9 +33,13 @@ public class VelocityTemplateEngine implements TemplateEngine {
 	@Override
 	public String render(String templateContent, Map<String, Object> context) {
 		VelocityContext velocityContext = new VelocityContext(context);
-		StringWriter sw = new StringWriter();
-		Velocity.evaluate(velocityContext, sw, "velocityTemplateEngine", templateContent);
-		return sw.toString();
+		try (StringWriter sw = new StringWriter()) {
+			Velocity.evaluate(velocityContext, sw, "velocityTemplateEngine", templateContent);
+			return sw.toString();
+		}
+		catch (Exception ex) {
+			throw new TemplateRenderException(ex);
+		}
 	}
 
 }
