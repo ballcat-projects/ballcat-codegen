@@ -38,7 +38,7 @@
 <script setup lang="ts">
   import { onMounted, reactive, ref, watch } from 'vue'
   import { doRequest } from '@/utils/axios/request'
-  import { TemplateEntry } from '@/api/gen/template-entry/types'
+  import { TemplateEngines, TemplateEntry } from '@/api/gen/template-entry/types'
   import CodeGenTips from '@/views/gen/template-group/components/CodeGenTips.vue'
   import Editor from '@/components/editor'
   import { ViewUpdate } from '@codemirror/view'
@@ -107,6 +107,10 @@
     () => {
       const key = activeKey.value
       if (editor) {
+        const entry = templateEntryMap.get(key)
+        if (entry) {
+          editor.templateEngine = TemplateEngines.getEngineName(entry.engineType)
+        }
         editor.setEditorDoc(contentStage.get(key) || '')
       }
     },

@@ -9,6 +9,23 @@ export enum TemplateEntryTypeEnum {
 }
 
 /**
+ * 模板引擎类型
+ */
+export class TemplateEngines {
+  static readonly 1: string = 'Velocity'
+  static readonly 2: string = 'Freemarker'
+
+  static getEngineName(engineType?: number) {
+    switch (engineType) {
+      case 1:
+        return 'Velocity'
+      case 2:
+        return 'Freemarker'
+    }
+  }
+}
+
+/**
  * 节点的删除模式枚举
  */
 export enum TemplateEntryRemoveModeEnum {
@@ -35,7 +52,7 @@ export interface TemplateEntry {
   // 模板内容
   content?: string
   // 引擎类型
-  engineType?: 1
+  engineType?: number
   // 备注信息
   remarks?: ''
   // 创建时间

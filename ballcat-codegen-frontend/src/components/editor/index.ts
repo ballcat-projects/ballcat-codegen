@@ -1,6 +1,7 @@
 import { EditorState, basicSetup } from '@codemirror/basic-setup'
 import { EditorView, KeyBinding, keymap, ViewUpdate } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
+import { Panel, showPanel } from '@codemirror/panel'
 // import { oneDarkTheme } from '@codemirror/theme-one-dark'
 import { StreamLanguage } from '@codemirror/stream-parser'
 import { velocity } from '@codemirror/legacy-modes/mode/velocity'
@@ -12,6 +13,7 @@ import { html } from '@codemirror/lang-html'
 
 class Editor {
   editorView: EditorView
+  templateEngine?: string
 
   constructor(
     el: Element | DocumentFragment,
@@ -28,6 +30,8 @@ class Editor {
           basicSetup,
           // 快捷键
           keymap.of([...defaultKeymap, indentWithTab, ...keyBinds]),
+          // 提示面板
+          showPanel.of(this.tooltipPanel),
           // 主题
           // oneDarkTheme,
           // 更新监听
@@ -44,6 +48,29 @@ class Editor {
         ]
       })
     })
+  }
+
+  tooltipPanel = (view: EditorView): Panel => {
+    const dom = document.createElement('div')
+    dom.innerHTML = this.getToolTip()
+    return {
+      dom,
+      update: update => {
+        if (update.docChanged) {
+          dom.innerHTML = this.getToolTip()
+        }
+      }
+    }
+  }
+
+  private getToolTip() {
+    let innerHTML = ''
+    if (this.templateEngine) {
+      innerHTML = `<span style="margin-right: 20px">
+                      <b>模板引擎</b>：<span style="color: red; font-weight: 600;">${this.templateEngine}</span>
+                  </span>`
+    }
+    return innerHTML + '<b>F11</b>：全屏，<b>Ctrl+S</b>：保存'
   }
 
   /**
