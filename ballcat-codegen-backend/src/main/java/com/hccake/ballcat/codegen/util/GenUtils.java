@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
+import com.hccake.ballcat.codegen.datatype.TypeScriptTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
@@ -90,9 +91,10 @@ public class GenUtils {
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
 			// 列的数据类型，转换成Java类型
-			columnProperties.setAttrType(MysqlDataTypeConverter.getJavaOfMysql(columnProperties.getDataType()));
+			String javaType = MysqlDataTypeConverter.getJavaOfMysql(columnProperties.getDataType());
+			columnProperties.setAttrType(javaType);
 			// 列的 ts数据类型
-			columnProperties.setTsAttrType(MysqlDataTypeConverter.getTsOfMysql(columnProperties.getDataType()));
+			columnProperties.setTsAttrType(TypeScriptTypeConverter.javaToTs(javaType));
 
 			// 是否主键
 			if ("PRI".equalsIgnoreCase(columnInfo.getColumnKey()) && generateProperties.getPk() == null) {
