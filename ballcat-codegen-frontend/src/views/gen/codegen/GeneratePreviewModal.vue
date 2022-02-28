@@ -74,7 +74,7 @@
   defineExpose<PreviewModalInstance>({
     open: (fileEntryList?: FileEntry[]) => {
       fileEntryTree.value = fileEntryList ? buildTree(fileEntryList) : []
-      console.log(fileEntryTree.value)
+      code.value = '双击文件查看代码信息'
       handleOpen()
     }
   })
