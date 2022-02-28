@@ -7,13 +7,12 @@ import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
 import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
+import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
-import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
-import com.hccake.ballcat.codegen.model.vo.TableInfo;
 import com.hccake.ballcat.codegen.service.GeneratorService;
-import com.hccake.ballcat.codegen.service.TableInfoService;
+import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.util.GenUtils;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
-	private final TableInfoService tableInfoService;
+	private final TableInfoQuery tableInfoQuery;
 
 	private final TemplateEntryService templateEntryService;
 
@@ -107,13 +106,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		for (String tableName : generateOptionDTO.getTableNames()) {
-			// 查询表信息
-			TableInfo tableInfo = tableInfoService.queryTableInfo(tableName);
-			// 查询列信息
-			List<ColumnInfo> columnInfoList = tableInfoService.listColumnInfo(tableName);
+			// 查询表详情
+			TableDetails tableDetails = tableInfoQuery.queryTableDetails(tableName);
 			// 生成代码
-			Map<String, FileEntry> fileEntryMap = generatorCode(generateOptionDTO.getTablePrefix(),
-					generateOptionDTO.getGenProperties(), tableInfo, columnInfoList, templateFiles);
+			Map<String, FileEntry> fileEntryMap = generatorCode(tableDetails, generateOptionDTO.getTablePrefix(),
+					generateOptionDTO.getGenProperties(), templateFiles);
 			map.putAll(fileEntryMap);
 		}
 		return map;
@@ -123,13 +120,13 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 * 代码生成
 	 * @return Map<String, FileEntry>
 	 */
-	public Map<String, FileEntry> generatorCode(String tablePrefix, Map<String, String> customProperties,
-			TableInfo tableInfo, List<ColumnInfo> columnInfos, List<TemplateFile> templateFiles) {
+	public Map<String, FileEntry> generatorCode(TableDetails tableDetails, String tablePrefix,
+			Map<String, String> customProperties, List<TemplateFile> templateFiles) {
 
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = GenUtils.getContext(tablePrefix, customProperties, tableInfo, columnInfos);
+		Map<String, Object> context = GenUtils.getContext(tableDetails, tablePrefix, customProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();

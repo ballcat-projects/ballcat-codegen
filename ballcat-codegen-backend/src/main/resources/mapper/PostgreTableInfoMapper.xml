@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hccake.ballcat.codegen.mapper.PostgreTableInfoMapper">
+    <select id="selectByPage" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
+		SELECT
+			T.tablename AS tableName,
+			obj_description ( C.oid ) AS tableComment
+		FROM
+			pg_tables T,
+			pg_class C
+		WHERE
+			T.schemaname = CURRENT_SCHEMA ( )
+			AND T.tablename = C.relname
+		<if test="tableName != null and tableName.trim() != ''">
+			AND T.tablename LIKE concat('%', #{tableName}, '%')
+		</if>
+    </select>
+
+
+	<select id="queryTableInfo" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
+		SELECT
+			T.tablename AS tableName,
+			obj_description ( C.oid ) AS tableComment
+		FROM
+			pg_tables T,
+			pg_class C
+		WHERE
+			T.schemaname = CURRENT_SCHEMA ( )
+			AND T.tablename = C.relname
+			AND T.tablename = #{tableName}
+	</select>
+
+
+	<select id="listColumnInfo" resultType="com.hccake.ballcat.codegen.model.bo.ColumnInfo">
+		SELECT
+			col.COLUMN_NAME,
+			col.data_type,
+			col_description ( C.oid, col.ordinal_position ) AS column_comment,
+			CASE WHEN temp.attname IS NULL THEN '' ELSE 'PRI' END AS column_key,
+			col.is_nullable
+		FROM
+			information_schema.COLUMNS AS col
+				LEFT JOIN pg_namespace ns ON ns.nspname = col.table_schema
+				LEFT JOIN pg_class C ON col.TABLE_NAME = C.relname AND C.relnamespace = ns.oid
+				LEFT JOIN (
+				SELECT
+					pg_attribute.attname
+				FROM
+					pg_constraint
+						INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid
+						INNER JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = pg_constraint.conkey [ 1 ]
+				WHERE
+					pg_class.relname = 'people'
+				  AND pg_constraint.contype = 'p'
+			) temp ON col.COLUMN_NAME = temp.attname
+		WHERE
+			col.table_schema = 'public'
+		  AND col.TABLE_NAME = 'people'
+		ORDER BY
+			col.table_schema,
+			col.TABLE_NAME,
+			col.ordinal_position;
+	</select>
+
+
+</mapper>

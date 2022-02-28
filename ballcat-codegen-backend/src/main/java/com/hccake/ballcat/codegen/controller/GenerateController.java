@@ -4,9 +4,9 @@ import cn.hutool.core.io.IoUtil;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
-import com.hccake.ballcat.codegen.model.vo.TableInfo;
+import com.hccake.ballcat.codegen.model.bo.TableInfo;
 import com.hccake.ballcat.codegen.service.GeneratorService;
-import com.hccake.ballcat.codegen.service.TableInfoService;
+import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.result.R;
@@ -40,7 +40,7 @@ public class GenerateController {
 
 	private final GeneratorService generatorService;
 
-	private final TableInfoService tableInfoService;
+	private final TableInfoQuery tableInfoQuery;
 
 	/**
 	 * 表信息分页查询
@@ -51,7 +51,7 @@ public class GenerateController {
 	@Operation(summary = "表信息分页查询")
 	@GetMapping("/table-info/page")
 	public R<PageResult<TableInfo>> getDataSourceConfigPage(PageParam pageParam, TableInfoQO tableInfoQO) {
-		return R.ok(tableInfoService.queryPage(pageParam, tableInfoQO));
+		return R.ok(tableInfoQuery.queryPage(pageParam, tableInfoQO));
 	}
 
 	/**

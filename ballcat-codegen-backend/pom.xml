@@ -34,10 +34,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 		</dependency>
@@ -48,13 +44,24 @@
 			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
 		</dependency>
 
+
+		<!-- jdbc 驱动 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+
 		<!--模板引擎-->
 		<dependency>
 			<artifactId>velocity</artifactId>
 			<groupId>org.apache.velocity</groupId>
 			<version>1.7</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>

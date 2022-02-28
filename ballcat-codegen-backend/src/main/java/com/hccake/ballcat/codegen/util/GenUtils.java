@@ -2,13 +2,17 @@ package com.hccake.ballcat.codegen.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.hccake.ballcat.codegen.datatype.MysqlDataTypeConverter;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.datatype.IColumnType;
+import com.hccake.ballcat.codegen.datatype.TypeConverter;
+import com.hccake.ballcat.codegen.datatype.TypeConverterManager;
 import com.hccake.ballcat.codegen.datatype.TypeScriptTypeConverter;
+import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
-import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
-import com.hccake.ballcat.codegen.model.vo.TableInfo;
+import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -29,10 +33,10 @@ import java.util.Map;
 @UtilityClass
 public class GenUtils {
 
-	public static Map<String, Object> getContext(String tablePrefix, Map<String, String> customProperties,
-			TableInfo tableInfo, List<ColumnInfo> columnInfos) {
+	public static Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix,
+			Map<String, String> customProperties) {
 		// 根据表信息和字段信息获取对应的配置属性
-		GenerateProperties generateProperties = getGenerateProperties(tableInfo, columnInfos, tablePrefix);
+		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix);
 		// 转换generateProperties为map，模板数据
 		Map<String, Object> context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
@@ -42,17 +46,15 @@ public class GenUtils {
 
 	/**
 	 * 根据表信息和字段信息获取对应的配置属性
-	 * @param tableInfo 表信息
-	 * @param columnInfos 字段信息
+	 * @param tableDetails 表详情
 	 * @param tablePrefix 表前缀
 	 * @return GenerateProperties
 	 */
-	private GenerateProperties getGenerateProperties(TableInfo tableInfo, List<ColumnInfo> columnInfos,
-			String tablePrefix) {
+	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix) {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
 		// 表名
-		String tableName = tableInfo.getTableName();
+		String tableName = tableDetails.getTableName();
 		generateProperties.setTableName(tableName);
 		// 去除前缀的表名
 		String noPrefixTableName = tableName;
@@ -61,7 +63,7 @@ public class GenUtils {
 		}
 
 		// 表备注
-		generateProperties.setComments(tableInfo.getTableComment());
+		generateProperties.setComments(tableDetails.getTableComment());
 		// 大驼峰类名
 		String className = underlineToCamel(noPrefixTableName);
 		generateProperties.setClassName(className);
@@ -76,7 +78,13 @@ public class GenUtils {
 
 		// 列信息
 		List<ColumnProperties> columnList = new ArrayList<>();
-		for (ColumnInfo columnInfo : columnInfos) {
+
+		// 类型转换器
+		DbType dbType = tableDetails.getDbType();
+		TypeConverter typeConverter = TypeConverterManager.getTypeConverter(dbType);
+		Assert.notNull(typeConverter, "未找到对应的数据库类型转换器：{}", dbType);
+
+		for (ColumnInfo columnInfo : tableDetails.getColumnInfos()) {
 			String columnName = columnInfo.getColumnName();
 			ColumnProperties columnProperties = new ColumnProperties();
 			columnProperties.setColumnName(columnName);
@@ -91,10 +99,11 @@ public class GenUtils {
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
 			// 列的数据类型，转换成Java类型
-			String javaType = MysqlDataTypeConverter.getJavaOfMysql(columnProperties.getDataType());
-			columnProperties.setAttrType(javaType);
+			IColumnType columnType = typeConverter.convert(columnProperties.getDataType());
+			String columnJavaType = columnType.getType();
+			columnProperties.setAttrType(columnJavaType);
 			// 列的 ts数据类型
-			columnProperties.setTsAttrType(TypeScriptTypeConverter.javaToTs(javaType));
+			columnProperties.setTsAttrType(TypeScriptTypeConverter.javaToTs(columnJavaType));
 
 			// 是否主键
 			if ("PRI".equalsIgnoreCase(columnInfo.getColumnKey()) && generateProperties.getPk() == null) {

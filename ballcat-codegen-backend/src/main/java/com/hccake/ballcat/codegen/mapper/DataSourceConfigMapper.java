@@ -11,6 +11,7 @@ import com.hccake.ballcat.common.model.domain.SelectData;
 import com.hccake.extend.mybatis.plus.conditions.query.LambdaQueryWrapperX;
 import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
 import com.hccake.extend.mybatis.plus.toolkit.WrappersX;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @author hccake
  * @date 2020-06-17 10:24:47
  */
+@Mapper
 public interface DataSourceConfigMapper extends ExtendMapper<DataSourceConfig> {
 
 	/**

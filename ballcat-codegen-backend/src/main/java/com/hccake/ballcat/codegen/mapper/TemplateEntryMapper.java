@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author hccake
  * @date 2020-06-19 19:11:41
  */
+@Mapper
 public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**

@@ -1,4 +1,4 @@
-package com.hccake.ballcat.codegen.model.vo;
+package com.hccake.ballcat.codegen.model.bo;
 
 import lombok.Data;
 

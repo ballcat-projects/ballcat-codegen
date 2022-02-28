@@ -1,13 +1,13 @@
 package com.hccake.ballcat.codegen.mapper;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
-import com.hccake.ballcat.codegen.model.vo.ColumnInfo;
-import com.hccake.ballcat.codegen.model.vo.TableInfo;
+import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
+import com.hccake.ballcat.codegen.model.bo.TableInfo;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.extend.mybatis.plus.toolkit.PageUtil;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,8 +17,13 @@ import java.util.List;
  *
  * @author Hccake
  */
-@Mapper
 public interface TableInfoMapper {
+
+	/**
+	 * 获取当前对应的数据库类型
+	 * @return DbType
+	 */
+	DbType dbType();
 
 	/**
 	 * 分页查询

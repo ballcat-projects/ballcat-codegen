@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hccake.ballcat.codegen.mapper.TableInfoMapper">
-    <select id="selectByPage" resultType="com.hccake.ballcat.codegen.model.vo.TableInfo">
+<mapper namespace="com.hccake.ballcat.codegen.mapper.MysqlTableInfoMapper">
+    <select id="selectByPage" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
         SELECT
             `table_name`,
             engine,
@@ -19,7 +19,7 @@
     </select>
 
 
-	<select id="queryTableInfo" resultType="com.hccake.ballcat.codegen.model.vo.TableInfo">
+	<select id="queryTableInfo" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
 		SELECT
 		`table_name`,
 		engine,
@@ -33,7 +33,7 @@
 	</select>
 
 
-	<select id="listColumnInfo" resultType="com.hccake.ballcat.codegen.model.vo.ColumnInfo">
+	<select id="listColumnInfo" resultType="com.hccake.ballcat.codegen.model.bo.ColumnInfo">
         SELECT
             column_name,
             data_type,
