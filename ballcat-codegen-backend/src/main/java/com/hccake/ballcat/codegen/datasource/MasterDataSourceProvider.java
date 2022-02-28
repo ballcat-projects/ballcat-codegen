@@ -1,8 +1,10 @@
 package com.hccake.ballcat.codegen.datasource;
 
-import com.baomidou.dynamic.datasource.provider.AbstractDataSourceProvider;
+import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
+import com.baomidou.dynamic.datasource.provider.DynamicDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.hccake.ballcat.codegen.constant.DataSourceConstants;
+import com.hccake.ballcat.codegen.util.DbTypeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 
@@ -19,7 +21,7 @@ import java.util.Map;
  * @date 2020/6/15 17:46
  */
 @Slf4j
-public class MasterDataSourceProvider extends AbstractDataSourceProvider {
+public class MasterDataSourceProvider implements DynamicDataSourceProvider {
 
 	/**
 	 * JDBC url 地址
@@ -36,10 +38,17 @@ public class MasterDataSourceProvider extends AbstractDataSourceProvider {
 	 */
 	private final String password;
 
-	public MasterDataSourceProvider(DataSourceProperties dataSourceProperties) {
+	/**
+	 * 数据源创建器
+	 */
+	private final DefaultDataSourceCreator defaultDataSourceCreator;
+
+	public MasterDataSourceProvider(DataSourceProperties dataSourceProperties,
+			DefaultDataSourceCreator dataSourceCreator) {
 		this.url = dataSourceProperties.getUrl();
 		this.username = dataSourceProperties.getUsername();
 		this.password = dataSourceProperties.getPassword();
+		this.defaultDataSourceCreator = dataSourceCreator;
 	}
 
 	/**
@@ -49,14 +58,24 @@ public class MasterDataSourceProvider extends AbstractDataSourceProvider {
 	@Override
 	public Map<String, DataSource> loadDataSources() {
 		// 添加主数据源
-		Map<String, DataSourceProperty> dataSourcePropertiesMap = new HashMap<>(8);
+		Map<String, DataSource> dataSourceMap = new HashMap<>(8);
+
 		DataSourceProperty masterDataSourceProperty = new DataSourceProperty();
 		masterDataSourceProperty.setUsername(username);
 		masterDataSourceProperty.setPassword(password);
 		masterDataSourceProperty.setUrl(url);
-		dataSourcePropertiesMap.put(DataSourceConstants.DEFAULT_DS_NAME, masterDataSourceProperty);
+		String dsName = DataSourceConstants.DEFAULT_DS_NAME;
+		String poolName = masterDataSourceProperty.getPoolName();
+		if (poolName == null || "".equals(poolName)) {
+			poolName = dsName;
+		}
+		masterDataSourceProperty.setPoolName(poolName);
+		DataSource dataSource = defaultDataSourceCreator.createDataSource(masterDataSourceProperty);
+		// 包装一层
+		WrappedDataSource wrappedDataSource = new WrappedDataSource(dsName, DbTypeUtils.getDbType(url), dataSource);
+		dataSourceMap.put(dsName, wrappedDataSource);
 
-		return createDataSourceMap(dataSourcePropertiesMap);
+		return dataSourceMap;
 	}
 
 }

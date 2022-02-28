@@ -3,6 +3,8 @@ package com.hccake.ballcat.codegen.datasource;
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.util.DbTypeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
@@ -81,7 +83,10 @@ public class DynamicDataSourceHelper {
 	 */
 	public void addDynamicDataSource(DataSourceProperty dataSourceProperty) {
 		DataSource dataSource = dataSourceCreator.createDataSource(dataSourceProperty);
-		dynamicRoutingDataSource.addDataSource(dataSourceProperty.getPoolName(), dataSource);
+		String dsName = dataSourceProperty.getPoolName();
+		DbType dbType = DbTypeUtils.getDbType(dataSourceProperty.getUrl());
+		WrappedDataSource wrappedDataSource = new WrappedDataSource(dsName, dbType, dataSource);
+		dynamicRoutingDataSource.addDataSource(dsName, wrappedDataSource);
 	}
 
 	/**

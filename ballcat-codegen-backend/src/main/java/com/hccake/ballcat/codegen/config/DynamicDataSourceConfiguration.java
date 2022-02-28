@@ -1,5 +1,6 @@
 package com.hccake.ballcat.codegen.config;
 
+import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.processor.DsHeaderProcessor;
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
@@ -26,8 +27,9 @@ public class DynamicDataSourceConfiguration {
 	 * @return MasterDataSourceProvider 动态数据源提供者
 	 */
 	@Bean
-	public MasterDataSourceProvider masterDataSourceProvider(DataSourceProperties dataSourceProperties) {
-		return new MasterDataSourceProvider(dataSourceProperties);
+	public MasterDataSourceProvider masterDataSourceProvider(DataSourceProperties dataSourceProperties,
+			DefaultDataSourceCreator defaultDataSourceCreator) {
+		return new MasterDataSourceProvider(dataSourceProperties, defaultDataSourceCreator);
 	}
 
 	@Bean
