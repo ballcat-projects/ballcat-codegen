@@ -45,15 +45,27 @@
 		</dependency>
 
 
-		<!-- jdbc 驱动 -->
+		<!-- mysql 驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		<!-- postgresql 驱动 -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+		<!-- sqlserver 驱动 -->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
+<!--		&lt;!&ndash; oracle 驱动 &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.oracle.ojdbc</groupId>-->
+<!--			<artifactId>ojdbc8</artifactId>-->
+<!--		</dependency>-->
+
 
 
 		<!--模板引擎-->

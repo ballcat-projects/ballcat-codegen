@@ -1,6 +1,5 @@
 package com.hccake.ballcat.codegen.config.mybatis;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
@@ -31,7 +30,7 @@ public class MybatisPlusConfig {
 	@ConditionalOnMissingBean(MybatisPlusInterceptor.class)
 	public MybatisPlusInterceptor mybatisPlusInterceptor() {
 		MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-		interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+		interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
 		return interceptor;
 	}
 

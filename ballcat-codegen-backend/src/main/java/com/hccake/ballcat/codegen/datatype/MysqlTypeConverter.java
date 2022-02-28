@@ -25,6 +25,7 @@ public class MysqlTypeConverter implements TypeConverter {
 		TYPE_MAP.put("float", FLOAT);
 		TYPE_MAP.put("double", DOUBLE);
 		TYPE_MAP.put("decimal", BIG_DECIMAL);
+		TYPE_MAP.put("numeric", BIG_DECIMAL);
 		TYPE_MAP.put("bit", BOOLEAN);
 
 		TYPE_MAP.put("char", STRING);
@@ -35,7 +36,8 @@ public class MysqlTypeConverter implements TypeConverter {
 		TYPE_MAP.put("longtext", STRING);
 		TYPE_MAP.put("json", STRING);
 
-		TYPE_MAP.put("date", LOCAL_DATE_TIME);
+		TYPE_MAP.put("date", LOCAL_DATE);
+		TYPE_MAP.put("time", LOCAL_TIME);
 		TYPE_MAP.put("datetime", LOCAL_DATE_TIME);
 		TYPE_MAP.put("timestamp", LOCAL_DATE_TIME);
 
@@ -44,8 +46,8 @@ public class MysqlTypeConverter implements TypeConverter {
 	}
 
 	@Override
-	public IColumnType convert(String mysqlType) {
-		return TYPE_MAP.getOrDefault(mysqlType, STRING);
+	public IColumnType convert(String dataType) {
+		return TYPE_MAP.getOrDefault(dataType, STRING);
 	}
 
 }
