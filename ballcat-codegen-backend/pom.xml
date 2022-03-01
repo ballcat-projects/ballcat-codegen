@@ -60,11 +60,12 @@
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
-<!--		&lt;!&ndash; oracle 驱动 &ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>com.oracle.ojdbc</groupId>-->
-<!--			<artifactId>ojdbc8</artifactId>-->
-<!--		</dependency>-->
+		<!-- oracle 驱动 -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>21.5.0.0</version>
+		</dependency>
 
 
 

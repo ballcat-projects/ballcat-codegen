@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hccake.ballcat.codegen.mapper.OracleTableInfoMapper">
+    <select id="selectByPage" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
+		SELECT
+		dt.table_name tableName,
+		dtc.comments tableComment,
+		uo.created createTime
+		FROM
+		user_tables dt,
+		user_tab_comments dtc,
+		user_objects uo
+		WHERE
+		dt.table_name = dtc.table_name
+		AND dt.table_name = uo.object_name
+		AND uo.object_type = 'TABLE'
+		<if test="tableName != null and tableName.trim() != ''">
+			AND dt.table_name like '%'|| UPPER(#{tableName}) || '%'
+		</if>
+		ORDER BY
+		uo.CREATED DESC
+    </select>
+
+
+	<select id="queryTableInfo" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
+		SELECT
+			dt.table_name tableName,
+			dtc.comments tableComment,
+			uo.created createTime
+		FROM
+			user_tables dt,
+			user_tab_comments dtc,
+			user_objects uo
+		WHERE
+			dt.table_name = dtc.table_name
+			AND dt.table_name = uo.object_name
+			AND uo.object_type = 'TABLE'
+			AND dt.table_name = UPPER(#{tableName})
+		ORDER BY
+		uo.CREATED DESC
+	</select>
+
+
+	<select id="listColumnInfo" resultType="com.hccake.ballcat.codegen.model.bo.ColumnInfo">
+		SELECT
+			temp.column_name columNname,
+			temp.data_type dataType,
+			temp.comments columnComment,
+			CASE
+				temp.constraint_type
+				WHEN 'P' THEN
+					'PRI'
+				WHEN 'C' THEN
+					'UNI' ELSE ''
+				END "columKey",
+			'' "extra"
+		FROM
+			(
+				SELECT
+					col.column_id,
+					col.column_name,
+					col.data_type,
+					colc.comments,
+					uc.constraint_type,
+					row_number ( ) over ( partition BY col.column_name ORDER BY uc.constraint_type DESC ) AS row_flg
+				FROM
+					user_tab_columns col
+						LEFT JOIN user_col_comments colc ON colc.table_name = col.table_name
+						AND colc.column_name = col.column_name
+						LEFT JOIN user_cons_columns ucc ON ucc.table_name = col.table_name
+						AND ucc.column_name = col.column_name
+						LEFT JOIN user_constraints uc ON uc.constraint_name = ucc.constraint_name
+				WHERE
+					col.table_name = UPPER( #{tableName} )
+			) temp
+		WHERE
+			temp.row_flg = 1
+		ORDER BY
+			temp.column_id
+	</select>
+
+
+</mapper>
