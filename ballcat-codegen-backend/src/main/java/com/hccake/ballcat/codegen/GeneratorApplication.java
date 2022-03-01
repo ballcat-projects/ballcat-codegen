@@ -3,6 +3,7 @@ package com.hccake.ballcat.codegen;
 import cn.hutool.core.lang.ClassScanner;
 import com.hccake.ballcat.codegen.database.DbTypeConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  * @date 2019/9/12 16:21
  */
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(exclude = SpringDocConfiguration.class)
 public class GeneratorApplication {
 
 	public static void main(String[] args) throws ClassNotFoundException {
