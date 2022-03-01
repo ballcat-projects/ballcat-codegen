@@ -1,18 +1,21 @@
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.database.mysql;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.database.DbTypeConverter;
+import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
+import com.hccake.ballcat.codegen.database.IColumnType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.hccake.ballcat.codegen.datatype.DbColumnType.*;
+import static com.hccake.ballcat.codegen.database.DbColumnType.*;
 
 /**
  * @author Hccake
  * @version 1.0
  * @date 2020/6/22 17:53
  */
-public class MysqlTypeConverter implements TypeConverter {
+public class MysqlDbTypeConverter implements DbTypeConverter {
 
 	static final Map<String, IColumnType> TYPE_MAP = new HashMap<>();
 
@@ -42,7 +45,7 @@ public class MysqlTypeConverter implements TypeConverter {
 		TYPE_MAP.put("timestamp", LOCAL_DATE_TIME);
 
 		// 注册
-		TypeConverterManager.register(DbType.MYSQL, new MysqlTypeConverter());
+		DbTypeConverterManager.register(DbType.MYSQL, new MysqlDbTypeConverter());
 	}
 
 	@Override

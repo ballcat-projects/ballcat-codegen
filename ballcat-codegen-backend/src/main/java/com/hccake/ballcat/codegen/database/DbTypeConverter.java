@@ -1,9 +1,9 @@
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.database;
 
 /**
  * @author hccake
  */
-public interface TypeConverter {
+public interface DbTypeConverter {
 
 	/**
 	 * 数据库的列类型转换为 java 类型

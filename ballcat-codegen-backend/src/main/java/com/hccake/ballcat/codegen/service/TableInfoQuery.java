@@ -5,7 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.hccake.ballcat.codegen.datasource.WrappedDataSource;
-import com.hccake.ballcat.codegen.mapper.TableInfoMapper;
+import com.hccake.ballcat.codegen.database.TableInfoMapper;
 import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TableInfo;

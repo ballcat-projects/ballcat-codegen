@@ -1,6 +1,7 @@
-package com.hccake.ballcat.codegen.mapper;
+package com.hccake.ballcat.codegen.database.sqlserver;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.database.TableInfoMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

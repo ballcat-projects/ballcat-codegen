@@ -1,16 +1,19 @@
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.database.sqlserver;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.database.DbTypeConverter;
+import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
+import com.hccake.ballcat.codegen.database.IColumnType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.hccake.ballcat.codegen.datatype.DbColumnType.*;
+import static com.hccake.ballcat.codegen.database.DbColumnType.*;
 
 /**
  * @author hccake
  */
-public class SqlServerTypeConverter implements TypeConverter {
+public class SqlServerDbTypeConverter implements DbTypeConverter {
 
 	static final Map<String, IColumnType> TYPE_MAP = new HashMap<>();
 
@@ -41,7 +44,7 @@ public class SqlServerTypeConverter implements TypeConverter {
 		TYPE_MAP.put("timestamp", LOCAL_DATE_TIME);
 
 		// 注册
-		TypeConverterManager.register(DbType.SQL_SERVER, new SqlServerTypeConverter());
+		DbTypeConverterManager.register(DbType.SQL_SERVER, new SqlServerDbTypeConverter());
 	}
 
 	@Override

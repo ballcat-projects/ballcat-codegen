@@ -68,7 +68,6 @@
 		</dependency>
 
 
-
 		<!--模板引擎-->
 		<dependency>
 			<artifactId>velocity</artifactId>
@@ -83,6 +82,38 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>static/report/**</exclude>
+					<exclude>**/*.woff</exclude>
+					<exclude>**/*.woff2</exclude>
+					<exclude>**/*.ttf</exclude>
+					<exclude>**/*.ico</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>static/report/**</include>
+					<include>**/*.woff</include>
+					<include>**/*.woff2</include>
+					<include>**/*.ttf</include>
+					<include>**/*.ico</include>
+				</includes>
+			</resource>
+			<!-- 扫描src/main/java下所有xx.xml文件 -->
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -104,7 +135,8 @@
 							<overwrite>true</overwrite>
 							<resources>
 								<resource>
-									<directory>${project.parent.basedir}/ballcat-codegen-frontend/target/dist</directory>
+									<directory>${project.parent.basedir}/ballcat-codegen-frontend/target/dist
+									</directory>
 									<includes>
 										<include>static/</include>
 										<include>index.html</include>

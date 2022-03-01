@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.hccake.ballcat.codegen.engine.TemplateEngine;
 import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
 import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
-import com.hccake.ballcat.codegen.mapper.TableInfoMapper;
+import com.hccake.ballcat.codegen.database.TableInfoMapper;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

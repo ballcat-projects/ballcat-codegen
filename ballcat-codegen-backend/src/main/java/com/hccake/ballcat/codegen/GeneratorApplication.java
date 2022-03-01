@@ -1,7 +1,7 @@
 package com.hccake.ballcat.codegen;
 
 import cn.hutool.core.lang.ClassScanner;
-import com.hccake.ballcat.codegen.datatype.TypeConverter;
+import com.hccake.ballcat.codegen.database.DbTypeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,8 +27,8 @@ public class GeneratorApplication {
 	 */
 	private static void loadTypeConverter() throws ClassNotFoundException {
 		// 包扫描，以便注册所有的 TypeConverter
-		Set<Class<?>> classes = ClassScanner.scanPackage("com.hccake.ballcat.codegen.datatype",
-				TypeConverter.class::isAssignableFrom);
+		Set<Class<?>> classes = ClassScanner.scanPackage("com.hccake.ballcat.codegen.database",
+				DbTypeConverter.class::isAssignableFrom);
 		for (Class<?> aClass : classes) {
 			Class.forName(aClass.getName());
 			log.info("TypeConverter 加载成功：" + aClass);

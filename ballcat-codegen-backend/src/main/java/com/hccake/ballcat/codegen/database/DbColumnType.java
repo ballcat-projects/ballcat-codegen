@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.database;
 
 /**
  * 表字段类型

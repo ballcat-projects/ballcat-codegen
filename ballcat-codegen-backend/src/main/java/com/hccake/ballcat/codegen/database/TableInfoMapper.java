@@ -1,4 +1,4 @@
-package com.hccake.ballcat.codegen.mapper;
+package com.hccake.ballcat.codegen.database;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.metadata.IPage;

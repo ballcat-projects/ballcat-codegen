@@ -5,10 +5,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.hccake.ballcat.codegen.datatype.IColumnType;
-import com.hccake.ballcat.codegen.datatype.TypeConverter;
-import com.hccake.ballcat.codegen.datatype.TypeConverterManager;
-import com.hccake.ballcat.codegen.datatype.TypeScriptTypeConverter;
+import com.hccake.ballcat.codegen.database.IColumnType;
+import com.hccake.ballcat.codegen.database.DbTypeConverter;
+import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
+import com.hccake.ballcat.codegen.typescript.TypeScriptTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
@@ -81,8 +81,8 @@ public class GenUtils {
 
 		// 类型转换器
 		DbType dbType = tableDetails.getDbType();
-		TypeConverter typeConverter = TypeConverterManager.getTypeConverter(dbType);
-		Assert.notNull(typeConverter, "未找到对应的数据库类型转换器：{}", dbType);
+		DbTypeConverter dbTypeConverter = DbTypeConverterManager.getTypeConverter(dbType);
+		Assert.notNull(dbTypeConverter, "未找到对应的数据库类型转换器：{}", dbType);
 
 		for (ColumnInfo columnInfo : tableDetails.getColumnInfos()) {
 			String columnName = columnInfo.getColumnName();
@@ -99,7 +99,7 @@ public class GenUtils {
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
 			// 列的数据类型，转换成Java类型
-			IColumnType columnType = typeConverter.convert(columnProperties.getDataType());
+			IColumnType columnType = dbTypeConverter.convert(columnProperties.getDataType());
 			String columnJavaType = columnType.getType();
 			columnProperties.setAttrType(columnJavaType);
 			// 列的 ts数据类型

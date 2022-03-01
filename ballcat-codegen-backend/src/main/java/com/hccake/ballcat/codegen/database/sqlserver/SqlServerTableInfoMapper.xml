@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hccake.ballcat.codegen.mapper.SqlServerTableInfoMapper">
+<mapper namespace="com.hccake.ballcat.codegen.database.sqlserver.SqlServerTableInfoMapper">
     <select id="selectByPage" resultType="com.hccake.ballcat.codegen.model.bo.TableInfo">
 		SELECT
 			*

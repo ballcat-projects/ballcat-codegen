@@ -1,16 +1,19 @@
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.database.postgre;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.database.DbTypeConverter;
+import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
+import com.hccake.ballcat.codegen.database.IColumnType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.hccake.ballcat.codegen.datatype.DbColumnType.*;
+import static com.hccake.ballcat.codegen.database.DbColumnType.*;
 
 /**
  * @author hccake
  */
-public class PostgreTypeConverter implements TypeConverter {
+public class PostgreDbTypeConverter implements DbTypeConverter {
 
 	static final Map<String, IColumnType> TYPE_MAP = new HashMap<>();
 
@@ -40,7 +43,7 @@ public class PostgreTypeConverter implements TypeConverter {
 		TYPE_MAP.put("timestamp", LOCAL_DATE_TIME);
 
 		// 注册
-		TypeConverterManager.register(DbType.POSTGRE_SQL, new PostgreTypeConverter());
+		DbTypeConverterManager.register(DbType.POSTGRE_SQL, new PostgreDbTypeConverter());
 	}
 
 	@Override

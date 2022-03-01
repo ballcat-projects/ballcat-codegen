@@ -1,4 +1,4 @@
-package com.hccake.ballcat.codegen.datatype;
+package com.hccake.ballcat.codegen.typescript;
 
 import java.util.HashMap;
 import java.util.Map;
