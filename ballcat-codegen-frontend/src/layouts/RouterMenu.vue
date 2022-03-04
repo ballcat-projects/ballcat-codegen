@@ -55,7 +55,7 @@
 
   defineProps<{
     mode?: 'inline' | 'vertical' | 'horizontal'
-    theme?: 'dark' | 'white'
+    theme?: 'dark' | 'light'
   }>()
 
   const menuData = getMenuData(menuRouters)
