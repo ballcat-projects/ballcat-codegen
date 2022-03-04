@@ -1,36 +1,23 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { h, resolveComponent } from 'vue'
 
 const menuRouters: Array<RouteRecordRaw> = [
   {
-    path: '/gen',
-    redirect: '/gen/codegen',
-    meta: { icon: 'SettingOutlined', title: '代码生成器' },
-    component: {
-      render() {
-        return h(resolveComponent('router-view'))
-      }
-    },
-    children: [
-      {
-        path: '/gen/codegen',
-        name: 'CodeGen',
-        meta: { title: '代码生成器' },
-        component: () => import('@/views/gen/codegen/index.vue')
-      },
-      {
-        path: '/gen/template/group',
-        name: 'TemplateGroup',
-        meta: { title: '模板组管理' },
-        component: () => import('@/views/gen/template-group/index.vue')
-      },
-      {
-        path: '/gen/datasouce',
-        name: 'DataSource',
-        meta: { title: '数据源配置' },
-        component: () => import('@/views/gen/datasource-config/index.vue')
-      }
-    ]
+    path: '/codegen',
+    name: 'CodeGen',
+    meta: { title: '代码生成器' },
+    component: () => import('@/views/gen/codegen/index.vue')
+  },
+  {
+    path: '/template/group',
+    name: 'TemplateGroup',
+    meta: { title: '模板组管理' },
+    component: () => import('@/views/gen/template-group/index.vue')
+  },
+  {
+    path: '/datasouce',
+    name: 'DataSource',
+    meta: { title: '数据源配置' },
+    component: () => import('@/views/gen/datasource-config/index.vue')
   },
   {
     path: '404',
@@ -45,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: () => import('../layouts/BasicLayout.vue'),
     children: [...menuRouters],
-    redirect: '/gen'
+    redirect: '/codegen'
   },
   {
     path: '/:catchAll(.*)',
