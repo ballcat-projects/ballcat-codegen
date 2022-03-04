@@ -79,7 +79,9 @@
 
   function handleSubmit() {
     validate().then(() => {
-      doRequest(reqFunction(modelRef), {
+      doRequest({
+        request: reqFunction(modelRef),
+        successMessage: '保存成功！',
         onSuccess() {
           emits('done')
           handleClose()

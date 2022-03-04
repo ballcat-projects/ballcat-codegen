@@ -71,8 +71,8 @@
   // 当模板组 id 改变时，刷新对应的模板信息
   watchEffect(() => {
     props.templateGroupId &&
-      doRequest(listTemplateProperty(props.templateGroupId), {
-        successMessage: false,
+      doRequest({
+        request: listTemplateProperty(props.templateGroupId),
         onSuccess(res) {
           properties.value = res.data as TemplateProperty[]
         }

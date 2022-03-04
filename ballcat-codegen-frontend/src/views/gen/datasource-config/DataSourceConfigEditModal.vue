@@ -110,7 +110,9 @@
       if (!isUpdate.value) {
         delete modelRef.id
       }
-      doRequest(reqFunction(modelRef), {
+      doRequest({
+        request: reqFunction(modelRef),
+        successMessage: '保存成功！',
         onSuccess() {
           emits('done')
           handleClose()

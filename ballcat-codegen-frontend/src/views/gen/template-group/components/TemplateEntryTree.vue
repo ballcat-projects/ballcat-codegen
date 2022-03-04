@@ -138,8 +138,8 @@
   function treeLoad() {
     let templateGroupId = props.templateGroupId
     templateGroupId &&
-      doRequest(listTemplateEntry(templateGroupId), {
-        successMessage: false,
+      doRequest({
+        request: listTemplateEntry(templateGroupId),
         onSuccess(res) {
           let list = res.data as TemplateEntry[]
           treeData.value = listToTree(list, 0, {
@@ -233,7 +233,8 @@
       message.error('不能移动到非文件夹目标内部')
       return
     }
-    doRequest(moveEntry(entry.id, targetEntry.id, horizontalMove), {
+    doRequest({
+      request: moveEntry(entry.id, targetEntry.id, horizontalMove),
       successMessage: '移动成功',
       onSuccess() {
         treeLoad()

@@ -66,8 +66,8 @@ export default function <RecordType>(tableOptions: TableOptions<RecordType>) {
     loading.value = true
     const params = pageParams()
 
-    doRequest(tableOptions.pageRequest(params), {
-      successMessage: false,
+    doRequest({
+      request: tableOptions.pageRequest(params),
       onSuccess: res => {
         const pageResult = res.data as PageResult<RecordType>
         // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页

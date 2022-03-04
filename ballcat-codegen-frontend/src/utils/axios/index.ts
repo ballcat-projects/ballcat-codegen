@@ -6,7 +6,7 @@ import type { BAxiosError } from '@/utils/axios/types'
 // 创建 axios 实例
 const axiosInstance = axios.create({
   baseURL: '/api', // api base_url
-  timeout: 600000 // 请求超时时间
+  timeout: 6000 // 请求超时时间
 })
 
 // 请求失败处理函数

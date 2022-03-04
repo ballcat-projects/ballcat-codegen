@@ -140,8 +140,8 @@
 
   // 模板组的选择数据
   const templateGroupSelectData = ref<SelectData[]>([])
-  doRequest(listSelectData(), {
-    successMessage: false,
+  doRequest({
+    request: listSelectData(),
     onSuccess: res => {
       let data = res.data as SelectData[]
       templateGroupSelectData.value = data
@@ -184,8 +184,8 @@
     if (!templateGroupId) {
       return
     }
-    doRequest(listTemplateProperty(templateGroupId), {
-      successMessage: false,
+    doRequest({
+      request: listTemplateProperty(templateGroupId),
       onSuccess: res => {
         templateProperties.value = res.data
         if (templateProperties.value && templateProperties.value.length > 0) {
@@ -202,8 +202,8 @@
       }
     })
     treeLoading.value = true
-    doRequest(listTemplateEntry(templateGroupId), {
-      successMessage: false,
+    doRequest({
+      request: listTemplateEntry(templateGroupId),
       onSuccess: res => {
         templateEntryTree.value = listToTree(res.data as TemplateEntry[], 0, {
           attributeMapping(treeNode) {
@@ -262,8 +262,8 @@
           ...templateEntryIdsState.halfCheckedKeys,
           ...templateEntryIdsState.checkedKeys
         ]
-        doRequest(preview(dsName.value, modelRef), {
-          successMessage: false,
+        doRequest({
+          request: preview(dsName.value, modelRef),
           onSuccess: res => {
             previewModal.value?.open(res.data)
           },

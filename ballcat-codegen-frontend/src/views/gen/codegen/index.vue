@@ -123,8 +123,8 @@
   tableState.loadData()
 
   const dataSourceSelectData = ref<SelectData[]>([])
-  doRequest(listDatasourceConfigSelectData(), {
-    successMessage: false,
+  doRequest({
+    request: listDatasourceConfigSelectData(),
     onSuccess: res => {
       dataSourceSelectData.value = res.data as SelectData[]
     }

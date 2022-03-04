@@ -63,7 +63,9 @@
 
   function handleSubmit() {
     validate().then(() => {
-      doRequest(removeTemplateEntry(templateEntryId.value, modelRef.mode), {
+      doRequest({
+        request: removeTemplateEntry(templateEntryId.value, modelRef.mode),
+        successMessage: '删除成功！',
         onSuccess() {
           emits('done')
           handleClose()

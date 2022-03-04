@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 /**
  * 服务端统一返回信息
@@ -21,9 +21,11 @@ export interface BAxiosError extends AxiosError {
 }
 
 /**
- * axios 的响应处理器
+ * axios 的请求选项
  */
-export interface ResponseHandler<T = unknown> {
+export interface RequestOptions<T = unknown> {
+  // 请求 Promise
+  request: Promise<AxiosResponse<R<T>>>
   // 判断是否请求成功
   checkRequestSuccess?: (res: R<T>) => boolean
   // 成功消息提示

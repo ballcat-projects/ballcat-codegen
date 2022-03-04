@@ -122,6 +122,9 @@
 
   /* 删除数据源配置 */
   const handleDel = (record: DataSourceConfig) => {
-    doRequest<void>(removeDatasourceConfig(record.id))
+    doRequest<void>({
+      request: removeDatasourceConfig(record.id),
+      successMessage: '删除成功！'
+    })
   }
 </script>

@@ -89,8 +89,9 @@
       if (modelRef.type === TemplateEntryTypeEnum.FOLDER) {
         delete modelRef.engineType
       }
-      const requestFunction = isCreate.value ? addTemplateEntry : updateTemplateEntry
-      doRequest(requestFunction(modelRef), {
+      doRequest({
+        request: isCreate.value ? addTemplateEntry(modelRef) : updateTemplateEntry(modelRef),
+        successMessage: '保存成功！',
         onSuccess() {
           emits('done')
           handleClose()

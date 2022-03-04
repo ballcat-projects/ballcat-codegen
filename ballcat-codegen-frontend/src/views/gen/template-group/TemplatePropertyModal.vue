@@ -163,12 +163,16 @@
     if (id === 0) {
       delete editableDatum.id
       loading.value = true
-      doRequest(addTemplateProperty(editableDatum), {
+      doRequest({
+        request: addTemplateProperty(editableDatum),
+        successMessage: '保存成功！',
         onSuccess: () => tableState.reloadTable(false)
       })
     } else {
       loading.value = true
-      doRequest(updateTemplateProperty(editableDatum), {
+      doRequest({
+        request: updateTemplateProperty(editableDatum),
+        successMessage: '修改成功！',
         onSuccess: () => tableState.reloadTable(false)
       })
       delete editableData[id]
@@ -186,7 +190,9 @@
   }
 
   function handleRemove(id: number) {
-    doRequest(removeTemplateProperty(id), {
+    doRequest({
+      request: removeTemplateProperty(id),
+      successMessage: '删除成功',
       onSuccess() {
         tableState.reloadTable(false)
       }

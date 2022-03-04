@@ -176,7 +176,8 @@
 
     // 服务端发起请求保存
     fileSaving.value = true
-    doRequest(updateTemplateEntryContent(id, content), {
+    doRequest({
+      request: updateTemplateEntryContent(id, content),
       successMessage: '保存成功！',
       onSuccess() {
         // 同步更新本地内容
