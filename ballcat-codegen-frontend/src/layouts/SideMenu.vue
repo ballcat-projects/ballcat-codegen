@@ -7,10 +7,7 @@
   >
     <template v-for="item in menuData" :key="item.path">
       <template v-if="!item.children">
-        <a-menu-item
-          :key="item.path"
-          @click="$router.push({ path: item.path })"
-        >
+        <a-menu-item :key="item.path" @click="$router.push({ path: item.path })">
           <template v-if="item.meta.icon" #icon>
             <icon :type="item.meta.icon" />
           </template>
@@ -40,10 +37,7 @@
         delete newItem.children
         openKeysMap.set(item.path, parentKeys)
         if (item.children && !item.meta.hiddenInMenu) {
-          newItem.children = getMenuData(item.children, [
-            ...parentKeys,
-            item.path
-          ])
+          newItem.children = getMenuData(item.children, [...parentKeys, item.path])
         }
         menuData.push(newItem)
       }

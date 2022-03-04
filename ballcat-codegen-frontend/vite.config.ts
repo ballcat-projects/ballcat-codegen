@@ -2,10 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
-import {
-  createStyleImportPlugin,
-  AndDesignVueResolve
-} from 'vite-plugin-style-import'
+import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
 import { resolve } from 'path'
 
 const serverAddress = 'http://ballcat-admin:7777'

@@ -64,7 +64,7 @@ export interface TemplateEntry {
 /**
  * 模板目录项
  */
-export interface TemplateEntryDTO extends TemplateEntry {}
+export type TemplateEntryDTO = TemplateEntry
 
 /**
  * 模板目录项
