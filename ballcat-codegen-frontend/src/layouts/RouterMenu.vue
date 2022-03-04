@@ -2,8 +2,8 @@
   <a-menu
     v-model:openKeys="openKeys"
     v-model:selectedKeys="selectedKeys"
-    mode="inline"
-    theme="dark"
+    :mode="mode"
+    :theme="theme"
   >
     <template v-for="item in menuData" :key="item.path">
       <template v-if="!item.children">
@@ -52,6 +52,11 @@
   import SubMenu from './SubMenu.vue'
   import { menuRouters } from '@/router'
   import Icon from '../components/Icon/index.vue'
+
+  defineProps<{
+    mode?: 'inline' | 'vertical' | 'horizontal'
+    theme?: 'dark' | 'white'
+  }>()
 
   const menuData = getMenuData(menuRouters)
 

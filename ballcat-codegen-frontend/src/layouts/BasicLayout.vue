@@ -5,7 +5,7 @@
         <img src="../assets/logo.svg" class="logo" alt="logo" style="width: 32px; height: auto" />
         <span v-show="!collapsed" class="project-name"> Code Generator </span>
       </div>
-      <side-menu />
+      <side-menu mode="inline" theme="dark" />
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
@@ -27,7 +27,7 @@
   import { ref } from 'vue'
   import BasicHeader from '@/layouts/BasicHeader.vue'
   import BasicFooter from '@/layouts/BasicFooter.vue'
-  import SideMenu from '@/layouts/SideMenu.vue'
+  import SideMenu from '@/layouts/RouterMenu.vue'
 
   const collapsed = ref<boolean>(false)
   const toggleCollapsed = () => (collapsed.value = !collapsed.value)
