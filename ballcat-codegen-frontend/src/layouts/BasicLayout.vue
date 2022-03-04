@@ -7,7 +7,9 @@
         <basic-header theme="light" />
       </a-layout-header>
       <a-layout-content style="margin: 16px 16px 8px">
-        <router-view />
+        <div class="wide">
+          <router-view />
+        </div>
       </a-layout-content>
       <a-layout-footer style="padding: 0 50px 8px">
         <BasicFooter />
@@ -23,5 +25,10 @@
   #components-layout-side {
     min-height: 100vh;
     height: 100%;
+
+    .wide {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
   }
 </style>
