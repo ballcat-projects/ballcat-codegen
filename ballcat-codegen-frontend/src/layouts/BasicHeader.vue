@@ -13,17 +13,21 @@
         <router-menu mode="horizontal" />
       </div>
 
-      <div class="ballcat-top-nav-header-right-content">
-        <div class="right">
-          <span
-            class="action"
-            style="font-size: 18px"
-            @click="window.open('http://www.ballcat.cn')"
-          >
-            <GithubOutlined />
-            <span style="padding-left: 6px; font-weight: 600">Github</span>
+      <div class="ballcat-top-nav-header-right-content" style="padding-right: 6px">
+        <a-space class="right" :size="0">
+          <span class="action" @click="jumpToDoc">
+            <QuestionCircleOutlined />
+            <span>文档</span>
           </span>
-        </div>
+          <span class="action" @click="jumpToGithub">
+            <GithubOutlined />
+            <span>Github</span>
+          </span>
+          <span class="action" @click="jumpToGitee">
+            <img src="../assets/gitee.svg" alt="gitee" />
+            <span>Gitee</span>
+          </span>
+        </a-space>
       </div>
     </div>
   </div>
@@ -31,11 +35,23 @@
 
 <script setup lang="ts">
   import RouterMenu from './RouterMenu.vue'
-  import { GithubOutlined } from '@ant-design/icons-vue'
+  import { GithubOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue'
 
   defineProps<{
     theme: 'dark' | 'light'
   }>()
+
+  const jumpToGithub = () => {
+    window.open('https://github.com/ballcat-projects/ballcat-codegen')
+  }
+
+  const jumpToGitee = () => {
+    window.open('https://gitee.com/ballcat-projects/ballcat-codegen')
+  }
+
+  const jumpToDoc = () => {
+    window.open('http://www.ballcat.cn/codegen/#%E5%89%8D%E8%A8%80')
+  }
 </script>
 
 <style scoped lang="less">
@@ -129,6 +145,8 @@
       transition: all 0.3s;
       > span {
         vertical-align: middle;
+        font-weight: 600;
+        padding-left: 5px;
       }
       &:hover {
         background: @pro-header-hover-bg;
