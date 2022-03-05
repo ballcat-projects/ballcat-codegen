@@ -1,11 +1,11 @@
 <template>
-  <div v-show="templateEntryMap.size === 0" class="pane-content pane-scroll">
+  <div v-show="templateEntryMap.size === 0" class="pane-content pane-scroll" style="height: 100%; overflow: auto">
     <code-gen-tips :template-group-id="templateGroupId" />
   </div>
   <div
     v-show="templateEntryMap.size !== 0"
     class="pane-scroll"
-    style="height: 100%; overflow: auto"
+    style="height: 100%;"
   >
     <a-spin tip="保存中..." :spinning="fileSaving">
       <a-tabs
@@ -79,26 +79,34 @@
         contentStage.set(activeKey.value, editor?.getEditorDoc() || '')
       }
     }
-    editor = new Editor(editorBox.value, '', handleUpdate, [
-      {
-        // 保存快捷键
-        key: 'MOD-s',
-        preventDefault: true,
-        run: () => {
-          save()
-          return true
+    editor = new Editor(editorBox.value, '', handleUpdate,
+      [
+        {
+          // 保存快捷键
+          key: 'MOD-s',
+          preventDefault: true,
+          run: () => {
+            save()
+            return true
+          }
+        },
+        {
+          // 全屏/退出全屏快捷键，ESC 无法绑定
+          key: 'F11',
+          preventDefault: true,
+          run: () => {
+            fullScreen.value = !fullScreen.value
+            return true
+          }
         }
-      },
+      ],
       {
-        // 全屏/退出全屏快捷键，ESC 无法绑定
-        key: 'F11',
-        preventDefault: true,
-        run: () => {
-          fullScreen.value = !fullScreen.value
-          return true
+        spec: {
+          "&.cm-editor": {height: "calc(100vh - 188px)"},
+          "& .cm-scroller": { overflow: 'auto !important' },
         }
       }
-    ])
+    )
   })
 
   // 选中节点后更新编辑器的内容

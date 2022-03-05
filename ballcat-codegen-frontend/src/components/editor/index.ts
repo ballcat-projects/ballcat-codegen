@@ -10,6 +10,7 @@ import { velocity } from '@codemirror/legacy-modes/mode/velocity'
 import { javascript } from '@codemirror/lang-javascript'
 import { java } from '@codemirror/lang-java'
 import { html } from '@codemirror/lang-html'
+import { StyleSpec } from 'style-mod';
 
 class Editor {
   editorView: EditorView
@@ -19,8 +20,16 @@ class Editor {
     el: Element | DocumentFragment,
     content: string,
     updateListener: (v: ViewUpdate) => void,
-    keyBinds: KeyBinding[]
+    keyBinds: KeyBinding[],
+    themes ?: {
+      spec: {
+        [selector: string]: StyleSpec;
+      }, options?: {
+        dark?: boolean;
+      }
+    }
   ) {
+    const themeConf = themes ? EditorView.theme(themes.spec, themes.options ? themes.options : {}) : []
     this.editorView = new EditorView({
       parent: el,
       state: EditorState.create({
@@ -34,6 +43,7 @@ class Editor {
           showPanel.of(this.tooltipPanel),
           // 主题
           // oneDarkTheme,
+          themeConf,
           // 更新监听
           EditorView.updateListener.of(updateListener),
 
