@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, reactive, ref, watch, watchEffect } from 'vue'
+  import { reactive, ref, watch } from 'vue'
   import { queryTableInfoPage } from '@/api/gen/generate'
   import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
   import type { ColumnProps } from 'ant-design-vue/lib/table'

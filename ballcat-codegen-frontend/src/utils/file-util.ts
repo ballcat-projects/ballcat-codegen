@@ -29,19 +29,27 @@ export function remoteFileDownload(response: AxiosResponse, filename?: string) {
     if (!filename) {
       filename = resolveFilename(headers)
     }
+    fileDownload(blob, filename)
+  }
+}
 
-    //兼容IE10，后续可以移除
-    const navigator = window.navigator as any
-    if (navigator.msSaveOrOpenBlob) {
-      navigator.msSaveBlob(blob, filename)
-    } else {
-      const href = URL.createObjectURL(blob) //创建新的URL表示指定的blob对象
-      const a = document.createElement('a') //创建a标签
-      a.style.display = 'none'
-      a.href = href // 指定下载链接
-      a.download = filename //指定下载文件名
-      a.click() //触发下载
-      URL.revokeObjectURL(a.href) //释放URL对象
-    }
+/**
+ * 根据 blob 和 文件名进行文件下载
+ * @param blob
+ * @param filename
+ */
+export function fileDownload(blob: Blob, filename: string) {
+  //兼容IE10，后续可以移除
+  const navigator = window.navigator as any
+  if (navigator.msSaveOrOpenBlob) {
+    navigator.msSaveBlob(blob, filename)
+  } else {
+    const href = URL.createObjectURL(blob) //创建新的URL表示指定的blob对象
+    const a = document.createElement('a') //创建a标签
+    a.style.display = 'none'
+    a.href = href // 指定下载链接
+    a.download = filename //指定下载文件名
+    a.click() //触发下载
+    URL.revokeObjectURL(a.href) //释放URL对象
   }
 }

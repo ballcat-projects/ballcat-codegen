@@ -23,6 +23,28 @@
         <highlightjs :language="language" :code="code" style="overflow: initial" />
       </pane>
     </splitpanes>
+
+    <!-- 代码复制下载，放在面板里面渲染会出问题，所以拿到外面 -->
+    <span style="position: absolute; top: 62px; right: 28px">
+      <a-button type="link" style="padding: 0" :disabled="!selectedEntry" @click="handleDownload">
+        <template #icon>
+          <DownloadOutlined />
+        </template>
+        下载
+      </a-button>
+      <a-button
+        type="link"
+        style="padding: 0; margin-left: 12px"
+        :disabled="!selectedEntry"
+        @click="handleCopy"
+      >
+        <template #icon>
+          <CopyOutlined v-if="!copied" />
+          <CheckOutlined v-else />
+        </template>
+        复制
+      </a-button>
+    </span>
   </a-modal>
 </template>
 <script setup lang="ts">
@@ -37,6 +59,33 @@
   import { FileEntry } from '@/api/gen/template-entry/types'
   import { Splitpanes, Pane } from 'splitpanes'
   import 'splitpanes/dist/splitpanes.css'
+  import { CopyOutlined, CheckOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+  import { useClipboard } from '@vueuse/core'
+  import { fileDownload } from '@/utils/file-util'
+
+  // 当前选中的 entry
+  const selectedEntry = ref<FileEntry>()
+
+  // vueuse copy
+  const { copy, copied } = useClipboard()
+
+  /** 代码复制 */
+  const handleCopy = () => {
+    if (selectedEntry.value) {
+      copy(code.value)
+    }
+  }
+
+  /** 代码下载 */
+  const handleDownload = () => {
+    const entry = selectedEntry.value
+    if (entry) {
+      const blob = new Blob([code.value], {
+        type: 'text/plain'
+      })
+      fileDownload(blob, entry.filename)
+    }
+  }
 
   // 不能删除
   const highlightjs = defineComponent(hljsVuePlugin.component)
@@ -52,6 +101,7 @@
     // 非文件类型不加载
     const entry = node.dataRef
     if (entry.type === 2) {
+      selectedEntry.value = entry
       language.value = entry.filename
       code.value = entry.content ? entry.content : ''
       modalTitle.value = '代码预览 - ' + entry.filename
@@ -75,6 +125,7 @@
     open: (fileEntryList?: FileEntry[]) => {
       fileEntryTree.value = fileEntryList ? buildTree(fileEntryList) : []
       code.value = '双击文件查看代码信息'
+      selectedEntry.value = undefined
       handleOpen()
     }
   })
