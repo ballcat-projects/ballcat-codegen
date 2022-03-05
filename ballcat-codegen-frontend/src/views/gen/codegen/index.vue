@@ -1,70 +1,74 @@
 <template>
-  <a-card :bordered="false" style="min-height: calc(100vh - 108px)">
-    <a-form>
-      <a-row :gutter="12">
-        <a-col :xl="6" :md="12" :sm="24">
-          <a-form-item label="数据源">
-            <a-select
-              v-model:value="dsName"
-              style="width: 100%"
-              @change="tableState.reloadTable(true)"
-            >
-              <a-select-option key="master" value="master">master</a-select-option>
-              <a-select-option v-for="item in dataSourceSelectData" :key="item.value">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :xl="6" :md="12" :sm="24">
-          <a-form-item label="">
-            <a-input-search
-              v-model:value="queryParam.tableName"
-              placeholder="表名"
-              @search="tableState.reloadTable(true)"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :xl="6" :md="12" :sm="24">
-          <a-form-item label="">
-            <a-button type="primary" @click="multiGenerate">
-              <template #icon>
-                <DownloadOutlined />
+  <a-card :bordered="false" :body-style="{ padding: 0 }">
+    <a-row type="flex" style="min-height: calc(100vh - 150px)">
+      <a-col :flex="5">
+        <div class="database-title">数据源</div>
+        <a-menu
+          v-model:selectedKeys="selectedDsNames"
+          mode="inline"
+          style="height: calc(100% - 56px)"
+        >
+          <a-menu-item key="master" value="master">master</a-menu-item>
+          <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
+            {{ item.name }}
+          </a-menu-item>
+        </a-menu>
+      </a-col>
+      <a-col :flex="20">
+        <div style="padding: 24px">
+          <a-form>
+            <a-row :gutter="12">
+              <a-col :xl="6" :md="12" :sm="24">
+                <a-form-item label="">
+                  <a-input-search
+                    v-model:value="queryParam.tableName"
+                    placeholder="表名"
+                    @search="tableState.reloadTable(true)"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :xl="6" :md="12" :sm="24">
+                <a-form-item label="">
+                  <a-button type="primary" @click="multiGenerate">
+                    <template #icon>
+                      <DownloadOutlined />
+                    </template>
+                    批量生成
+                  </a-button>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+          <a-table
+            row-key="tableName"
+            size="middle"
+            :columns="columns"
+            :data-source="dataSource"
+            :pagination="pagination"
+            :loading="loading"
+            :row-selection="{
+              selectedRowKeys: tableState.selectedRowKeys,
+              onChange: tableState.onSelectChange
+            }"
+            :scroll="{ x: 620 }"
+            @change="tableState.handleTableChange"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.dataIndex === 'action'">
+                <a @click="singleGenerate(record)">生成</a>
               </template>
-              批量生成
-            </a-button>
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-form>
-    <a-table
-      row-key="tableName"
-      size="middle"
-      :columns="columns"
-      :data-source="dataSource"
-      :pagination="pagination"
-      :loading="loading"
-      :row-selection="{
-        selectedRowKeys: tableState.selectedRowKeys,
-        onChange: tableState.onSelectChange
-      }"
-      :scroll="{ x: 1000 }"
-      @change="tableState.handleTableChange"
-    >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <a @click="singleGenerate(record)">生成</a>
-        </template>
-      </template>
-    </a-table>
+            </template>
+          </a-table>
+        </div>
+      </a-col>
+    </a-row>
   </a-card>
-
   <!-- 代码生成弹窗 -->
   <generate-modal ref="generateModel" />
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue'
+  import { computed, reactive, ref, watch, watchEffect } from 'vue'
   import { queryTableInfoPage } from '@/api/gen/generate'
   import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
   import type { ColumnProps } from 'ant-design-vue/lib/table'
@@ -82,8 +86,7 @@
   const columns = ref<ColumnProps[]>([
     {
       title: '表名',
-      dataIndex: 'tableName',
-      width: '250px'
+      dataIndex: 'tableName'
     },
     {
       title: 'Engine',
@@ -96,19 +99,30 @@
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      width: '150px',
+      width: 150,
       sorter: true
     },
     {
       title: '操作',
       dataIndex: 'action',
-      width: '150px'
+      width: 80
     }
   ])
 
   const generateModel = ref<GenerateModalInstance>()
 
+  const selectedDsNames = ref<string[]>(['master'])
+
   const dsName = ref<string>('master')
+
+  watch(
+    () => selectedDsNames,
+    () => {
+      dsName.value = selectedDsNames.value[0]
+      tableState.loadData()
+    },
+    { deep: true }
+  )
 
   const queryParam = reactive({})
 
@@ -146,3 +160,16 @@
     }
   }
 </script>
+
+<style scoped lang="less">
+  .database-title {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 32px;
+    padding: 8px 0 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    border-right: 1px solid #f0f0f0;
+    width: 100%;
+  }
+</style>
