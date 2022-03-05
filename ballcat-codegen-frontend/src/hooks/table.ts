@@ -84,6 +84,7 @@ export default function <RecordType>(tableOptions: TableOptions<RecordType>) {
         pagination.value.total = pageResult.total
         tableOptions.onPageLoadSuccess?.(pageResult)
       },
+      onError: () => (dataSource.value = []),
       onFinally: () => {
         loading.value = false
       }
