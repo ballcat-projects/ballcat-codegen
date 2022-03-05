@@ -50,6 +50,7 @@
               selectedRowKeys: tableState.selectedRowKeys,
               onChange: tableState.onSelectChange
             }"
+            table-layout="fixed"
             :scroll="{ x: 620 }"
             @change="tableState.handleTableChange"
           >
