@@ -1,5 +1,10 @@
 <template>
-  <a-card size="small" :body-style="{ padding: 0 }">
+  <a-card
+    size="small"
+    :bordered="false"
+    :body-style="{ padding: 0 }"
+    style="min-height: calc(100vh - 108px)"
+  >
     <template #title>
       <div style="position: relative; height: 32px; line-height: 32px; padding-left: 1%">
         <span>{{ templateGroup?.name }}</span>
