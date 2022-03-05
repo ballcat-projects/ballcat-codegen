@@ -2,13 +2,17 @@
   <a-card
     size="small"
     :bordered="false"
-    :body-style="{ padding: 0 }"
-    style="min-height: calc(100vh - 108px)"
+    :body-style="{ padding: 0, height: 'calc(100vh - 156px)' }"
+    ref="entryEditor"
   >
     <template #title>
       <div style="position: relative; height: 32px; line-height: 32px; padding-left: 1%">
         <span>{{ templateGroup?.name }}</span>
         <span style="position: absolute; right: 1%">
+          <a-button style="margin-right: 8px" @click="toggle">
+            <template v-if="isFullscreen"> 退出全屏 </template>
+            <template v-else> 全屏显示 </template>
+          </a-button>
           <a-button @click="handleGoBack">返回上级</a-button>
         </span>
       </div>
@@ -38,6 +42,7 @@
   import TemplateEntryContentEditor from '@/views/gen/template-group/components/TemplateEntryContentEditor.vue'
   import { Modal } from 'ant-design-vue'
   import { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
+  import { useFullscreen } from '@vueuse/core'
 
   const props = defineProps<{
     templateGroup: TemplateGroup
@@ -46,6 +51,9 @@
   let emits = defineEmits<{
     (e: 'go-back'): void
   }>()
+
+  const entryEditor = ref<HTMLElement | null>(null)
+  const { isFullscreen, exit, toggle } = useFullscreen(entryEditor)
 
   // 模板组
   const templateGroup = toRef(props, 'templateGroup')
@@ -56,6 +64,7 @@
   /** 返回上级 */
   function handleGoBack() {
     if (editorRef.value?.checkSaveState()) {
+      exit()
       emits('go-back')
       return
     }
@@ -75,8 +84,6 @@
   // 面板
   .splitpanes.default-theme .splitpanes__pane {
     background-color: #ffffff !important;
-    height: calc(100vh - 154px) !important;
-    min-height: 500px !important;
     border-top: 1px solid #f2f2f2 !important;
   }
 
@@ -85,12 +92,6 @@
     //background-color: #f2f2f2 !important;
     width: 3px;
     border-top: 1px solid #eee;
-  }
-
-  // 面板内容
-  .pane-content {
-    height: 100%;
-    overflow: auto;
   }
 
   .pane-scroll::-webkit-scrollbar {
