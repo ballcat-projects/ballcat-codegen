@@ -123,13 +123,13 @@
 
   const add = () => {
     isUpdate.value = false
-    title.value = '新建数据源配置'
+    title.value = '新建数据源'
     resetFields()
     handleOpen()
   }
   const update = (record: DataSourceConfig) => {
     isUpdate.value = true
-    title.value = '修改数据源配置'
+    title.value = '修改数据源'
     resetFields()
     handleOpen()
     copyProperties(modelRef, record)

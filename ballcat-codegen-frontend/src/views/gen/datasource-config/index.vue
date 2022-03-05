@@ -36,11 +36,7 @@
   </a-card>
 
   <!-- 编辑弹窗 -->
-  <data-source-config-edit-modal
-    ref="editModal"
-    title="新建表单"
-    @done="tableState.reloadTable(false)"
-  />
+  <data-source-config-edit-modal ref="editModal" @done="tableState.reloadTable(false)" />
 </template>
 
 <script setup lang="ts">
