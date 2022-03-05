@@ -6,6 +6,9 @@ spring:
     name: @artifactId@
   profiles:
     active: @profiles.active@  # 当前激活配置，默认dev
+  datasource:
+    dynamic:
+      strict: true # 使用严格模式处理
 
 mybatis-plus:
   mapper-locations:
