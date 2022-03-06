@@ -7,7 +7,7 @@
     class="pane-scroll"
     style="height: 100%;"
   >
-    <a-spin tip="保存中..." :spinning="fileSaving">
+    <a-spin wrapperClassName="spin-box" tip="保存中..." :spinning="fileSaving">
       <a-tabs
         v-model:activeKey="activeKey"
         :tab-bar-style="{ margin: 0 }"
@@ -28,9 +28,7 @@
           </template>
         </a-tab-pane>
       </a-tabs>
-      <div>
-        <div ref="editorBox" :class="fullScreen && 'editor-fullscreen'" />
-      </div>
+      <div style="height: calc(100% - 32px)" ref="editorBox" :class="fullScreen && 'editor-fullscreen'" />
     </a-spin>
   </div>
 </template>
@@ -102,7 +100,7 @@
       ],
       {
         spec: {
-          "&.cm-editor": {height: "calc(100vh - 188px)"},
+          "&.cm-editor": {height: "100%"},
           "& .cm-scroller": { overflow: 'auto !important' },
         }
       }
@@ -222,6 +220,12 @@
 </script>
 
 <style scoped lang="less">
+  .spin-box {
+    height: 100%;
+    :deep(.ant-spin-container) {
+      height: 100%;
+    }
+  }
   .badge-status-unsaved {
     position: relative;
     background-color: #919191;

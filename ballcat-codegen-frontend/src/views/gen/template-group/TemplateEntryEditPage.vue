@@ -2,7 +2,7 @@
   <a-card
     size="small"
     :bordered="false"
-    :body-style="{ padding: 0, height: 'calc(100vh - 156px)' }"
+    :body-style="{ padding: 0, height: isFullscreen ? 'calc(100vh - 49px)' : 'calc(100vh - 156px)' }"
     ref="entryEditor"
   >
     <template #title>
