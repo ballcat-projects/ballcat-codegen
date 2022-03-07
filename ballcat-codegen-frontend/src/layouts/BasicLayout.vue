@@ -28,7 +28,7 @@
 
     .ballcat-layout-content {
       &.wide {
-        max-width: 1200px;
+        max-width: 80%;
         margin: 0 auto;
       }
     }
