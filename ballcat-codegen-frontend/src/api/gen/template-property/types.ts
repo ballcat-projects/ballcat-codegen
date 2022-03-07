@@ -9,7 +9,7 @@ export interface TemplateProperty {
   // 标题
   title?: string
   // 属性键
-  propKey?: string
+  propKey: string
   // 默认值(可为空值)
   defaultValue?: string
   // 是否必填，1：是，0：否

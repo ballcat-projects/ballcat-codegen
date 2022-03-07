@@ -44,7 +44,7 @@
   import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
   import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
-  import { DataSourceConfig } from '@/api/gen/datasource-config/types'
+  import { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
   import DataSourceConfigEditModal from '@/views/gen/datasource-config/DataSourceConfigEditModal.vue'
   import { DataSourceConfigEditModalInstance } from './types'
   import AddButton from '@/components/button/AddButton.vue'
@@ -96,7 +96,7 @@
   ]
 
   // 查询参数
-  const queryParam = reactive({})
+  const queryParam = reactive<DataSourcePageParam>({})
   // 数据表格
   let tableState = useTable<DataSourceConfig>({
     pageRequest: queryDatasourceConfigPage,

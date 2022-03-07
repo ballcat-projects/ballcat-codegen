@@ -1,12 +1,12 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
 import { PageResult, SelectData } from '@/api/types'
-import { DataSourceConfig, TableInfoPageParam } from '@/api/gen/datasource-config/types'
+import { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
 
 /**
  * 分页查询
  */
-export function queryDatasourceConfigPage(query: TableInfoPageParam) {
+export function queryDatasourceConfigPage(query: DataSourcePageParam) {
   return request.get<R<PageResult<DataSourceConfig>>>('/gen/datasource-config/page', {
     params: query
   })

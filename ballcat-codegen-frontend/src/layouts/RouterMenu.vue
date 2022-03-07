@@ -8,10 +8,10 @@
     <template v-for="item in menuData" :key="item.path">
       <template v-if="!item.children">
         <a-menu-item :key="item.path" @click="$router.push({ path: item.path })">
-          <template v-if="item.meta.icon" #icon>
+          <template v-if="item.meta && item.meta.icon" #icon>
             <icon :type="item.meta.icon" />
           </template>
-          {{ item.meta.title }}
+          {{ item.meta?.title }}
         </a-menu-item>
       </template>
       <template v-else>
@@ -22,15 +22,15 @@
 </template>
 
 <script lang="ts">
-  import { RouteRecordRaw } from 'vue-router'
+  import { BallcatRouteRecordRaw } from '@/router/types'
 
   const openKeysMap = new Map()
 
   const getMenuData = function (
-    routes: Array<RouteRecordRaw> = [],
+    routes: Array<BallcatRouteRecordRaw> = [],
     parentKeys: Array<string> = []
   ) {
-    const menuData: Array<RouteRecordRaw> = []
+    const menuData: Array<BallcatRouteRecordRaw> = []
     routes.forEach(item => {
       if (item.meta && !item.meta.hiddenInMenu) {
         const newItem = { ...item }

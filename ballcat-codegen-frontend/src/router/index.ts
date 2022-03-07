@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { BallcatRouteRecordRaw } from '@/router/types'
 
-const menuRouters: Array<RouteRecordRaw> = [
+const menuRouters: Array<BallcatRouteRecordRaw> = [
   {
     path: '/codegen',
     name: 'CodeGen',
@@ -26,7 +27,7 @@ const menuRouters: Array<RouteRecordRaw> = [
     meta: { hiddenInMenu: true }
   }
 ]
-const routes: Array<RouteRecordRaw> = [
+const routes: Array<BallcatRouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
@@ -44,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory('/'),
-  routes
+  routes: routes as RouteRecordRaw[]
 })
 
 export { menuRouters }

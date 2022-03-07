@@ -3,7 +3,7 @@ import { PageParam } from '@/api/types'
 /**
  * 数据源配置查询对象
  */
-export interface TableInfoPageParam extends PageParam {
+export interface DataSourcePageParam extends PageParam {
   // 数据源名称
   name?: string
 }

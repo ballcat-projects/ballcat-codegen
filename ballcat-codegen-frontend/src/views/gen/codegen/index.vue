@@ -125,7 +125,7 @@
     { deep: true }
   )
 
-  const queryParam = reactive({})
+  const queryParam = reactive<TableInfoPageParam>({})
 
   let tableState = useTable<TableInfo>({
     queryParam: queryParam,

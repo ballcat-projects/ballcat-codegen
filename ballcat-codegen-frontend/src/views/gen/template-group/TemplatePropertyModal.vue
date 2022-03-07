@@ -31,7 +31,7 @@
           <div>
             <a-switch
               v-if="editableData[record.id]"
-              v-model:checked="editableData[record.id][column.dataIndex]"
+              v-model:checked="editableData[record.id].required"
               :checked-value="1"
               :un-checked-value="0"
               checked-children="是"
@@ -133,7 +133,7 @@
   // 所属模板组 id
   const templateGroupId = ref<number>()
   // 数据表格
-  let tableState = useTable<TemplateGroup>({
+  let tableState = useTable<TemplateProperty>({
     pageRequest: (query: PageParam) => {
       const params = Object.assign({ groupId: templateGroupId.value }, query)
       return queryTemplatePropertyPage(params)
@@ -141,7 +141,7 @@
   })
   const { dataSource, pagination, loading } = tableState
 
-  const editableData: UnwrapRef<Record<string, TemplateProperty>> = reactive({})
+  const editableData = reactive<UnwrapRef<Record<string, TemplateProperty>>>({})
 
   function handleAdd() {
     if (editableData[0]) {

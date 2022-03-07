@@ -190,7 +190,7 @@
         templateProperties.value = res.data
         if (templateProperties.value && templateProperties.value.length > 0) {
           for (let property of templateProperties.value) {
-            modelRef.genProperties[property.propKey as string] = property.defaultValue
+            modelRef.genProperties[property.propKey] = property.defaultValue
             rulesRef['genProperties.' + property.propKey] = [
               {
                 required: property.required === 1,

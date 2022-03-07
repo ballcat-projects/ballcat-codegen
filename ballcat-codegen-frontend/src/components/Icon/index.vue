@@ -1,9 +1,9 @@
 <template>
-  <component :is="AntdIcon[type]" />
+  <component :is="AntdIcons[type]" />
 </template>
 
 <script setup lang="ts">
-  import * as AntdIcon from '@ant-design/icons-vue'
+  import * as AntdIcons from '@ant-design/icons-vue/lib/icons'
   defineProps<{
     type: string
   }>()
