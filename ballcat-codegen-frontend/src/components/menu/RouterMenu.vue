@@ -7,12 +7,7 @@
   >
     <template v-for="item in menuData" :key="item.path">
       <template v-if="!item.children">
-        <a-menu-item :key="item.path" @click="$router.push({ path: item.path })">
-          <template v-if="item.meta && item.meta.icon" #icon>
-            <icon :type="item.meta.icon" />
-          </template>
-          {{ item.meta?.title }}
-        </a-menu-item>
+        <MenuItemContent :menu-info="item" />
       </template>
       <template v-else>
         <sub-menu :key="item.path" :menu-info="item" />
@@ -21,8 +16,17 @@
   </a-menu>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+  import { useRoute } from 'vue-router'
+  import { ref, watchEffect } from 'vue'
+  import SubMenu from './SubMenu.vue'
+  import { menuRouters } from '@/router'
   import { BallcatRouteRecordRaw } from '@/router/types'
+
+  defineProps<{
+    mode?: 'inline' | 'vertical' | 'horizontal'
+    theme?: 'dark' | 'light'
+  }>()
 
   const openKeysMap = new Map()
 
@@ -44,19 +48,6 @@
     })
     return menuData
   }
-</script>
-
-<script setup lang="ts">
-  import { useRoute } from 'vue-router'
-  import { ref, watchEffect } from 'vue'
-  import SubMenu from './SubMenu.vue'
-  import { menuRouters } from '@/router'
-  import Icon from '../components/Icon/index.vue'
-
-  defineProps<{
-    mode?: 'inline' | 'vertical' | 'horizontal'
-    theme?: 'dark' | 'light'
-  }>()
 
   const menuData = getMenuData(menuRouters)
 

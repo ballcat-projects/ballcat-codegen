@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-  import RouterMenu from './RouterMenu.vue'
+  import RouterMenu from '@/components/menu'
   import { GithubOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue'
 
   defineProps<{
