@@ -24,6 +24,12 @@ public class DataSourceConfigPageVO {
 	private Integer id;
 
 	/**
+	 * 数据源描述
+	 */
+	@Schema(title = "数据源描述")
+	private String title;
+
+	/**
 	 * 名称
 	 */
 	@Schema(title = "名称")

@@ -18,3 +18,7 @@ DROP TABLE `gen_template_info`;
 -- 修改文件名字段 file_name => filename
 ALTER TABLE `gen_template_entry`
     CHANGE COLUMN `file_name` `filename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件夹路径/模板文件名称（支持占位符）' AFTER `group_id`;
+
+-- 新增数据源描述字段
+ALTER TABLE `gen_data_source_config`
+    ADD COLUMN title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '数据源描述';

@@ -14,6 +14,10 @@
         <a-input v-model:value="modelRef.id" />
       </a-form-item>
 
+      <a-form-item label="描述" v-bind="validateInfos.title">
+        <a-input v-model:value="modelRef.title" placeholder="数据源描述" />
+      </a-form-item>
+
       <a-form-item label="名称" v-bind="validateInfos.name">
         <a-input v-model:value="modelRef.name" placeholder="数据源名称" />
       </a-form-item>
@@ -81,6 +85,7 @@
   const modelRef = reactive<DataSourceConfig & { pass?: string }>({
     id: undefined,
     pass: '',
+    title: '',
     name: '',
     username: '',
     password: '',
@@ -90,6 +95,7 @@
   // 表单校验规则
   const rulesRef = computed(() => {
     return {
+      title: [{ required: true, message: '请输入数据源描述！' }],
       name: [{ required: true, message: '请输入数据源名称!' }],
       username: [{ required: true, message: '请输入用户名!' }],
       pass: isUpdate.value ? [] : [{ required: true, message: '请输入密码!' }],

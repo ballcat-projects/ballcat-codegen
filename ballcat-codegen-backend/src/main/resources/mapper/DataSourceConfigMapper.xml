@@ -3,7 +3,7 @@
 <mapper namespace="com.hccake.ballcat.codegen.mapper.DataSourceConfigMapper">
 	<select id="listSelectData" resultType="com.hccake.ballcat.common.model.domain.SelectData">
 		select
-		name , name as value
+		title as name , name as value
 		from
 		gen_data_source_config
 	</select>
