@@ -24,16 +24,16 @@ public class DataSourceConfigPageVO {
 	private Integer id;
 
 	/**
-	 * 数据源描述
+	 * 标题
 	 */
-	@Schema(title = "数据源描述")
+	@Schema(title = "标题")
 	private String title;
 
 	/**
-	 * 名称
+	 * 数据源key
 	 */
-	@Schema(title = "名称")
-	private String name;
+	@Schema(title = "数据源key")
+	private String dsKey;
 
 	/**
 	 * 用户名

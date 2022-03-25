@@ -60,14 +60,14 @@
       width: '50px'
     },
     {
-      title: '数据源描述',
+      title: '标题',
       dataIndex: 'title',
       ellipsis: true,
       width: '100px'
     },
     {
-      title: '数据源名称',
-      dataIndex: 'name',
+      title: 'dsKey',
+      dataIndex: 'dsKey',
       ellipsis: true,
       width: '100px'
     },
