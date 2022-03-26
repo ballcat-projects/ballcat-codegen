@@ -85,6 +85,7 @@
   .splitpanes.default-theme .splitpanes__pane {
     background-color: #ffffff !important;
     border-top: 1px solid #f2f2f2 !important;
+    overflow: auto;
   }
 
   // 分割器的背景色
