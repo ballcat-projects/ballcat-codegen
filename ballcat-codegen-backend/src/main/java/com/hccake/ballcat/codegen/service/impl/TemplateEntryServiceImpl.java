@@ -226,12 +226,11 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	 * @param list 模板文件列表
 	 * @param path 当前目录路径
 	 */
-	@SuppressWarnings("unchecked")
 	private void fillTemplateFiles(TemplateEntryTree current, List<TemplateFile> list, String path) {
 
 		// 文件夹类型则递归子节点
 		if (TemplateEntryTypeEnum.FOLDER.getType().equals(current.getType())) {
-			List<TemplateEntryTree> children = (List<TemplateEntryTree>) current.getChildren();
+			List<TemplateEntryTree> children = current.getChildren();
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
 				for (TemplateEntryTree child : children) {
