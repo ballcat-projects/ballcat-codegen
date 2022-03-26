@@ -31,7 +31,7 @@ public class SpaRedirectFilterConfiguration {
 	 * Forwards all routes except '/index.html', '/200.html', '/favicon.ico', '/sw.js'
 	 * '/api/', '/api/**'
 	 */
-	private static final String REGEX = "(?!/actuator|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js).*$";
+	private static final String REGEX = "(?!/actuator|/_nuxt|/static|/index\\.html|/200\\.html|/favicon\\.ico|/sw\\.js|^/v3/api-docs|^/swagger-ui).*$";
 
 	@Bean
 	public FilterRegistrationBean<OncePerRequestFilter> spaRedirectFiler() {

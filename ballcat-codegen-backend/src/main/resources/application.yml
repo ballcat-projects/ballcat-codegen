@@ -29,3 +29,23 @@ jasypt:
   encryptor:
     password: "123456"
 
+ballcat:
+  openapi:
+    title: BallCat-Codegen Docs
+    description: BallCat 代码生成器文档
+    version: ${project.version}
+    terms-of-service: http://www.ballcat.cn/
+    license:
+      name: Powered By BallCat
+      url: http://www.ballcat.cn/
+    contact:
+      name: Hccake
+      email: chengbohua@foxmail.com
+      url: https://github.com/Hccake
+    servers:
+      - url: /api # 设置调试的 server 前缀为 /api
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    disable-swagger-default-url: true
