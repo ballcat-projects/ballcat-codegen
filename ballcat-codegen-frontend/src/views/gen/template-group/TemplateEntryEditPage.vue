@@ -1,9 +1,12 @@
 <template>
   <a-card
+    ref="entryEditor"
     size="small"
     :bordered="false"
-    :body-style="{ padding: 0, height: isFullscreen ? 'calc(100vh - 49px)' : 'calc(100vh - 156px)' }"
-    ref="entryEditor"
+    :body-style="{
+      padding: 0,
+      height: isFullscreen ? 'calc(100vh - 49px)' : 'calc(100vh - 156px)'
+    }"
   >
     <template #title>
       <div style="position: relative; height: 32px; line-height: 32px; padding-left: 1%">
@@ -85,7 +88,6 @@
   .splitpanes.default-theme .splitpanes__pane {
     background-color: #ffffff !important;
     border-top: 1px solid #f2f2f2 !important;
-    overflow: auto;
   }
 
   // 分割器的背景色
@@ -97,8 +99,8 @@
 
   .pane-scroll::-webkit-scrollbar {
     /*滚动条整体样式*/
-    width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
-    height: 5px;
+    width: 9px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 10px;
   }
 
   .pane-scroll::-webkit-scrollbar-thumb {

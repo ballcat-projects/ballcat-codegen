@@ -1,13 +1,13 @@
 <template>
-  <div v-show="templateEntryMap.size === 0" class="pane-content pane-scroll" style="height: 100%; overflow: auto">
+  <div
+    v-show="templateEntryMap.size === 0"
+    class="pane-content pane-scroll"
+    style="height: 100%; overflow: auto"
+  >
     <code-gen-tips :template-group-id="templateGroupId" />
   </div>
-  <div
-    v-show="templateEntryMap.size !== 0"
-    class="pane-scroll"
-    style="height: 100%;"
-  >
-    <a-spin wrapperClassName="spin-box" tip="保存中..." :spinning="fileSaving">
+  <div v-show="templateEntryMap.size !== 0" class="pane-scroll" style="height: 100%">
+    <a-spin wrapper-class-name="spin-box" tip="保存中..." :spinning="fileSaving">
       <a-tabs
         v-model:activeKey="activeKey"
         :tab-bar-style="{ margin: 0 }"
@@ -28,7 +28,11 @@
           </template>
         </a-tab-pane>
       </a-tabs>
-      <div style="height: calc(100% - 32px)" ref="editorBox" :class="fullScreen && 'editor-fullscreen'" />
+      <div
+        ref="editorBox"
+        style="height: calc(100% - 32px)"
+        :class="fullScreen && 'editor-fullscreen'"
+      />
     </a-spin>
   </div>
 </template>
@@ -77,7 +81,10 @@
         contentStage.set(activeKey.value, editor?.getEditorDoc() || '')
       }
     }
-    editor = new Editor(editorBox.value, '', handleUpdate,
+    editor = new Editor(
+      editorBox.value,
+      '',
+      handleUpdate,
       [
         {
           // 保存快捷键
@@ -100,8 +107,8 @@
       ],
       {
         spec: {
-          "&.cm-editor": {height: "100%"},
-          "& .cm-scroller": { overflow: 'auto !important' },
+          '&.cm-editor': { height: '100%' },
+          '& .cm-scroller': { overflow: 'auto !important' }
         }
       }
     )

@@ -1,53 +1,55 @@
 <template>
   <div
     class="pane-content pane-scroll"
-    style="padding: 10px; width: fit-content"
+    style="height: 100%; overflow: auto"
     @contextmenu.prevent="clearSelectAndShowMenu"
   >
-    <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>
+    <div style="padding: 10px; width: fit-content; min-width: 100%">
+      <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>
 
-    <a-directory-tree
-      v-model:selectedKeys="selectedKeys"
-      v-model:expandedKeys="expandedKeys"
-      :tree-data="treeData"
-      :show-icon="true"
-      :draggable="true"
-      @drop="handleDrop"
-      @dblclick="handleDblClick"
-      @right-click="selectAndShowMenu"
-    >
-    </a-directory-tree>
+      <a-directory-tree
+        v-model:selectedKeys="selectedKeys"
+        v-model:expandedKeys="expandedKeys"
+        :tree-data="treeData"
+        :show-icon="true"
+        :draggable="true"
+        @drop="handleDrop"
+        @dblclick="handleDblClick"
+        @right-click="selectAndShowMenu"
+      >
+      </a-directory-tree>
 
-    <a-menu v-if="menuVisible" :style="menuStyle">
-      <template v-if="selectedEntry">
-        <a-menu-item key="1" :style="menuItemStyle" @click="updateEntry()">
-          <edit-outlined />
-          <span>编辑</span>
-        </a-menu-item>
-        <a-menu-item key="2" :style="menuItemStyle" @click="removeEntry()">
-          <delete-outlined />
-          <span>删除</span>
-        </a-menu-item>
-      </template>
-      <template v-if="!selectedEntry || selectedEntry.type !== 2">
-        <a-menu-item
-          key="3"
-          :style="menuItemStyle"
-          @click="createdEntry(TemplateEntryTypeEnum.FOLDER)"
-        >
-          <diff-outlined />
-          <span>新建文件夹</span>
-        </a-menu-item>
-        <a-menu-item
-          key="4"
-          :style="menuItemStyle"
-          @click="createdEntry(TemplateEntryTypeEnum.FILE)"
-        >
-          <file-add-outlined />
-          <span>新建文件</span>
-        </a-menu-item>
-      </template>
-    </a-menu>
+      <a-menu v-if="menuVisible" :style="menuStyle">
+        <template v-if="selectedEntry">
+          <a-menu-item key="1" :style="menuItemStyle" @click="updateEntry()">
+            <edit-outlined />
+            <span>编辑</span>
+          </a-menu-item>
+          <a-menu-item key="2" :style="menuItemStyle" @click="removeEntry()">
+            <delete-outlined />
+            <span>删除</span>
+          </a-menu-item>
+        </template>
+        <template v-if="!selectedEntry || selectedEntry.type !== 2">
+          <a-menu-item
+            key="3"
+            :style="menuItemStyle"
+            @click="createdEntry(TemplateEntryTypeEnum.FOLDER)"
+          >
+            <diff-outlined />
+            <span>新建文件夹</span>
+          </a-menu-item>
+          <a-menu-item
+            key="4"
+            :style="menuItemStyle"
+            @click="createdEntry(TemplateEntryTypeEnum.FILE)"
+          >
+            <file-add-outlined />
+            <span>新建文件</span>
+          </a-menu-item>
+        </template>
+      </a-menu>
+    </div>
   </div>
 
   <!-- 模板目录项删除弹窗 -->
