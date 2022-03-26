@@ -1,7 +1,7 @@
 <template>
   <div
     class="pane-content pane-scroll"
-    style="padding: 10px"
+    style="padding: 10px; width: fit-content"
     @contextmenu.prevent="clearSelectAndShowMenu"
   >
     <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>

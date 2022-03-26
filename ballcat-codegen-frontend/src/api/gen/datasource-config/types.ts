@@ -4,8 +4,8 @@ import { PageParam } from '@/api/types'
  * 数据源配置查询对象
  */
 export interface DataSourcePageParam extends PageParam {
-  // 数据源名称
-  name?: string
+  // 数据源标题
+  title?: string
 }
 
 /**
@@ -14,8 +14,10 @@ export interface DataSourcePageParam extends PageParam {
 export interface DataSourceConfig {
   // ID
   id?: number
-  // 名称
-  name?: string
+  // 标题
+  title: string,
+  // dsKey
+  dsKey?: string
   // 用户名
   username?: string
   // 密码

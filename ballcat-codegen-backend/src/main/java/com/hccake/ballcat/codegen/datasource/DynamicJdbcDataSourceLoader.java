@@ -30,7 +30,7 @@ public class DynamicJdbcDataSourceLoader implements InitializingBean {
 
 		// 遍历添加进动态数据源中
 		for (DataSourceConfig dataSourceConfig : list) {
-			String dsName = dataSourceConfig.getName();
+			String dsName = dataSourceConfig.getDsKey();
 			String username = dataSourceConfig.getUsername();
 			String password = dynamicDataSourceHelper.decryptPassword(dataSourceConfig.getPassword());
 			String url = dataSourceConfig.getUrl();

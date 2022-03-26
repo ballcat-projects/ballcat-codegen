@@ -24,10 +24,16 @@ public class DataSourceConfigDTO {
 	private Integer id;
 
 	/**
-	 * 名称
+	 * 标题
 	 */
-	@Schema(title = "名称")
-	private String name;
+	@Schema(title = "标题")
+	private String title;
+
+	/**
+	 * 数据源key
+	 */
+	@Schema(title = "数据源key")
+	private String dsKey;
 
 	/**
 	 * 用户名

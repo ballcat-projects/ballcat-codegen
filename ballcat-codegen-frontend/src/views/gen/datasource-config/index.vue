@@ -3,8 +3,8 @@
     <!-- 操作按钮区域 -->
     <div class="table-list-toolbar">
       <a-input-search
-        v-model:value="queryParam.name"
-        placeholder="数据源名称"
+        v-model:value="queryParam.title"
+        placeholder="数据源描述"
         style="width: 250px"
         @search="tableState.reloadTable(true)"
       />
@@ -60,8 +60,14 @@
       width: '50px'
     },
     {
-      title: '数据源名称',
-      dataIndex: 'name',
+      title: '标题',
+      dataIndex: 'title',
+      ellipsis: true,
+      width: '100px'
+    },
+    {
+      title: 'dsKey',
+      dataIndex: 'dsKey',
       ellipsis: true,
       width: '100px'
     },

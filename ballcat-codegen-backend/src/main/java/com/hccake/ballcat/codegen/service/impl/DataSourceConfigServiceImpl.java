@@ -60,7 +60,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 	@Override
 	public boolean save(DataSourceConfigDTO dto) {
 		// 新的数据源配置信息
-		DataSourceProperty dataSourceProperty = dynamicDataSourceHelper.prodDataSourceProperty(dto.getName(),
+		DataSourceProperty dataSourceProperty = dynamicDataSourceHelper.prodDataSourceProperty(dto.getDsKey(),
 				dto.getUrl(), dto.getUsername(), dto.getPass());
 		// 校验数据源配置
 		if (dynamicDataSourceHelper.isErrorDataSourceProperty(dataSourceProperty)) {
@@ -107,7 +107,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 		}
 
 		// 新的数据源配置信息
-		DataSourceProperty dataSourceProperty = dynamicDataSourceHelper.prodDataSourceProperty(dto.getName(),
+		DataSourceProperty dataSourceProperty = dynamicDataSourceHelper.prodDataSourceProperty(dto.getDsKey(),
 				dto.getUrl(), dto.getUsername(), pass);
 		// 校验数据源配置
 		if (dynamicDataSourceHelper.isErrorDataSourceProperty(dataSourceProperty)) {
@@ -121,7 +121,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 		}
 
 		// 先删除现有数据源
-		dynamicDataSourceHelper.removeDataSource(oldConfig.getName());
+		dynamicDataSourceHelper.removeDataSource(oldConfig.getDsKey());
 		// 再添加数据源
 		dynamicDataSourceHelper.addDynamicDataSource(dataSourceProperty);
 
@@ -136,7 +136,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 
 		if (SqlHelper.retBool(baseMapper.deleteById(id))) {
 			// 删除现有数据源
-			dynamicDataSourceHelper.removeDataSource(oldConfig.getName());
+			dynamicDataSourceHelper.removeDataSource(oldConfig.getDsKey());
 			return true;
 		}
 		return false;

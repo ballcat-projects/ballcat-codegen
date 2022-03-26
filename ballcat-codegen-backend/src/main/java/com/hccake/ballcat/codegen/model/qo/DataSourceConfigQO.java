@@ -18,9 +18,9 @@ public class DataSourceConfigQO {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 数据源名称
+	 * 数据源描述
 	 */
-	@Schema(title = "数据源名称")
-	private String name;
+	@Schema(title = "数据源描述")
+	private String title;
 
 }

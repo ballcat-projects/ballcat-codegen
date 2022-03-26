@@ -14,8 +14,12 @@
         <a-input v-model:value="modelRef.id" />
       </a-form-item>
 
-      <a-form-item label="名称" v-bind="validateInfos.name">
-        <a-input v-model:value="modelRef.name" placeholder="数据源名称" />
+      <a-form-item label="标题" v-bind="validateInfos.title">
+        <a-input v-model:value="modelRef.title" placeholder="数据源标题" />
+      </a-form-item>
+
+      <a-form-item label="dsKey" v-bind="validateInfos.dsKey">
+        <a-input v-model:value="modelRef.dsKey" placeholder="数据源dsKey" />
       </a-form-item>
 
       <a-form-item label="用户名" v-bind="validateInfos.username">
@@ -81,7 +85,8 @@
   const modelRef = reactive<DataSourceConfig & { pass?: string }>({
     id: undefined,
     pass: '',
-    name: '',
+    title: '',
+    dsKey: '',
     username: '',
     password: '',
     url: ''
@@ -90,12 +95,22 @@
   // 表单校验规则
   const rulesRef = computed(() => {
     return {
-      name: [{ required: true, message: '请输入数据源名称!' }],
+      title: [{ required: true, message: '请输入数据源标题！' }],
+      dsKey: [{ required: true, message: '请输入数据源dsKey!'}, { validator: validRule }],
       username: [{ required: true, message: '请输入用户名!' }],
       pass: isUpdate.value ? [] : [{ required: true, message: '请输入密码!' }],
       url: [{ required: true, message: '请输入连接地址!' }]
     }
   })
+
+  const validRule = (rule: any, value: string) => {
+    if (value) {
+      if (/[^\a-\z\A-\Z0-9\_-]/g.test(value)) {
+        return Promise.reject("只能输入字母、字母、下划线和中划线");
+      }
+    }
+    return Promise.resolve();
+  };
 
   // 提交按钮的 loading 状态控制
   const submitLoading = ref<boolean>(false)

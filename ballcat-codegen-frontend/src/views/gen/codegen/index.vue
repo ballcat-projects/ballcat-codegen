@@ -10,7 +10,7 @@
         >
           <a-menu-item key="master" value="master">master</a-menu-item>
           <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
-            {{ item.name }}
+            {{ item.name || item.value }}
           </a-menu-item>
         </a-menu>
       </a-col>
