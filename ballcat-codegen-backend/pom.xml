@@ -38,6 +38,17 @@
 			<artifactId>jasypt-spring-boot-starter</artifactId>
 		</dependency>
 
+		<!-- openapi 扩展处理 -->
+		<dependency>
+			<groupId>com.hccake</groupId>
+			<artifactId>ballcat-extend-openapi</artifactId>
+		</dependency>
+		<!-- springdoc swagger-ui -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+		</dependency>
+
 		<!--动态数据源-->
 		<dependency>
 			<groupId>com.baomidou</groupId>

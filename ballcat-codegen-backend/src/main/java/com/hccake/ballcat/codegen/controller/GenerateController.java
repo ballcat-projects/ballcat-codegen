@@ -2,9 +2,9 @@ package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.io.IoUtil;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
+import com.hccake.ballcat.codegen.model.bo.TableInfo;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
-import com.hccake.ballcat.codegen.model.bo.TableInfo;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.common.model.domain.PageParam;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +51,7 @@ public class GenerateController {
 	 */
 	@Operation(summary = "表信息分页查询")
 	@GetMapping("/table-info/page")
-	public R<PageResult<TableInfo>> getDataSourceConfigPage(PageParam pageParam, TableInfoQO tableInfoQO) {
+	public R<PageResult<TableInfo>> getDataSourceConfigPage(@Validated PageParam pageParam, TableInfoQO tableInfoQO) {
 		return R.ok(tableInfoQuery.queryPage(pageParam, tableInfoQO));
 	}
 

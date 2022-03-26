@@ -7,13 +7,21 @@ import com.hccake.ballcat.codegen.model.vo.DataSourceConfigPageVO;
 import com.hccake.ballcat.codegen.service.DataSourceConfigService;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
+import com.hccake.ballcat.common.model.domain.SelectData;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
-import com.hccake.ballcat.common.model.domain.SelectData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,6 +31,7 @@ import java.util.List;
  * @author hccake
  * @date 2020-06-17 10:24:47
  */
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gen/datasource-config")
@@ -40,7 +49,7 @@ public class DataSourceConfigController {
 	@Operation(summary = "分页查询")
 	@GetMapping("/page")
 	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:read')" )
-	public R<PageResult<DataSourceConfigPageVO>> getDataSourceConfigPage(PageParam pageParam,
+	public R<PageResult<DataSourceConfigPageVO>> getDataSourceConfigPage(@Validated PageParam pageParam,
 			DataSourceConfigQO dataSourceConfigQO) {
 		return R.ok(dataSourceConfigService.queryPage(pageParam, dataSourceConfigQO));
 	}
