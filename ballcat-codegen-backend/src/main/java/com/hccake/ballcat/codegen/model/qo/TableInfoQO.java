@@ -2,6 +2,7 @@ package com.hccake.ballcat.codegen.model.qo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springdoc.api.annotations.ParameterObject;
 
 /**
  * @author Hccake
@@ -10,6 +11,7 @@ import lombok.Data;
  */
 @Data
 @Schema(title = "表信息查询对象")
+@ParameterObject
 public class TableInfoQO {
 
 	/**

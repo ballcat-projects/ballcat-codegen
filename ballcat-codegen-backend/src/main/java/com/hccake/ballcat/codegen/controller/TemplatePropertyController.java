@@ -12,6 +12,7 @@ import com.hccake.ballcat.common.model.result.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,7 +62,7 @@ public class TemplatePropertyController {
 	@Operation(summary = "分页查询")
 	@GetMapping("/page")
 	// @PreAuthorize("@per.hasPermission('codegen:templateproperty:read')" )
-	public R<PageResult<TemplatePropertyPageVO>> getTemplatePropertyPage(PageParam pageParam,
+	public R<PageResult<TemplatePropertyPageVO>> getTemplatePropertyPage(@Validated PageParam pageParam,
 			TemplatePropertyQO templatePropertyQO) {
 		return R.ok(templatePropertyService.queryPage(pageParam, templatePropertyQO));
 	}
