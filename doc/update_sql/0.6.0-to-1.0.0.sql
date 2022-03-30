@@ -28,7 +28,7 @@ ALTER TABLE `gen_data_source_config`
 -- 初始化 title 数据
 UPDATE `gen_data_source_config` SET title = `ds_key`;
 -- 设置不允许为 null，ds_key 唯一
-ALTER TABLE `codegen`.`gen_data_source_config`
+ALTER TABLE `gen_data_source_config`
     MODIFY COLUMN `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题' AFTER `id`,
     MODIFY COLUMN `ds_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '数据源key' AFTER `title`,
     ADD UNIQUE INDEX(`ds_key`);
