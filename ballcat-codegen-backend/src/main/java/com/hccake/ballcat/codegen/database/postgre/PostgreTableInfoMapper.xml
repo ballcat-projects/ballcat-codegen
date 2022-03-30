@@ -50,12 +50,12 @@
 						INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid
 						INNER JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = pg_constraint.conkey [ 1 ]
 				WHERE
-					pg_class.relname = 'people'
+					pg_class.relname = #{tableName}
 				  AND pg_constraint.contype = 'p'
 			) temp ON col.COLUMN_NAME = temp.attname
 		WHERE
 			col.table_schema = 'public'
-		  AND col.TABLE_NAME = 'people'
+		  AND col.TABLE_NAME = #{tableName}
 		ORDER BY
 			col.table_schema,
 			col.TABLE_NAME,
