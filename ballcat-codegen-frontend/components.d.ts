@@ -43,6 +43,9 @@ declare module 'vue' {
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     Icon: typeof import('./src/components/Icon/index.vue')['default']
+    MenuItemContent: typeof import('./src/components/menu/MenuItemContent.vue')['default']
+    RouterMenu: typeof import('./src/components/menu/RouterMenu.vue')['default']
+    SubMenu: typeof import('./src/components/menu/SubMenu.vue')['default']
   }
 }
 
