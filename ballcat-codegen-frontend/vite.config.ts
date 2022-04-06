@@ -6,6 +6,7 @@ import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-
 import { resolve } from 'path'
 
 const serverAddress = 'http://ballcat-admin:7777'
+// const serverAddress = 'http://codegen.ballcat.cn'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -51,6 +52,7 @@ export default defineConfig({
       less: {
         javascriptEnabled: true,
         modifyVars: {
+          'root-entry-name': 'default',
           'primary-color': '#9f6ae0',
           'border-radius-base': '10px',
           'btn-border-radius-base': '30px',
