@@ -6,6 +6,7 @@ target
 public
 src/assets
 .eslintrc.js
+components.d.ts
 
 *.woff
 *.ttf
