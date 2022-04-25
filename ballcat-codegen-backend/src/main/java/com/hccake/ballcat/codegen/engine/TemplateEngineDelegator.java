@@ -2,12 +2,13 @@ package com.hccake.ballcat.codegen.engine;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.hccake.ballcat.codegen.exception.TemplateRenderException;
 
 import java.util.Map;
 
 /**
  * 模板引擎的委托者
- * 
+ *
  * @author hccake
  */
 public class TemplateEngineDelegator {
@@ -24,7 +25,8 @@ public class TemplateEngineDelegator {
 	 * @param context 渲染使用的上下文
 	 * @return 渲染完成后的字符串
 	 */
-	public String render(TemplateEngineTypeEnum engineType, String templateContent, Map<String, Object> context) {
+	public String render(TemplateEngineTypeEnum engineType, String templateContent, Map<String, Object> context)
+			throws TemplateRenderException {
 		if (StrUtil.isEmpty(templateContent)) {
 			return StrUtil.EMPTY;
 		}

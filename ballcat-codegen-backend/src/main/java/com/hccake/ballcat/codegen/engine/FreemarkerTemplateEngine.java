@@ -1,6 +1,7 @@
 package com.hccake.ballcat.codegen.engine;
 
 import com.hccake.ballcat.codegen.exception.TemplateRenderException;
+import freemarker.core.TemplateClassResolver;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.SneakyThrows;
@@ -23,6 +24,9 @@ public class FreemarkerTemplateEngine implements TemplateEngine {
 	public FreemarkerTemplateEngine() {
 		this.configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
+
+		// 安全处理 https://ackcent.com/blog/in-depth-freemarker-template-injection/
+		configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 	}
 
 	@Override

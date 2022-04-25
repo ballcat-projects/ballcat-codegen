@@ -5,7 +5,7 @@ package com.hccake.ballcat.codegen.exception;
  *
  * @author hccake
  */
-public class TemplateRenderException extends RuntimeException {
+public class TemplateRenderException extends Exception {
 
 	public TemplateRenderException(Exception e) {
 		super(e);

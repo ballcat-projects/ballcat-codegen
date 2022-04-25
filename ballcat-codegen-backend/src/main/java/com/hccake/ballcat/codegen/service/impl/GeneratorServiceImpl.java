@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
 import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
+import com.hccake.ballcat.codegen.exception.TemplateRenderException;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
@@ -15,6 +16,8 @@ import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.util.GenUtils;
+import com.hccake.ballcat.common.core.exception.BusinessException;
+import com.hccake.ballcat.common.model.result.SystemResultCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -133,7 +136,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 			fileEntry.setType(templateFile.getType());
 
 			// 替换路径中的占位符
-			String filename = StrUtil.format(templateFile.getFilename(), context);
+			String templateFilename = templateFile.getFilename();
+			String filename = StrUtil.format(templateFilename, context);
 			fileEntry.setFilename(filename);
 
 			String parentFilePath = GenUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
@@ -141,14 +145,23 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 			// 如果是文件
 			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, filename));
+				String filePath = GenUtils.concatFilePath(parentFilePath, filename);
+				fileEntry.setFilePath(filePath);
 				// 文件内容渲染
 				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
-				String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
-				fileEntry.setContent(content);
+
+				try {
+					String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
+					fileEntry.setContent(content);
+				}
+				catch (TemplateRenderException ex) {
+					String errorMessage = StrUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
+							ex.getMessage());
+					throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
+				}
 			}
 			else {
-				String currentPath = GenUtils.evaluateRealPath(templateFile.getFilename(), context);
+				String currentPath = GenUtils.evaluateRealPath(templateFilename, context);
 				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, currentPath));
 			}
 

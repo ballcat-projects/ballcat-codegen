@@ -1,5 +1,7 @@
 package com.hccake.ballcat.codegen.engine;
 
+import com.hccake.ballcat.codegen.exception.TemplateRenderException;
+
 import java.util.Map;
 
 /**
@@ -21,6 +23,6 @@ public interface TemplateEngine {
 	 * @param context 渲染使用的上下文
 	 * @return 渲染完成后的字符串
 	 */
-	String render(String templateContent, Map<String, Object> context);
+	String render(String templateContent, Map<String, Object> context) throws TemplateRenderException;
 
 }
