@@ -20,7 +20,7 @@
 	</modules>
 
 	<properties>
-		<revision>1.0.0.beta</revision>
+		<revision>1.0.0.beta.2</revision>
 		<maven.deploy.skip>true</maven.deploy.skip>
 	</properties>
 
