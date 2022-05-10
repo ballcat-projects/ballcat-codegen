@@ -37,5 +37,5 @@ export function updateDatasourceConfig(data: DataSourceConfig) {
  * 删除数据源配置
  */
 export function removeDatasourceConfig(id?: number) {
-  return request.get<R<void>>(`/gen/datasource-config/${id}`)
+  return request.delete<R<void>>(`/gen/datasource-config/${id}`)
 }
