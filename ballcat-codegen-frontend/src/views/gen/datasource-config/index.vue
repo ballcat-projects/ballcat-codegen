@@ -126,7 +126,10 @@
   const handleDel = (record: DataSourceConfig) => {
     doRequest<void>({
       request: removeDatasourceConfig(record.id),
-      successMessage: '删除成功！'
+      successMessage: '删除成功！',
+      onSuccess() {
+        tableState.loadData()
+      }
     })
   }
 </script>
