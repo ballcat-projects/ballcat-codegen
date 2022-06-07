@@ -13,8 +13,12 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<!-- 版本控制 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<ojdbc8.version>21.5.0.0</ojdbc8.version>
+		<velocity.version>1.7</velocity.version>
+		<freemarker.version>2.3.31</freemarker.version>
 	</properties>
 
 	<dependencies>
@@ -75,7 +79,7 @@
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
-			<version>21.5.0.0</version>
+			<version>${ojdbc8.version}</version>
 		</dependency>
 
 
@@ -83,12 +87,18 @@
 		<dependency>
 			<artifactId>velocity</artifactId>
 			<groupId>org.apache.velocity</groupId>
-			<version>1.7</version>
+			<version>${velocity.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
-			<version>2.3.31</version>
+			<version>${freemarker.version}</version>
+		</dependency>
+
+		<!-- 数据库版本控制 -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -161,5 +171,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
