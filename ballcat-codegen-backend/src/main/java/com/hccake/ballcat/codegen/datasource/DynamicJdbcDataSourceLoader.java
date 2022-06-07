@@ -6,6 +6,7 @@ import com.hccake.ballcat.codegen.service.DataSourceConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Hccake 2021/3/19
  * @version 1.0
  */
+@Lazy
 @Slf4j
 @Component
 @RequiredArgsConstructor
