@@ -19,6 +19,7 @@
 		<ojdbc8.version>21.5.0.0</ojdbc8.version>
 		<velocity.version>1.7</velocity.version>
 		<freemarker.version>2.3.31</freemarker.version>
+		<flyway.version>7.15.0</flyway.version>
 	</properties>
 
 	<dependencies>
@@ -99,6 +100,7 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
 		</dependency>
 	</dependencies>
 
