@@ -43,6 +43,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 查询指定模板组下所有的目录项
+	 *
 	 * @param templateGroupId 模板组ID
 	 * @return 所有的目录项
 	 */
@@ -53,13 +54,14 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 移动目录项
+	 *
 	 * @param horizontalMove 是否移动到目标目录平级，否则移动到其内部
-	 * @param entryId 被移动的目录项ID
-	 * @param targetEntryId 目标目录项ID
+	 * @param entryId        被移动的目录项ID
+	 * @param targetEntryId  目标目录项ID
 	 * @return boolean 移动成功或者失败
 	 */
 	@Override
-	public boolean move(boolean horizontalMove, Integer entryId, Integer targetEntryId) {
+	public boolean move(boolean horizontalMove, Integer entryId, Integer targetEntryId, Integer groupId) {
 		// 目录项必须存在
 		TemplateEntry entry = baseMapper.selectById(entryId);
 		Assert.notNull(entry, "This is a nonexistent directory entry!");
@@ -77,7 +79,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.isFalse(parentId.equals(entry.getParentId()), "The entry do not need to be moved");
 
 		// 重名校验
-		this.duplicateNameCheck(parentId, entry.getFilename());
+		this.duplicateNameCheck(parentId, entry.getFilename(), groupId);
 
 		// 更新目录项
 		TemplateEntry entity = new TemplateEntry();
@@ -88,17 +90,19 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 重名校验，同文件夹下不允许重名
+	 *
 	 * @param entryId 目录项ID
-	 * @param name 文件名
+	 * @param name    文件名
 	 */
 	@Override
-	public void duplicateNameCheck(Integer entryId, String name) {
-		boolean existed = baseMapper.existSameName(entryId, name);
+	public void duplicateNameCheck(Integer entryId, String name, Integer groupId) {
+		boolean existed = baseMapper.existSameName(entryId, name, groupId);
 		Assert.isFalse(existed, "The entry with the same name already exists");
 	}
 
 	/**
 	 * 判断目录项是否存在
+	 *
 	 * @param entryId 目录项ID
 	 * @return boolean 存在：true
 	 */
@@ -109,8 +113,9 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 删除目录项
+	 *
 	 * @param entryId 目录项id
-	 * @param mode 删除模式
+	 * @param mode    删除模式
 	 * @return boolean 成功：true
 	 */
 	@Override
@@ -125,8 +130,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			if (TemplateEntryRemoveModeEnum.RESERVED_CHILD_NODE.getType().equals(mode)) {
 				// 子节点上移
 				baseMapper.updateParentId(groupId, entryId, entry.getParentId());
-			}
-			else if (TemplateEntryRemoveModeEnum.REMOVE_CHILD_NODE.getType().equals(mode)) {
+			} else if (TemplateEntryRemoveModeEnum.REMOVE_CHILD_NODE.getType().equals(mode)) {
 				// ==========删除所有子节点=============
 				// 1. 获取所有目录项（目录项不会太多，一次查询比较方便）
 				List<TemplateEntry> entryList = baseMapper.listByTemplateGroupId(groupId);
@@ -139,8 +143,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 				if (CollectionUtil.isNotEmpty(treeNodeIds)) {
 					baseMapper.deleteBatchIds(treeNodeIds);
 				}
-			}
-			else {
+			} else {
 				throw new BusinessException(BaseResultCode.LOGIC_CHECK_ERROR.getCode(), "error delete mode");
 			}
 		}
@@ -151,8 +154,9 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 复制模板目录项文件
+	 *
 	 * @param resourceGroupId 原模板组
-	 * @param targetGroupId 模板模板组
+	 * @param targetGroupId   模板模板组
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -191,6 +195,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 删除模板文件
+	 *
 	 * @param groupId 模板组ID
 	 */
 	@Override
@@ -222,9 +227,10 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 填充模板文件信息
+	 *
 	 * @param current 当前目录项
-	 * @param list 模板文件列表
-	 * @param path 当前目录路径
+	 * @param list    模板文件列表
+	 * @param path    当前目录路径
 	 */
 	private void fillTemplateFiles(TemplateEntryTree current, List<TemplateFile> list, String path) {
 
@@ -252,6 +258,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 新建一个目录项
+	 *
 	 * @param entryDTO 目录项新建传输对象
 	 * @return entryId
 	 */
@@ -263,7 +270,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.isTrue(GlobalConstants.TREE_ROOT_ID.equals(parentId) || this.exists(parentId),
 				"This is a nonexistent parent directory entry!");
 		// 重名校验
-		this.duplicateNameCheck(parentId, entryDTO.getFilename());
+		this.duplicateNameCheck(parentId, entryDTO.getFilename(), entryDTO.getGroupId());
 		// 转持久层对象
 		TemplateEntry entity = TemplateModelConverter.INSTANCE.entryCreateDtoToPo(entryDTO);
 		// 落库
@@ -273,6 +280,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 
 	/**
 	 * 更新目录项
+	 *
 	 * @param entryDTO 目录项修改传输对象
 	 * @return success:true
 	 */
@@ -286,7 +294,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.notNull(oldEntry, "This is a nonexistent directory entry!");
 		// 如果更新了文件名，则进行重名校验
 		if (!filename.equals(oldEntry.getFilename())) {
-			this.duplicateNameCheck(oldEntry.getParentId(), filename);
+			this.duplicateNameCheck(oldEntry.getParentId(), filename, 1);
 		}
 		// 更新 entry
 		TemplateEntry entry = TemplateModelConverter.INSTANCE.entryUpdateDtoToPo(entryDTO);

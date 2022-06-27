@@ -18,6 +18,7 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 查询指定模板组下所有的目录项
+	 *
 	 * @param templateGroupId 模板组ID
 	 * @return 所有的目录项
 	 */
@@ -25,22 +26,27 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 移动目录项
+	 *
 	 * @param horizontalMove 是否移动到目标目录平级，否则移动到其内部
-	 * @param entryId 被移动的目录项ID
-	 * @param targetEntryId 目标目录项ID
+	 * @param entryId        被移动的目录项ID
+	 * @param targetEntryId  目标目录项ID
+	 * @param groupId        组id
 	 * @return boolean
 	 */
-	boolean move(boolean horizontalMove, Integer entryId, Integer targetEntryId);
+	boolean move(boolean horizontalMove, Integer entryId, Integer targetEntryId, Integer groupId);
 
 	/**
 	 * 重名校验，同文件夹下不允许重名
+	 *
 	 * @param entryId 目录项ID
-	 * @param name 文件名
+	 * @param name    文件名
+	 * @param groupId 组id
 	 */
-	void duplicateNameCheck(Integer entryId, String name);
+	void duplicateNameCheck(Integer entryId, String name, Integer groupId);
 
 	/**
 	 * 判断目录项是否存在
+	 *
 	 * @param entryId 目录项ID
 	 * @return boolean 存在：true
 	 */
@@ -48,6 +54,7 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 新建一个目录项
+	 *
 	 * @param templateEntryCreateDTO 目录项新建传输对象
 	 * @return entryId
 	 */
@@ -55,6 +62,7 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 更新目录项
+	 *
 	 * @param templateEntryUpdateDTO 目录项修改传输对象
 	 * @return success:true
 	 */
@@ -62,14 +70,16 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 删除目录项
+	 *
 	 * @param entryId 目录项id
-	 * @param mode 删除模式
+	 * @param mode    删除模式
 	 * @return boolean 成功：true
 	 */
 	boolean removeEntry(Integer entryId, Integer mode);
 
 	/**
 	 * 转换为模板文件
+	 *
 	 * @param templateEntryList 模板目录项集合
 	 * @return List<TemplateFile>
 	 */
@@ -77,20 +87,23 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 
 	/**
 	 * 复制模板目录项文件
+	 *
 	 * @param resourceGroupId 原模板组
-	 * @param targetGroupId 模板模板组
+	 * @param targetGroupId   模板模板组
 	 */
 	void copy(Integer resourceGroupId, Integer targetGroupId);
 
 	/**
 	 * 删除模板文件
+	 *
 	 * @param groupId 模板组ID
 	 */
 	void removeByGroupId(Integer groupId);
 
 	/**
 	 * 修改目录项内容
-	 * @param id 目录项id
+	 *
+	 * @param id      目录项id
 	 * @param content 内容
 	 * @return 更新成功 true
 	 */
