@@ -8,8 +8,8 @@ goto menu
 :menu
 echo.
 echo. * * * * * * * * * * mvn commands * * * * * * * * * *
-echo. * * ¿ìËÙÊ¹ÓÃmvnÃüÁî±àÒëmaven¹¤³Ì * *
-echo. * 0 -Dmaven.test.skip=true Ä¬ÈÏÎªtrue£¬¿ÉÍ¨¹ı02¡¢03¡¢04·½Ê½ÉèÖÃ²»Ìø¹ı²âÊÔ
+echo. * * å¿«é€Ÿä½¿ç”¨mvnå‘½ä»¤ç¼–è¯‘mavenå·¥ç¨‹ * *
+echo. * 0 -Dmaven.test.skip=true é»˜è®¤ä¸ºtrueï¼Œå¯é€šè¿‡02ã€03ã€04æ–¹å¼è®¾ç½®ä¸è·³è¿‡æµ‹è¯•
 echo. * *
 echo. * 1 mvn clean
 echo. * *
@@ -23,7 +23,7 @@ echo. * 99 exit
 echo. * *
 echo. * * * * * * * * * * * * * * * * * * * * * * * * * * *
 echo.
-echo ÇëÊäÈëÑ¡ÔñÏîĞòºÅ£º
+echo è¯·è¾“å…¥é€‰æ‹©é¡¹åºå·ï¼š
 set /p ID=
 
 set skipTest=-Dmaven.test.skip=true
@@ -46,7 +46,7 @@ if "%ID%"=="99" goto quit
 goto quit
 
 :clean
-echo. ¿ªÊ¼clean
+echo. å¼€å§‹clean
 call mvn clean
 echo.
 echo.
@@ -54,7 +54,7 @@ pause
 goto menu
 
 :install
-echo. ¿ªÊ¼Ö´ĞĞ£ºmvn clean install %skipTest%
+echo. å¼€å§‹æ‰§è¡Œï¼šmvn clean install %skipTest%
 call mvn clean install %skipTest%
 echo.
 echo.
@@ -62,7 +62,7 @@ pause
 goto menu
 
 :compile
-echo. ¿ªÊ¼Ö´ĞĞ£ºmvn clean compile %skipTest%
+echo. å¼€å§‹æ‰§è¡Œï¼šmvn clean compile %skipTest%
 call mvn clean compile %skipTest%
 echo.
 echo.
@@ -70,7 +70,7 @@ pause
 goto menu
 
 :package
-echo. ¿ªÊ¼Ö´ĞĞ£ºmvn clean package %skipTest%
+echo. å¼€å§‹æ‰§è¡Œï¼šmvn clean package %skipTest%
 call mvn clean package %skipTest%
 echo.
 echo.
@@ -78,4 +78,4 @@ pause
 goto menu
 
 :quit
-if not {%ID%}=={99} echo ÊäÈëµÄÑ¡Ïî²»ÕıÈ· & pause & goto menu
+if not {%ID%}=={99} echo è¾“å…¥çš„é€‰é¡¹ä¸æ­£ç¡® & pause & goto menu
