@@ -19,7 +19,6 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 根据模板组ID查询模板文件目录项集合
-	 *
 	 * @param templateGroupId 模板组ID
 	 * @return List<TemplateDirectoryEntry>
 	 */
@@ -29,9 +28,8 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 检测是否在指定目录下存在指定名称的文件
-	 *
 	 * @param entryId 目录项ID
-	 * @param name    文件名称
+	 * @param name 文件名称
 	 * @param groupId 组id
 	 * @return 是否存在
 	 */
@@ -43,7 +41,6 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 判断目录项是否存在
-	 *
 	 * @param entryId 目录项ID
 	 * @return boolean 存在：true
 	 */
@@ -54,8 +51,7 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 更新父级目录id
-	 *
-	 * @param groupId     分组ID
+	 * @param groupId 分组ID
 	 * @param oldParentId 老的父级ID
 	 * @param newParentId 新增父级ID
 	 */
@@ -68,7 +64,6 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 
 	/**
 	 * 删除模板文件
-	 *
 	 * @param groupId 模板组ID
 	 */
 	default void deleteByGroupId(Integer groupId) {
