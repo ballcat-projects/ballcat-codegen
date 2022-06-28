@@ -9,6 +9,10 @@ spring:
   datasource:
     dynamic:
       strict: true # 使用严格模式处理
+  flyway:
+    clean-disabled: true
+    baseline-on-migrate: true
+    placeholder-replacement: false # 取消占位符检测
 
 mybatis-plus:
   mapper-locations:
@@ -49,3 +53,5 @@ springdoc:
   swagger-ui:
     display-request-duration: true
     disable-swagger-default-url: true
+
+

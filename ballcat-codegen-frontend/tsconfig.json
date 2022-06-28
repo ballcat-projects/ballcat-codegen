@@ -19,7 +19,8 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "types/**/**.d.ts"
+    "types/**/**.d.ts",
+    "components.d.ts"
   ],
   "references": [
     {

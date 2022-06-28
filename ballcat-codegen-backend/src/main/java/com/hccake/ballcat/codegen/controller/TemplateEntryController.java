@@ -41,7 +41,6 @@ public class TemplateEntryController {
 
 	/**
 	 * 模板组的文件目录
-	 *
 	 * @param templateGroupId 模板组ID
 	 * @return R
 	 */
@@ -57,24 +56,22 @@ public class TemplateEntryController {
 
 	/**
 	 * 移动目录项
-	 *
-	 * @param entryId        被移动的目录项ID
+	 * @param entryId 被移动的目录项ID
 	 * @param horizontalMove 是否移动到目标目录平级，否则移动到其内部
-	 * @param targetEntryId  目标目录项ID
-	 * @param groupId        组id
+	 * @param targetEntryId 目标目录项ID
+	 * @param groupId 组id
 	 * @return R
 	 */
 	@Operation(summary = "移动目录项")
 	@PatchMapping("/{entryId}/position")
 	public R<Void> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
-						@RequestParam Integer targetEntryId, @RequestParam Integer groupId) {
+			@RequestParam Integer targetEntryId, @RequestParam Integer groupId) {
 		return templateEntryService.move(horizontalMove, entryId, targetEntryId, groupId) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "移动目录项失败");
 	}
 
 	/**
 	 * 新增模板目录项
-	 *
 	 * @param templateEntryCreateDTO 模板目录项
 	 * @return R
 	 */
@@ -89,7 +86,6 @@ public class TemplateEntryController {
 
 	/**
 	 * 修改目录项
-	 *
 	 * @param templateEntryUpdateDTO 模板目录项
 	 * @return R
 	 */
@@ -102,8 +98,7 @@ public class TemplateEntryController {
 
 	/**
 	 * 通过id删除模板文件目录项
-	 *
-	 * @param id   id
+	 * @param id id
 	 * @param mode 删除模式， 1：只删除本身，将子节点上移 2. 删除自身及其所有子节点
 	 * @return R
 	 */
@@ -118,8 +113,7 @@ public class TemplateEntryController {
 
 	/**
 	 * 修改模板目录项内容
-	 *
-	 * @param id      模板项id
+	 * @param id 模板项id
 	 * @param content 模板内容
 	 * @return R
 	 */
