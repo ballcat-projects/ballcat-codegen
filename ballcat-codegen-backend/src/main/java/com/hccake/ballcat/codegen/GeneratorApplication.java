@@ -5,8 +5,6 @@ import com.hccake.ballcat.codegen.database.DbTypeConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
-import org.springframework.context.annotation.DependsOn;
 
 import java.util.Set;
 
@@ -16,8 +14,7 @@ import java.util.Set;
  * @date 2019/9/12 16:21
  */
 @Slf4j
-@DependsOn(value = "flywayInitializerConfig")
-@SpringBootApplication(exclude = {FlywayAutoConfiguration.class})
+@SpringBootApplication
 public class GeneratorApplication {
 
 	public static void main(String[] args) throws ClassNotFoundException {
