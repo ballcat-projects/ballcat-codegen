@@ -48,7 +48,7 @@ public class DbTypeConverterManager {
 				return DbColumnTypeConverter.INSTANCE.toModel(type);
 			}
 		}
-		log.error("未找到对应数据类型，字段类型是：{}", dataType);
+		log.warn("未找到对应数据类型，字段类型是：{}", dataType);
 		return null;
 	}
 
