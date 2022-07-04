@@ -46,8 +46,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	private final TemplateEngineDelegator templateEngineDelegator;
 
+	private final GenUtils genUtils;
+
 	/**
 	 * 生成代码
+	 *
 	 * @param generatorOptionDTO 代码生成的一些配置信息
 	 * @return 已生成的代码数据
 	 */
@@ -57,7 +60,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 		Map<String, FileEntry> map = getStringFileEntryMap(generatorOptionDTO);
 
 		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-				ZipOutputStream zip = new ZipOutputStream(outputStream)) {
+			 ZipOutputStream zip = new ZipOutputStream(outputStream)) {
 			// 循环写入数据
 			for (Map.Entry<String, FileEntry> entry : map.entrySet()) {
 				FileEntry fileEntry = entry.getValue();
@@ -87,6 +90,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 获得生成后的 代码地址：代码文件 的 map
+	 *
 	 * @param generateOptionDTO 生成参数
 	 * @return Map<String, FileEntry>
 	 */
@@ -100,12 +104,13 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 获得生成后的 代码地址：代码文件 的 map
+	 *
 	 * @param generateOptionDTO 生成参数
-	 * @param templateFiles 模板文件
+	 * @param templateFiles     模板文件
 	 * @return Map<String, FileEntry>
 	 */
 	private Map<String, FileEntry> getStringFileEntryMap(GeneratorOptionDTO generateOptionDTO,
-			List<TemplateFile> templateFiles) {
+														 List<TemplateFile> templateFiles) {
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		for (String tableName : generateOptionDTO.getTableNames()) {
@@ -113,7 +118,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			TableDetails tableDetails = tableInfoQuery.queryTableDetails(tableName);
 			// 生成代码
 			Map<String, FileEntry> fileEntryMap = generatorCode(tableDetails, generateOptionDTO.getTablePrefix(),
-					generateOptionDTO.getGenProperties(), templateFiles);
+					generateOptionDTO.getGenProperties(), generateOptionDTO.getTemplateGroupId(), templateFiles);
 			map.putAll(fileEntryMap);
 		}
 		return map;
@@ -121,15 +126,16 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 代码生成
+	 *
 	 * @return Map<String, FileEntry>
 	 */
 	public Map<String, FileEntry> generatorCode(TableDetails tableDetails, String tablePrefix,
-			Map<String, String> customProperties, List<TemplateFile> templateFiles) {
+												Map<String, String> customProperties, Integer templateGroupId, List<TemplateFile> templateFiles) {
 
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = GenUtils.getContext(tableDetails, tablePrefix, customProperties);
+		Map<String, Object> context = genUtils.getContext(tableDetails, tablePrefix, templateGroupId, customProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();
@@ -140,12 +146,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 			String filename = StrUtil.format(templateFilename, context);
 			fileEntry.setFilename(filename);
 
-			String parentFilePath = GenUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
+			String parentFilePath = genUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
 			// 如果是文件
 			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				String filePath = GenUtils.concatFilePath(parentFilePath, filename);
+				String filePath = genUtils.concatFilePath(parentFilePath, filename);
 				fileEntry.setFilePath(filePath);
 				// 文件内容渲染
 				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
@@ -153,22 +159,18 @@ public class GeneratorServiceImpl implements GeneratorService {
 				try {
 					String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
 					fileEntry.setContent(content);
-				}
-				catch (TemplateRenderException ex) {
+				} catch (TemplateRenderException ex) {
 					String errorMessage = StrUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
 							ex.getMessage());
 					throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
 				}
-			}
-			else {
-				String currentPath = GenUtils.evaluateRealPath(templateFilename, context);
-				fileEntry.setFilePath(GenUtils.concatFilePath(parentFilePath, currentPath));
+			} else {
+				String currentPath = genUtils.evaluateRealPath(templateFilename, context);
+				fileEntry.setFilePath(genUtils.concatFilePath(parentFilePath, currentPath));
 			}
 
 			map.put(fileEntry.getFilePath(), fileEntry);
 		}
-
 		return map;
 	}
-
 }

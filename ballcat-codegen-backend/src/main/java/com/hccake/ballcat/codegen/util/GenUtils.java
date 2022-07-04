@@ -5,18 +5,19 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.hccake.ballcat.codegen.database.IColumnType;
-import com.hccake.ballcat.codegen.database.DbTypeConverter;
 import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
-import com.hccake.ballcat.codegen.typescript.TypeScriptTypeConverter;
 import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
 import com.hccake.ballcat.codegen.model.bo.ColumnProperties;
 import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
-import lombok.experimental.UtilityClass;
+import com.hccake.ballcat.codegen.model.entity.DbColumnType;
+import com.hccake.ballcat.codegen.model.entity.FieldType;
+import com.hccake.ballcat.codegen.typescript.TypeScriptTypeConverter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,13 +31,16 @@ import java.util.Map;
  * @date 2018-07-30
  */
 @Slf4j
-@UtilityClass
+@Component
+@RequiredArgsConstructor
 public class GenUtils {
 
-	public static Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix,
-			Map<String, String> customProperties) {
+	private final DbTypeConverterManager dbTypeConverterManager;
+
+	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix,
+										  Integer templateGroupId, Map<String, String> customProperties) {
 		// 根据表信息和字段信息获取对应的配置属性
-		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix);
+		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupId);
 		// 转换generateProperties为map，模板数据
 		Map<String, Object> context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
@@ -46,11 +50,12 @@ public class GenUtils {
 
 	/**
 	 * 根据表信息和字段信息获取对应的配置属性
+	 *
 	 * @param tableDetails 表详情
-	 * @param tablePrefix 表前缀
+	 * @param tablePrefix  表前缀
 	 * @return GenerateProperties
 	 */
-	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix) {
+	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix, Integer templateGroupId) {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
 		// 表名
@@ -81,8 +86,10 @@ public class GenUtils {
 
 		// 类型转换器
 		DbType dbType = tableDetails.getDbType();
-		DbTypeConverter dbTypeConverter = DbTypeConverterManager.getTypeConverter(dbType);
-		Assert.notNull(dbTypeConverter, "未找到对应的数据库类型转换器：{}", dbType);
+
+		// 类型集合
+		List<FieldType> typeList = dbTypeConverterManager.getDbTypeList(dbType, templateGroupId);
+		Assert.notNull(typeList, "未找到对应的数据库类型转换器集合：{}", dbType);
 
 		for (ColumnInfo columnInfo : tableDetails.getColumnInfos()) {
 			String columnName = columnInfo.getColumnName();
@@ -99,7 +106,7 @@ public class GenUtils {
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
 			// 列的数据类型，转换成Java类型
-			IColumnType columnType = dbTypeConverter.convert(columnProperties.getDataType());
+			DbColumnType columnType = dbTypeConverterManager.getTypeConverter(typeList, columnProperties.getDataType());
 			String columnJavaType = columnType.getType();
 			columnProperties.setAttrType(columnJavaType);
 			// 列的 ts数据类型
@@ -125,11 +132,12 @@ public class GenUtils {
 
 	/**
 	 * 路径拼接
+	 *
 	 * @param parentPath 父级路径
-	 * @param subPath 子路径
+	 * @param subPath    子路径
 	 * @return 完整路径
 	 */
-	public static String concatFilePath(String parentPath, String subPath) {
+	public String concatFilePath(String parentPath, String subPath) {
 		if (StrUtil.isEmpty(parentPath)) {
 			return subPath;
 		}
@@ -138,11 +146,12 @@ public class GenUtils {
 
 	/**
 	 * 获取真实的文件全路径
+	 *
 	 * @param filePathMaker 文件路径模板
-	 * @param map 模板属性
+	 * @param map           模板属性
 	 * @return filePath 文件路径
 	 */
-	public static String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
+	public String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
 		// 占位符替换
 		String realFilePath = StrUtil.format(filePathMaker, map);
 		if (StrUtil.isEmpty(realFilePath)) {
@@ -158,10 +167,11 @@ public class GenUtils {
 
 	/**
 	 * 根据类名生成表别名
+	 *
 	 * @param className 类名
 	 * @return 表别名
 	 */
-	private static String prodAlias(String className) {
+	private String prodAlias(String className) {
 		StringBuilder sb = new StringBuilder();
 		for (char c : className.toCharArray()) {
 			if (c >= 'A' && c <= 'Z') {
@@ -174,8 +184,7 @@ public class GenUtils {
 	/**
 	 * 列名转换成Java属性名
 	 */
-	public static String underlineToCamel(String underlineStr) {
-		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
+	public String underlineToCamel(String underlineStr) {
+		return WordUtils.capitalizeFully(underlineStr, new char[]{'_'}).replace("_", "");
 	}
-
 }

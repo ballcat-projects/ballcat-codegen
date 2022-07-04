@@ -24,7 +24,7 @@ public class DynamicJdbcDataSourceLoader implements InitializingBean {
 	private final DynamicDataSourceHelper dynamicDataSourceHelper;
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		// 查找所有配置的生成项目使用数据源
 		List<DataSourceConfig> list = dataSourceConfigService.list();
 
