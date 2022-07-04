@@ -13,7 +13,7 @@ import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.util.GenUtils;
+import com.hccake.ballcat.codegen.helper.GenerateHelper;
 import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
@@ -41,7 +41,7 @@ import java.util.Set;
 public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMapper, TemplateEntry>
 		implements TemplateEntryService {
 
-	private final GenUtils genUtils;
+	private final GenerateHelper generateHelper;
 
 	/**
 	 * 查询指定模板组下所有的目录项
@@ -234,7 +234,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			// 递归调用子节点，查找叶子节点
 			if (CollectionUtil.isNotEmpty(children)) {
 				for (TemplateEntryTree child : children) {
-					fillTemplateFiles(child, list, genUtils.concatFilePath(path, current.getFilename()));
+					fillTemplateFiles(child, list, generateHelper.concatFilePath(path, current.getFilename()));
 				}
 			}
 		}

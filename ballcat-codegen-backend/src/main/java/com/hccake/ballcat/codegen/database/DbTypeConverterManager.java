@@ -28,7 +28,6 @@ public class DbTypeConverterManager {
 	 */
 	public List<FieldType> getDbTypeList(DbType dbType, Integer templateGroupId) {
 		List<FieldType> fieldTypeList = fieldTypeService.selectDbTypeList(dbType, templateGroupId);
-		;
 		if (!ObjectUtils.isEmpty(fieldTypeList)) {
 			return fieldTypeList;
 		}

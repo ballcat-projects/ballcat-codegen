@@ -4,7 +4,6 @@ import com.hccake.ballcat.codegen.model.dto.TypeScriptTypeDTO;
 import com.hccake.ballcat.codegen.model.entity.TypeScriptType;
 import com.hccake.ballcat.codegen.model.vo.TypeScriptTypeVO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -23,7 +22,6 @@ public interface TypeScriptTypeConverter {
 	 * @param typeScriptType 前端和后端数据类型管理 object
 	 * @return TypeScriptTypeVO 前端和后端数据类型管理VO
 	 */
-	@Mappings({})
 	TypeScriptTypeVO toVo(TypeScriptType typeScriptType);
 
 	/**
@@ -31,7 +29,6 @@ public interface TypeScriptTypeConverter {
 	 * @param typeScriptTypeDTO 前端和后端数据类型管理DTO
 	 * @return TypeScriptType 前端和后端数据类型管理 object
 	 */
-	@Mappings({})
 	TypeScriptType toDto(TypeScriptTypeDTO typeScriptTypeDTO);
 
 }

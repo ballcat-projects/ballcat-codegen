@@ -15,7 +15,7 @@ import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.util.GenUtils;
+import com.hccake.ballcat.codegen.helper.GenerateHelper;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.SystemResultCode;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	private final TemplateEngineDelegator templateEngineDelegator;
 
-	private final GenUtils genUtils;
+	private final GenerateHelper generateHelper;
 
 	/**
 	 * 生成代码
@@ -131,7 +131,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = genUtils.getContext(tableDetails, tablePrefix, templateGroupId, customProperties);
+		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, templateGroupId,
+				customProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();
@@ -142,12 +143,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 			String filename = StrUtil.format(templateFilename, context);
 			fileEntry.setFilename(filename);
 
-			String parentFilePath = genUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
+			String parentFilePath = generateHelper.evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
 			// 如果是文件
 			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				String filePath = genUtils.concatFilePath(parentFilePath, filename);
+				String filePath = generateHelper.concatFilePath(parentFilePath, filename);
 				fileEntry.setFilePath(filePath);
 				// 文件内容渲染
 				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
@@ -163,8 +164,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 				}
 			}
 			else {
-				String currentPath = genUtils.evaluateRealPath(templateFilename, context);
-				fileEntry.setFilePath(genUtils.concatFilePath(parentFilePath, currentPath));
+				String currentPath = generateHelper.evaluateRealPath(templateFilename, context);
+				fileEntry.setFilePath(generateHelper.concatFilePath(parentFilePath, currentPath));
 			}
 
 			map.put(fileEntry.getFilePath(), fileEntry);

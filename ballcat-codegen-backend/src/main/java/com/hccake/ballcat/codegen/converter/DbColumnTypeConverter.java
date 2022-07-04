@@ -4,7 +4,6 @@ import com.hccake.ballcat.codegen.model.entity.DbColumnType;
 import com.hccake.ballcat.codegen.model.entity.FieldType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -22,8 +21,8 @@ public interface DbColumnTypeConverter {
 	 * @param ft 数据库字段类型
 	 * @return DbColumnType
 	 */
-	@Mappings({ @Mapping(target = "type", source = "ft.columnValue"),
-			@Mapping(target = "pkg", source = "ft.packageName") })
+	@Mapping(target = "type", source = "ft.columnValue")
+	@Mapping(target = "pkg", source = "ft.packageName")
 	DbColumnType toModel(FieldType ft);
 
 }

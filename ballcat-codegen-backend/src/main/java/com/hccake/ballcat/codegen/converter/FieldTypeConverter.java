@@ -23,7 +23,6 @@ public interface FieldTypeConverter {
 	 * @param fieldType DB和后端数据类型 object
 	 * @return FieldTypeVO DB和后端数据类型VO
 	 */
-	@Mappings({})
 	FieldTypeVO toVo(FieldType fieldType);
 
 	/**
@@ -31,7 +30,6 @@ public interface FieldTypeConverter {
 	 * @param fieldTypeDTO DB和后端数据类型DTO
 	 * @return FieldType DB和后端数据类型 object
 	 */
-	@Mappings({})
 	FieldType toDto(FieldTypeDTO fieldTypeDTO);
 
 }

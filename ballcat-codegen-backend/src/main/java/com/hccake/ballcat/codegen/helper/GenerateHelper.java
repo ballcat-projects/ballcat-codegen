@@ -1,4 +1,4 @@
-package com.hccake.ballcat.codegen.util;
+package com.hccake.ballcat.codegen.helper;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
@@ -33,7 +33,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GenUtils {
+public class GenerateHelper {
 
 	private final DbTypeConverterManager dbTypeConverterManager;
 
