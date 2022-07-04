@@ -1,12 +1,14 @@
 package com.hccake.ballcat.codegen.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
 import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
 import com.hccake.ballcat.codegen.exception.TemplateRenderException;
+import com.hccake.ballcat.codegen.helper.GenerateHelper;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
@@ -15,7 +17,7 @@ import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.util.GenUtils;
+import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.SystemResultCode;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +48,10 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	private final TemplateEngineDelegator templateEngineDelegator;
 
-	private final GenUtils genUtils;
+	private final GenerateHelper generateHelper;
 
 	/**
 	 * 生成代码
-	 *
 	 * @param generatorOptionDTO 代码生成的一些配置信息
 	 * @return 已生成的代码数据
 	 */
@@ -60,7 +61,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 		Map<String, FileEntry> map = getStringFileEntryMap(generatorOptionDTO);
 
 		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			 ZipOutputStream zip = new ZipOutputStream(outputStream)) {
+				ZipOutputStream zip = new ZipOutputStream(outputStream)) {
 			// 循环写入数据
 			for (Map.Entry<String, FileEntry> entry : map.entrySet()) {
 				FileEntry fileEntry = entry.getValue();
@@ -84,13 +85,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 		// 获取生成后的文件项 map
 		Map<String, FileEntry> map = getStringFileEntryMap(generateOptionDTO);
 		// 忽略大小写的排序
-		return CollectionUtil.sort(map.values(),
-				Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER));
+		return CollUtil.sort(map.values(), Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER));
 	}
 
 	/**
 	 * 获得生成后的 代码地址：代码文件 的 map
-	 *
 	 * @param generateOptionDTO 生成参数
 	 * @return Map<String, FileEntry>
 	 */
@@ -104,13 +103,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 获得生成后的 代码地址：代码文件 的 map
-	 *
 	 * @param generateOptionDTO 生成参数
-	 * @param templateFiles     模板文件
+	 * @param templateFiles 模板文件
 	 * @return Map<String, FileEntry>
 	 */
 	private Map<String, FileEntry> getStringFileEntryMap(GeneratorOptionDTO generateOptionDTO,
-														 List<TemplateFile> templateFiles) {
+			List<TemplateFile> templateFiles) {
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		for (String tableName : generateOptionDTO.getTableNames()) {
@@ -126,16 +124,16 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 	/**
 	 * 代码生成
-	 *
 	 * @return Map<String, FileEntry>
 	 */
 	public Map<String, FileEntry> generatorCode(TableDetails tableDetails, String tablePrefix,
-												Map<String, String> customProperties, Integer templateGroupId, List<TemplateFile> templateFiles) {
+			Map<String, String> customProperties, Integer templateGroupId, List<TemplateFile> templateFiles) {
 
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = genUtils.getContext(tableDetails, tablePrefix, templateGroupId, customProperties);
+		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, templateGroupId,
+				customProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();
@@ -146,12 +144,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 			String filename = StrUtil.format(templateFilename, context);
 			fileEntry.setFilename(filename);
 
-			String parentFilePath = genUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
+			String parentFilePath = GenerateUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
 			// 如果是文件
 			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				String filePath = genUtils.concatFilePath(parentFilePath, filename);
+				String filePath = GenerateUtils.concatFilePath(parentFilePath, filename);
 				fileEntry.setFilePath(filePath);
 				// 文件内容渲染
 				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
@@ -159,18 +157,21 @@ public class GeneratorServiceImpl implements GeneratorService {
 				try {
 					String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
 					fileEntry.setContent(content);
-				} catch (TemplateRenderException ex) {
-					String errorMessage = StrUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
+				}
+				catch (TemplateRenderException ex) {
+					String errorMessage = CharSequenceUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
 							ex.getMessage());
 					throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
 				}
-			} else {
-				String currentPath = genUtils.evaluateRealPath(templateFilename, context);
-				fileEntry.setFilePath(genUtils.concatFilePath(parentFilePath, currentPath));
+			}
+			else {
+				String currentPath = GenerateUtils.evaluateRealPath(templateFilename, context);
+				fileEntry.setFilePath(GenerateUtils.concatFilePath(parentFilePath, currentPath));
 			}
 
 			map.put(fileEntry.getFilePath(), fileEntry);
 		}
 		return map;
 	}
+
 }

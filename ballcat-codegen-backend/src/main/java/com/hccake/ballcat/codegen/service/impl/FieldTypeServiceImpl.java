@@ -19,9 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: FieldTypeServiceImpl
- * description：DB和后端数据类型 business implementation class
+ * software：IntelliJ IDEA 2022.2 class name: FieldTypeServiceImpl description：DB和后端数据类型
+ * business implementation class
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -51,4 +50,5 @@ public class FieldTypeServiceImpl extends ExtendServiceImpl<FieldTypeMapper, Fie
 				.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType));
 		return fieldTypeMapper.selectList(wrapper);
 	}
+
 }

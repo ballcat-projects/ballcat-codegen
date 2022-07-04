@@ -8,9 +8,8 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: TypeScriptTypeVO
- * description：前端和后端数据类型管理 view object
+ * software：IntelliJ IDEA 2022.2 class name: TypeScriptTypeVO description：前端和后端数据类型管理 view
+ * object
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -40,4 +39,5 @@ public class TypeScriptTypeVO {
 
 	@Schema(title = "updateTime", description = "更新时间")
 	private LocalDateTime updateTime;
+
 }

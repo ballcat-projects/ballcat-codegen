@@ -13,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: TypeScriptTypeServiceImpl
+ * software：IntelliJ IDEA 2022.2 class name: TypeScriptTypeServiceImpl
  * description：前端和后端数据类型管理 business implementation class
  *
  * @author MoBaiJun 2022-07-01 14:27:10
@@ -22,7 +21,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TypeScriptTypeServiceImpl extends ExtendServiceImpl<TypeScriptTypeMapper, TypeScriptType> implements TypeScriptTypeService {
+public class TypeScriptTypeServiceImpl extends ExtendServiceImpl<TypeScriptTypeMapper, TypeScriptType>
+		implements TypeScriptTypeService {
 
 	private final TypeScriptTypeMapper typeScriptTypeMapper;
 
@@ -30,4 +30,5 @@ public class TypeScriptTypeServiceImpl extends ExtendServiceImpl<TypeScriptTypeM
 	public PageResult<TypeScriptTypeVO> queryPage(PageParam pageParam, TypeScriptTypeQO qo) {
 		return typeScriptTypeMapper.queryPage(pageParam, qo);
 	}
+
 }

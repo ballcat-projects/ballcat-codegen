@@ -13,8 +13,7 @@ import com.hccake.extend.mybatis.plus.toolkit.WrappersX;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * interface name: TypeScriptTypeMapper
+ * software：IntelliJ IDEA 2022.2 interface name: TypeScriptTypeMapper
  * description：前端和后端数据类型管理 The Mapper interface
  *
  * @author MoBaiJun 2022-07-01 14:27:10
@@ -24,9 +23,8 @@ public interface TypeScriptTypeMapper extends ExtendMapper<TypeScriptType> {
 
 	/**
 	 * 分页查询
-	 *
 	 * @param pageParam pagination parameters
-	 * @param qo        Query conditions
+	 * @param qo Query conditions
 	 * @return PageResult<TypeScriptTypeVO> Paginated result set
 	 */
 	default PageResult<TypeScriptTypeVO> queryPage(PageParam pageParam, TypeScriptTypeQO qo) {
@@ -38,4 +36,5 @@ public interface TypeScriptTypeMapper extends ExtendMapper<TypeScriptType> {
 		IPage<TypeScriptTypeVO> voPage = page.convert(TypeScriptTypeConverter.INSTANCE::toVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());
 	}
+
 }

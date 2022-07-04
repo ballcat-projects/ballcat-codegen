@@ -24,12 +24,10 @@ public class DbTypeConverterManager {
 
 	/**
 	 * 获取字段集合
-	 *
 	 * @return 字段集合
 	 */
 	public List<FieldType> getDbTypeList(DbType dbType, Integer templateGroupId) {
 		List<FieldType> fieldTypeList = fieldTypeService.selectDbTypeList(dbType, templateGroupId);
-		;
 		if (!ObjectUtils.isEmpty(fieldTypeList)) {
 			return fieldTypeList;
 		}
@@ -41,7 +39,6 @@ public class DbTypeConverterManager {
 
 	/**
 	 * 获取对应数据类型
-	 *
 	 * @param dataType 字段类型
 	 * @return 数据类型
 	 */
@@ -54,4 +51,5 @@ public class DbTypeConverterManager {
 		log.error("未找到对应数据类型，字段类型是：{}", dataType);
 		return null;
 	}
+
 }
