@@ -1,6 +1,10 @@
 package com.hccake.ballcat.codegen.typescript;
 
+import cn.hutool.core.collection.CollUtil;
+import com.hccake.ballcat.codegen.model.entity.TypeScriptType;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,10 +16,18 @@ public class TypeScriptTypeConverter {
 
 	public static final String DEFAULT_TS_TYPE = "any";
 
-	public static final Map<String, String> JAVA_TO_TS = new HashMap<>();
+	public final Map<String, String> typeMapping = new HashMap<>();
 
-	public static String javaToTs(String javaType) {
-		return JAVA_TO_TS.getOrDefault(javaType, DEFAULT_TS_TYPE);
+	public TypeScriptTypeConverter(List<TypeScriptType> typeScriptTypes) {
+		if (CollUtil.isNotEmpty(typeScriptTypes)) {
+			for (TypeScriptType typeScriptType : typeScriptTypes) {
+				typeMapping.put(typeScriptType.getCodeKey(), typeScriptType.getCodeValue());
+			}
+		}
+	}
+
+	public String javaToTs(String javaType) {
+		return typeMapping.getOrDefault(javaType, DEFAULT_TS_TYPE);
 	}
 
 }

@@ -3,7 +3,6 @@ package com.hccake.ballcat.codegen.helper;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.hccake.ballcat.codegen.database.DbTypeConverterManager;
 import com.hccake.ballcat.codegen.model.bo.ColumnInfo;
@@ -12,14 +11,15 @@ import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.entity.DbColumnType;
 import com.hccake.ballcat.codegen.model.entity.FieldType;
+import com.hccake.ballcat.codegen.model.entity.TypeScriptType;
+import com.hccake.ballcat.codegen.service.TypeScriptTypeService;
 import com.hccake.ballcat.codegen.typescript.TypeScriptTypeConverter;
+import com.hccake.ballcat.codegen.util.GenerateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +36,8 @@ import java.util.Map;
 public class GenerateHelper {
 
 	private final DbTypeConverterManager dbTypeConverterManager;
+
+	private final TypeScriptTypeService typeScriptTypeService;
 
 	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, Integer templateGroupId,
 			Map<String, String> customProperties) {
@@ -70,10 +72,10 @@ public class GenerateHelper {
 		// 表备注
 		generateProperties.setComments(tableDetails.getTableComment());
 		// 大驼峰类名
-		String className = underlineToCamel(noPrefixTableName);
+		String className = GenerateUtils.underlineToCamel(noPrefixTableName);
 		generateProperties.setClassName(className);
 		// 表别名
-		generateProperties.setTableAlias(prodAlias(className));
+		generateProperties.setTableAlias(GenerateUtils.prodAlias(className));
 		// 小驼峰类名
 		String classname = StringUtils.uncapitalize(className);
 		generateProperties.setClassname(classname);
@@ -101,7 +103,7 @@ public class GenerateHelper {
 			columnProperties.setColumnType(columnInfo.getColumnType());
 
 			// 列名转换成Java属性名
-			String capitalizedAttrName = underlineToCamel(columnName);
+			String capitalizedAttrName = GenerateUtils.underlineToCamel(columnName);
 			columnProperties.setCapitalizedAttrName(capitalizedAttrName);
 			columnProperties.setAttrName(StringUtils.uncapitalize(capitalizedAttrName));
 
@@ -109,8 +111,10 @@ public class GenerateHelper {
 			DbColumnType columnType = dbTypeConverterManager.getTypeConverter(typeList, columnProperties.getDataType());
 			String columnJavaType = columnType.getType();
 			columnProperties.setAttrType(columnJavaType);
+
 			// 列的 ts数据类型
-			columnProperties.setTsAttrType(TypeScriptTypeConverter.javaToTs(columnJavaType));
+			List<TypeScriptType> list = typeScriptTypeService.list();
+			columnProperties.setTsAttrType(new TypeScriptTypeConverter(list).javaToTs(columnJavaType));
 
 			// 是否主键
 			if ("PRI".equalsIgnoreCase(columnInfo.getColumnKey()) && generateProperties.getPk() == null) {
@@ -128,61 +132,6 @@ public class GenerateHelper {
 		// 当前时间
 		generateProperties.setCurrentTime(DateUtil.now());
 		return generateProperties;
-	}
-
-	/**
-	 * 路径拼接
-	 * @param parentPath 父级路径
-	 * @param subPath 子路径
-	 * @return 完整路径
-	 */
-	public String concatFilePath(String parentPath, String subPath) {
-		if (StrUtil.isEmpty(parentPath)) {
-			return subPath;
-		}
-		return parentPath.endsWith(File.separator) ? parentPath + subPath : parentPath + File.separator + subPath;
-	}
-
-	/**
-	 * 获取真实的文件全路径
-	 * @param filePathMaker 文件路径模板
-	 * @param map 模板属性
-	 * @return filePath 文件路径
-	 */
-	public String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
-		// 占位符替换
-		String realFilePath = StrUtil.format(filePathMaker, map);
-		if (StrUtil.isEmpty(realFilePath)) {
-			return realFilePath;
-		}
-		// 用 . 标识文件夹合并，所以需要替换成 /
-		realFilePath = realFilePath.replace(StrUtil.DOT, File.separator);
-		// 防止多写了 /
-		realFilePath = realFilePath.replace(File.separator + File.separator, File.separator);
-
-		return realFilePath;
-	}
-
-	/**
-	 * 根据类名生成表别名
-	 * @param className 类名
-	 * @return 表别名
-	 */
-	private String prodAlias(String className) {
-		StringBuilder sb = new StringBuilder();
-		for (char c : className.toCharArray()) {
-			if (c >= 'A' && c <= 'Z') {
-				sb.append(Character.toLowerCase(c));
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 列名转换成Java属性名
-	 */
-	public String underlineToCamel(String underlineStr) {
-		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
 	}
 
 }

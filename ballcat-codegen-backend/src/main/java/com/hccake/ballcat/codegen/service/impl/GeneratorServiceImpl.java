@@ -1,12 +1,14 @@
 package com.hccake.ballcat.codegen.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.engine.TemplateEngineDelegator;
 import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
 import com.hccake.ballcat.codegen.exception.TemplateRenderException;
+import com.hccake.ballcat.codegen.helper.GenerateHelper;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
@@ -15,7 +17,7 @@ import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.helper.GenerateHelper;
+import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.SystemResultCode;
 import lombok.RequiredArgsConstructor;
@@ -83,8 +85,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 		// 获取生成后的文件项 map
 		Map<String, FileEntry> map = getStringFileEntryMap(generateOptionDTO);
 		// 忽略大小写的排序
-		return CollectionUtil.sort(map.values(),
-				Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER));
+		return CollUtil.sort(map.values(), Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER));
 	}
 
 	/**
@@ -143,12 +144,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 			String filename = StrUtil.format(templateFilename, context);
 			fileEntry.setFilename(filename);
 
-			String parentFilePath = generateHelper.evaluateRealPath(templateFile.getParentFilePath(), context);
+			String parentFilePath = GenerateUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
 			// 如果是文件
 			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				String filePath = generateHelper.concatFilePath(parentFilePath, filename);
+				String filePath = GenerateUtils.concatFilePath(parentFilePath, filename);
 				fileEntry.setFilePath(filePath);
 				// 文件内容渲染
 				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
@@ -158,14 +159,14 @@ public class GeneratorServiceImpl implements GeneratorService {
 					fileEntry.setContent(content);
 				}
 				catch (TemplateRenderException ex) {
-					String errorMessage = StrUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
+					String errorMessage = CharSequenceUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
 							ex.getMessage());
 					throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
 				}
 			}
 			else {
-				String currentPath = generateHelper.evaluateRealPath(templateFilename, context);
-				fileEntry.setFilePath(generateHelper.concatFilePath(parentFilePath, currentPath));
+				String currentPath = GenerateUtils.evaluateRealPath(templateFilename, context);
+				fileEntry.setFilePath(GenerateUtils.concatFilePath(parentFilePath, currentPath));
 			}
 
 			map.put(fileEntry.getFilePath(), fileEntry);
