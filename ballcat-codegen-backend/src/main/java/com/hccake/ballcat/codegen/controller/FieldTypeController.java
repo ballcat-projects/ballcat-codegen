@@ -26,9 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: FieldTypeController
- * description：DB和后端数据类型 the controller
+ * software：IntelliJ IDEA 2022.2 class name: FieldTypeController description：DB和后端数据类型 the
+ * controller
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -72,4 +71,5 @@ public class FieldTypeController {
 		return fieldTypeService.removeBatchByIds(Arrays.asList(ids)) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除数据类型失败");
 	}
+
 }

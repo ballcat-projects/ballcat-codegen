@@ -8,9 +8,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 /**
- * software：IntelliJ IDEA 2022.1
- * interface name: DbColumnTypeConverter
- * class description：
+ * software：IntelliJ IDEA 2022.1 interface name: DbColumnTypeConverter class description：
  *
  * @author MoBaiJun 2022/7/4 14:20
  */
@@ -21,11 +19,11 @@ public interface DbColumnTypeConverter {
 
 	/**
 	 * 数据库字段类型转转 DbColumnType
-	 *
 	 * @param ft 数据库字段类型
 	 * @return DbColumnType
 	 */
-	@Mappings({@Mapping(target = "type", source = "ft.columnValue"), @Mapping(target = "pkg", source = "ft.packageName")})
+	@Mappings({ @Mapping(target = "type", source = "ft.columnValue"),
+			@Mapping(target = "pkg", source = "ft.packageName") })
 	DbColumnType toModel(FieldType ft);
-}
 
+}

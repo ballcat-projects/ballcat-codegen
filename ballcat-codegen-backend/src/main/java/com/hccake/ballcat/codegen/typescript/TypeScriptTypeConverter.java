@@ -17,4 +17,5 @@ public class TypeScriptTypeConverter {
 	public static String javaToTs(String javaType) {
 		return JAVA_TO_TS.getOrDefault(javaType, DEFAULT_TS_TYPE);
 	}
+
 }

@@ -13,9 +13,8 @@ import com.hccake.extend.mybatis.plus.toolkit.WrappersX;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * interface name: FieldTypeMapper
- * description：DB和后端数据类型 The Mapper interface
+ * software：IntelliJ IDEA 2022.2 interface name: FieldTypeMapper description：DB和后端数据类型 The
+ * Mapper interface
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -24,9 +23,8 @@ public interface FieldTypeMapper extends ExtendMapper<FieldType> {
 
 	/**
 	 * 分页查询
-	 *
 	 * @param pageParam pagination parameters
-	 * @param qo        Query conditions
+	 * @param qo Query conditions
 	 * @return PageResult<FieldTypeVO> Paginated result set
 	 */
 	default PageResult<FieldTypeVO> queryPage(PageParam pageParam, FieldTypeQO qo) {
@@ -39,4 +37,5 @@ public interface FieldTypeMapper extends ExtendMapper<FieldType> {
 		IPage<FieldTypeVO> voPage = page.convert(FieldTypeConverter.INSTANCE::toVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());
 	}
+
 }

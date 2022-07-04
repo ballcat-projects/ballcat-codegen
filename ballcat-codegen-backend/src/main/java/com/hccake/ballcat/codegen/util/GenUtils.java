@@ -37,8 +37,8 @@ public class GenUtils {
 
 	private final DbTypeConverterManager dbTypeConverterManager;
 
-	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix,
-										  Integer templateGroupId, Map<String, String> customProperties) {
+	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, Integer templateGroupId,
+			Map<String, String> customProperties) {
 		// 根据表信息和字段信息获取对应的配置属性
 		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupId);
 		// 转换generateProperties为map，模板数据
@@ -50,12 +50,12 @@ public class GenUtils {
 
 	/**
 	 * 根据表信息和字段信息获取对应的配置属性
-	 *
 	 * @param tableDetails 表详情
-	 * @param tablePrefix  表前缀
+	 * @param tablePrefix 表前缀
 	 * @return GenerateProperties
 	 */
-	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix, Integer templateGroupId) {
+	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix,
+			Integer templateGroupId) {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
 		// 表名
@@ -132,9 +132,8 @@ public class GenUtils {
 
 	/**
 	 * 路径拼接
-	 *
 	 * @param parentPath 父级路径
-	 * @param subPath    子路径
+	 * @param subPath 子路径
 	 * @return 完整路径
 	 */
 	public String concatFilePath(String parentPath, String subPath) {
@@ -146,9 +145,8 @@ public class GenUtils {
 
 	/**
 	 * 获取真实的文件全路径
-	 *
 	 * @param filePathMaker 文件路径模板
-	 * @param map           模板属性
+	 * @param map 模板属性
 	 * @return filePath 文件路径
 	 */
 	public String evaluateRealPath(String filePathMaker, Map<String, Object> map) {
@@ -167,7 +165,6 @@ public class GenUtils {
 
 	/**
 	 * 根据类名生成表别名
-	 *
 	 * @param className 类名
 	 * @return 表别名
 	 */
@@ -185,6 +182,7 @@ public class GenUtils {
 	 * 列名转换成Java属性名
 	 */
 	public String underlineToCamel(String underlineStr) {
-		return WordUtils.capitalizeFully(underlineStr, new char[]{'_'}).replace("_", "");
+		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
 	}
+
 }

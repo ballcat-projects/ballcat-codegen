@@ -11,9 +11,8 @@ import com.hccake.extend.mybatis.plus.service.ExtendService;
 import java.util.List;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * interface name: FieldTypeService
- * description：DB和后端数据类型 business interface
+ * software：IntelliJ IDEA 2022.2 interface name: FieldTypeService description：DB和后端数据类型
+ * business interface
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -21,16 +20,14 @@ public interface FieldTypeService extends ExtendService<FieldType> {
 
 	/**
 	 * 根据QueryObject查询分页数据
-	 *
 	 * @param pageParam 分页参数
-	 * @param qo        查询参数对象
+	 * @param qo 查询参数对象
 	 * @return 分页数据
 	 */
 	PageResult<FieldTypeVO> queryPage(PageParam pageParam, FieldTypeQO qo);
 
 	/**
 	 * 查询数据库对应数据类型
-	 *
 	 * @param dbType 数据库类型
 	 * @return 字段集合
 	 */
@@ -38,9 +35,9 @@ public interface FieldTypeService extends ExtendService<FieldType> {
 
 	/**
 	 * 查找默认数据类型
-	 *
 	 * @param dbType 数据库类型
 	 * @return 字段集合
 	 */
 	List<FieldType> selectDbTypeList(DbType dbType);
+
 }

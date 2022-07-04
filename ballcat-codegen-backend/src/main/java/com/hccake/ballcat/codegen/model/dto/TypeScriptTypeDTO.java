@@ -6,30 +6,30 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: TypeScriptTypeDTO
- * description：前端和后端数据类型管理 The DTO added object
- * 
+ * software：IntelliJ IDEA 2022.2 class name: TypeScriptTypeDTO description：前端和后端数据类型管理 The
+ * DTO added object
+ *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
 @Getter
 @Setter
 @ToString
 @Schema(title = "TypeScriptTypeDTO", description = "前端和后端数据类型管理 DTO object")
-public class TypeScriptTypeDTO  {
+public class TypeScriptTypeDTO {
 
-    @Schema(title = "id", description = "主键id")
-    private Long id;
+	@Schema(title = "id", description = "主键id")
+	private Long id;
 
-    @Schema(title = "groupId", description = "模板组id")
-    private Long groupId;
+	@Schema(title = "groupId", description = "模板组id")
+	private Long groupId;
 
-    @Schema(title = "defaultValue", description = "是否默认（0：默认，1：非默认）")
-    private String defaultValue;
+	@Schema(title = "defaultValue", description = "是否默认（0：默认，1：非默认）")
+	private String defaultValue;
 
-    @Schema(title = "codeKey", description = "Java对应类型")
-    private String codeKey;
+	@Schema(title = "codeKey", description = "Java对应类型")
+	private String codeKey;
 
-    @Schema(title = "codeValue", description = "界面对应类型")
-    private String codeValue;
+	@Schema(title = "codeValue", description = "界面对应类型")
+	private String codeValue;
+
 }

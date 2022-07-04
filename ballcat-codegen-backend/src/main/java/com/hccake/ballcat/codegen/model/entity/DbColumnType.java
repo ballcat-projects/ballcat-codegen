@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * software：IntelliJ IDEA 2022.1
- * class name: DbColumnType
- * class description： 表字段类型
+ * software：IntelliJ IDEA 2022.1 class name: DbColumnType class description： 表字段类型
  *
  * @author MoBaiJun 2022/7/4 14:00
  */
@@ -23,4 +21,5 @@ public class DbColumnType {
 	 * 包路径
 	 */
 	private String pkg;
+
 }

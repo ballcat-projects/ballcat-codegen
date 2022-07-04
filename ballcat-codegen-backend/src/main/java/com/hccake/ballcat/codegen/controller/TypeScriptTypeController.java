@@ -25,8 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: TypeScriptTypeController
+ * software：IntelliJ IDEA 2022.2 class name: TypeScriptTypeController
  * description：前端和后端数据类型管理 the controller
  *
  * @author MoBaiJun 2022-07-01 14:27:10
@@ -41,7 +40,8 @@ public class TypeScriptTypeController {
 
 	@Operation(summary = "分页查询")
 	@GetMapping("/page")
-	public R<PageResult<TypeScriptTypeVO>> getDataSourceConfigPage(@Validated PageParam pageParam, TypeScriptTypeQO qo) {
+	public R<PageResult<TypeScriptTypeVO>> getDataSourceConfigPage(@Validated PageParam pageParam,
+			TypeScriptTypeQO qo) {
 		return R.ok(typeScriptTypeService.queryPage(pageParam, qo));
 	}
 
@@ -71,4 +71,5 @@ public class TypeScriptTypeController {
 		return typeScriptTypeService.removeBatchByIds(Arrays.asList(ids)) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除数据类型失败");
 	}
+
 }

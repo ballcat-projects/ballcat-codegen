@@ -8,9 +8,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 /**
- * software：IntelliJ IDEA 2022.2
- * class name: FieldTypeVO
- * description：DB和后端数据类型 view object
+ * software：IntelliJ IDEA 2022.2 class name: FieldTypeVO description：DB和后端数据类型 view object
  *
  * @author MoBaiJun 2022-07-01 14:27:10
  */
@@ -46,4 +44,5 @@ public class FieldTypeVO {
 
 	@Schema(title = "updateTime", description = "更新时间")
 	private LocalDateTime updateTime;
+
 }
