@@ -22,38 +22,34 @@ import java.time.LocalDateTime;
 @TableName("gen_field_type")
 @Schema(title = "FieldType", description = "DB和后端数据类型 entity object")
 public class FieldType {
-
-	@TableId(value = "id", type = IdType.AUTO)
-	@Schema(title = "id", description = "主键id")
-	private Long id;
-
-	@Schema(title = "groupId", description = "模板组id")
-	private Long groupId;
-
-	@Schema(title = "defaultValue", description = "是否默认值(0,默认值，1,非默认值)")
-	private String defaultValue;
-
-	@Schema(title = "columnKey", description = "DB属性类型")
-	private String columnKey;
-
-	@Schema(title = "columnValue", description = "对应属性类型")
-	private String columnValue;
-
-	@Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
-	private String dbType;
-
-	@Schema(title = "packageName", description = "属性包路径+类名")
-	private String packageName;
-
-	@Schema(title = "deleted", description = "逻辑删除字段（1删除0正常）")
-	private String deleted;
-
-	@TableField(value = "create_time", fill = FieldFill.INSERT)
-	@Schema(title = "createTime", description = "创建时间")
-	private LocalDateTime createTime;
-
-	@TableField(value = "update_time", fill = FieldFill.UPDATE)
-	@Schema(title = "updateTime", description = "更新时间")
-	private LocalDateTime updateTime;
-
+  
+    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(title = "id", description = "主键id")
+    private Long id;
+  
+    @Schema(title = "groupId", description = "模板组id")
+    private Long groupId;
+  
+    @Schema(title = "columnKey", description = "DB属性类型")
+    private String columnKey;
+  
+    @Schema(title = "columnValue", description = "对应属性类型")
+    private String columnValue;
+  
+    @Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
+    private String dbType;
+  
+    @Schema(title = "packageName", description = "属性包路径+类名")
+    private String packageName;
+  
+    @Schema(title = "deleted", description = "逻辑删除字段（1删除0正常）")
+    private String deleted;
+  
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @Schema(title = "createTime", description = "创建时间")
+    private LocalDateTime createTime;
+  
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    @Schema(title = "updateTime", description = "更新时间")
+    private LocalDateTime updateTime;
 }

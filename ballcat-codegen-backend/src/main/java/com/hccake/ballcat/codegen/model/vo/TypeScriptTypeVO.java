@@ -25,9 +25,6 @@ public class TypeScriptTypeVO {
 	@Schema(title = "groupId", description = "模板组id")
 	private Long groupId;
 
-	@Schema(title = "defaultValue", description = "是否默认（0：默认，1：非默认）")
-	private String defaultValue;
-
 	@Schema(title = "codeKey", description = "Java对应类型")
 	private String codeKey;
 
