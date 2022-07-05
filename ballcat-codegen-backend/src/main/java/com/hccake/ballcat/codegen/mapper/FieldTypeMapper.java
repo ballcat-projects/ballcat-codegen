@@ -31,7 +31,6 @@ public interface FieldTypeMapper extends ExtendMapper<FieldType> {
 		IPage<FieldType> page = this.prodPage(pageParam);
 		LambdaQueryWrapperX<FieldType> wrapper = WrappersX.lambdaQueryX(FieldType.class)
 				.eqIfPresent(FieldType::getGroupId, qo.getGroupId())
-				.eqIfPresent(FieldType::getDefaultValue, qo.getDefaultValue())
 				.eqIfPresent(FieldType::getDbType, qo.getDbType());
 		this.selectPage(page, wrapper);
 		IPage<FieldTypeVO> voPage = page.convert(FieldTypeConverter.INSTANCE::toVo);

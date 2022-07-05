@@ -30,9 +30,6 @@ public class FieldTypeVO {
 	@Schema(title = "columnKey", description = "DB属性类型")
 	private String columnKey;
 
-	@Schema(title = "columnValue", description = "对应属性类型")
-	private String columnValue;
-
 	@Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
 	private String dbType;
 

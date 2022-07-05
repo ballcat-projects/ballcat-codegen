@@ -30,8 +30,7 @@ public interface TypeScriptTypeMapper extends ExtendMapper<TypeScriptType> {
 	default PageResult<TypeScriptTypeVO> queryPage(PageParam pageParam, TypeScriptTypeQO qo) {
 		IPage<TypeScriptType> page = this.prodPage(pageParam);
 		LambdaQueryWrapperX<TypeScriptType> wrapper = WrappersX.lambdaQueryX(TypeScriptType.class)
-				.eqIfPresent(TypeScriptType::getGroupId, qo.getGroupId())
-				.eqIfPresent(TypeScriptType::getDefaultValue, qo.getDefaultValue());
+				.eqIfPresent(TypeScriptType::getGroupId, qo.getGroupId());
 		this.selectPage(page, wrapper);
 		IPage<TypeScriptTypeVO> voPage = page.convert(TypeScriptTypeConverter.INSTANCE::toVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());

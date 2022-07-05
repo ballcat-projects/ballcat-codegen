@@ -20,10 +20,6 @@ public class TypeScriptTypeQO {
 	@Schema(title = "id", description = "主键id")
 	private Long id;
 
-	@Schema(title = "groupId", description = "模板组id")
-	private Long groupId;
-
-	@Schema(title = "defaultValue", description = "是否默认（0：默认，1：非默认）")
-	private String defaultValue;
-
+    @Schema(title = "groupId", description = "模板组id")
+    private Long groupId;
 }
