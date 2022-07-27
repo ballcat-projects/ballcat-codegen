@@ -67,4 +67,5 @@ public class GenerateUtils {
 	public static String underlineToCamel(String underlineStr) {
 		return WordUtils.capitalizeFully(underlineStr, new char[] { '_' }).replace("_", "");
 	}
+
 }

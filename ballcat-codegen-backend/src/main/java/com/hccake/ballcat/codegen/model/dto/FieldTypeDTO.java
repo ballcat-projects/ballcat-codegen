@@ -23,8 +23,8 @@ public class FieldTypeDTO {
 	@Schema(title = "groupId", description = "模板组id")
 	private Long groupId;
 
-    @Schema(title = "columnKey", description = "DB属性类型")
-    private String columnKey;
+	@Schema(title = "columnKey", description = "DB属性类型")
+	private String columnKey;
 
 	@Schema(title = "columnValue", description = "对应属性类型")
 	private String columnValue;
