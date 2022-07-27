@@ -15,6 +15,7 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
+  base: '/',
   plugins: [
     vue(),
     // 组件按需引入
