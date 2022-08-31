@@ -15,7 +15,7 @@ export interface DataSourceConfig {
   // ID
   id?: number
   // 标题
-  title: string,
+  title: string
   // dsKey
   dsKey?: string
   // 用户名

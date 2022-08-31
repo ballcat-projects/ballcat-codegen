@@ -11,14 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 
 /**
  * @author Hccake
  * @version 1.0
  * @date 2020/6/15 17:37 动态数据源加载
  */
-@Lazy
 @Configuration
 @RequiredArgsConstructor
 public class DynamicDataSourceConfiguration {

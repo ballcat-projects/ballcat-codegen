@@ -96,7 +96,7 @@
   const rulesRef = computed(() => {
     return {
       title: [{ required: true, message: '请输入数据源标题！' }],
-      dsKey: [{ required: true, message: '请输入数据源dsKey!'}, { validator: validRule }],
+      dsKey: [{ required: true, message: '请输入数据源dsKey!' }, { validator: validRule }],
       username: [{ required: true, message: '请输入用户名!' }],
       pass: isUpdate.value ? [] : [{ required: true, message: '请输入密码!' }],
       url: [{ required: true, message: '请输入连接地址!' }]
@@ -106,11 +106,11 @@
   const validRule = (rule: any, value: string) => {
     if (value) {
       if (/[^\a-\z\A-\Z0-9\_-]/g.test(value)) {
-        return Promise.reject("只能输入字母、字母、下划线和中划线");
+        return Promise.reject('只能输入字母、字母、下划线和中划线')
       }
     }
-    return Promise.resolve();
-  };
+    return Promise.resolve()
+  }
 
   // 提交按钮的 loading 状态控制
   const submitLoading = ref<boolean>(false)

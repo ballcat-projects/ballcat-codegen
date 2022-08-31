@@ -5,7 +5,8 @@ import com.hccake.ballcat.codegen.model.entity.DataSourceConfig;
 import com.hccake.ballcat.codegen.service.DataSourceConfigService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DynamicJdbcDataSourceLoader implements InitializingBean {
+public class DynamicJdbcDataSourceLoader implements ApplicationRunner {
 
 	private final DataSourceConfigService dataSourceConfigService;
 
 	private final DynamicDataSourceHelper dynamicDataSourceHelper;
 
 	@Override
-	public void afterPropertiesSet() {
+	public void run(ApplicationArguments args) throws Exception {
 		// 查找所有配置的生成项目使用数据源
 		List<DataSourceConfig> list = dataSourceConfigService.list();
 

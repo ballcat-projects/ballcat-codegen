@@ -51,7 +51,7 @@ public class SpaRedirectFilterConfiguration {
 			@Override
 			protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 					throws ServletException, IOException {
-				String requestUri = req.getRequestURI();
+				String requestUri = req.getServletPath();
 				if (pattern.matcher(requestUri).matches() && !"/".equals(requestUri)) {
 					RequestDispatcher rd;
 					if (SpaRedirectFilterConfiguration.ANT_PATH_MATCHER.match("/api/**", requestUri)) {

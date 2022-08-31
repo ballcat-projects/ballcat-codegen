@@ -1,13 +1,9 @@
 <template>
-  <a-card :bordered="false" :body-style="{ padding: 0 }">
-    <a-row type="flex" style="min-height: calc(100vh - 150px)">
+  <a-card :bordered="false" :body-style="{ padding: 0, minHeight: '500px' }">
+    <a-row type="flex" style="min-height: calc(100vh - 200px); align-items: stretch">
       <a-col :flex="5">
         <div class="database-title">数据源</div>
-        <a-menu
-          v-model:selectedKeys="selectedDsNames"
-          mode="inline"
-          style="height: calc(100% - 56px)"
-        >
+        <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
           <a-menu-item key="master" value="master">master</a-menu-item>
           <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
             {{ item.name || item.value }}
@@ -15,7 +11,7 @@
         </a-menu>
       </a-col>
       <a-col :flex="20">
-        <div style="padding: 24px">
+        <div ref="tableColRef" style="padding: 24px">
           <a-form>
             <a-row :gutter="12">
               <a-col :xl="6" :md="12" :sm="24">
@@ -69,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, watch } from 'vue'
+  import { CSSProperties, onMounted, reactive, ref, watch } from 'vue'
   import { queryTableInfoPage } from '@/api/gen/generate'
   import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
   import type { ColumnProps } from 'ant-design-vue/lib/table'
@@ -82,6 +78,23 @@
   import { message } from 'ant-design-vue'
   import GenerateModal from '@/views/gen/codegen/GenerateModal.vue'
   import { GenerateModalInstance } from './types'
+
+  // 处理数据源菜单的高度问题，保持和表格同高
+  const menuStyle: CSSProperties = reactive({
+    overflowY: 'auto',
+    paddingRight: '1px',
+    height: '1px',
+    borderRadius: '10px'
+  })
+  const tableColRef = ref()
+  onMounted(() => {
+    // 利用 ResizeObserver，监听 dom size 修改
+    const resizeObserver = new ResizeObserver(mutations => {
+      let tableColHeight = Math.max(548, mutations[0].contentRect.height)
+      menuStyle.height = tableColHeight + 'px'
+    })
+    resizeObserver.observe(tableColRef.value)
+  })
 
   // 表格列配置
   const columns = ref<ColumnProps[]>([
@@ -167,7 +180,7 @@
     color: rgba(0, 0, 0, 0.85);
     font-size: 16px;
     font-weight: 400;
-    line-height: 32px;
+    line-height: 31px;
     padding: 8px 0 8px 12px;
     border-bottom: 1px solid #f0f0f0;
     border-right: 1px solid #f0f0f0;

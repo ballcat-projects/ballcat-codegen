@@ -23,6 +23,7 @@ public class FieldTypeQO {
 	@Schema(title = "groupId", description = "模板组id")
 	private Long groupId;
 
-    @Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
-    private String dbType;
+	@Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
+	private String dbType;
+
 }
