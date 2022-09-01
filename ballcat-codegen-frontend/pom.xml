@@ -23,6 +23,12 @@
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>${frontend-maven-plugin.version}</version>
+				<configuration>
+					<!-- optional: where to download node from. Defaults to https://nodejs.org/dist/ -->
+					<nodeDownloadRoot>https://registry.npmmirror.com/-/binary/node/</nodeDownloadRoot>
+					<!-- optional: where to download npm from. Defaults to https://registry.npmjs.org/npm/-/ -->
+					<npmDownloadRoot>https://registry.npmmirror.com/-/binary/npm/</npmDownloadRoot>
+				</configuration>
 				<executions>
 					<!-- Install our node and npm version to run npm/node scripts-->
 					<execution>
@@ -31,7 +37,7 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v14.19.3</nodeVersion>
+							<nodeVersion>v16.17.0</nodeVersion>
 						</configuration>
 					</execution>
 					<!-- Install all project dependencies -->
@@ -45,6 +51,7 @@
 						<!-- Optional configuration which provides for running any npm command -->
 						<configuration>
 							<arguments>install</arguments>
+							<npmRegistryURL>http://registry.npmmirror.com/</npmRegistryURL>
 						</configuration>
 					</execution>
 					<!-- Build and minify static files -->
