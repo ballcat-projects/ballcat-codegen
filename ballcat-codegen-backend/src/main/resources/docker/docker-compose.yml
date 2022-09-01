@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  # 指定服务名称mysql、redis
+  mysql:
+    # 自己构建的镜像
+    image: mysql:latest
+    # 指定容器名称
+    container_name: mysql
+    restart: always
+    # 指定服务运行的端口
+    ports:
+      - "3309:3306"
+    # 指定容器的环境变量
+    environment:
+      # 数据库密码
+      - MYSQL_ROOT_PASSWORD=root
+      # 创建的库
+      - MYSQL_DATABASE=ballcat_codegen
+      # 允许多IP连接数据库
+      - MYSQL_ROOT_HOST=%
+  # 指定服务名称
+  ballcat-codegen:
+    # 自己构建的镜像，当前路径Dockerfile
+    build: .
+    # 打包之后的镜像名字
+    image: ballcat-codegen
+    container_name: ballcat-codegen
+    restart: always
+    # 指定服务运行的端口
+    ports:
+      - "7777:7777"
+    # 依赖的服务
+    depends_on:
+      - mysql
