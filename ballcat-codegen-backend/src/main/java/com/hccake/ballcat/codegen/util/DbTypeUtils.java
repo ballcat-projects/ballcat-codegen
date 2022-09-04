@@ -78,16 +78,16 @@ public final class DbTypeUtils {
 	 */
 	public static int getDbType(DbType dbType) {
 		switch (dbType) {
-		case MYSQL:
-			return 1;
-		case ORACLE:
-			return 2;
-		case POSTGRE_SQL:
-			return 3;
-		case SQL_SERVER:
-			return 4;
-		default:
-			return 0;
+			case MYSQL:
+				return 1;
+			case ORACLE:
+				return 2;
+			case POSTGRE_SQL:
+				return 3;
+			case SQL_SERVER:
+				return 4;
+			default:
+				return 0;
 		}
 	}
 
