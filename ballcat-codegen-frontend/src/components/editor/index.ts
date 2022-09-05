@@ -1,9 +1,9 @@
-import { EditorState, basicSetup } from '@codemirror/basic-setup'
-import { EditorView, KeyBinding, keymap, ViewUpdate } from '@codemirror/view'
+import { basicSetup } from 'codemirror'
+import { EditorState } from '@codemirror/state'
+import { EditorView, KeyBinding, keymap, ViewUpdate, showPanel, Panel } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
-import { Panel, showPanel } from '@codemirror/panel'
 // import { oneDarkTheme } from '@codemirror/theme-one-dark'
-import { StreamLanguage } from '@codemirror/stream-parser'
+import { StreamLanguage } from '@codemirror/language'
 import { velocity } from '@codemirror/legacy-modes/mode/velocity'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
