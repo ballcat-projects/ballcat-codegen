@@ -70,7 +70,7 @@
   import { doRequest } from '@/utils/axios/request'
   import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance, TemplatePropertyModalInstance } from './types'
-  import { TemplateGroupPageParam } from '@/api/gen/template-group/types'
+  import type { TemplateGroupPageParam } from '@/api/gen/template-group/types'
 
   const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
   const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()

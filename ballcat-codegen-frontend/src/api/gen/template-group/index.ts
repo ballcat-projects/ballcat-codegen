@@ -1,7 +1,7 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
-import { PageResult, SelectData } from '@/api/types'
-import { TemplateGroup, TemplateGroupPageParam } from '@/api/gen/template-group/types'
+import type { PageResult, SelectData } from '@/api/types'
+import type { TemplateGroup, TemplateGroupPageParam } from '@/api/gen/template-group/types'
 
 /**
  * 获取模板组下拉框数据

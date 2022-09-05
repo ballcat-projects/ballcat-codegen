@@ -39,12 +39,12 @@
   import { Splitpanes, Pane } from 'splitpanes'
   import 'splitpanes/dist/splitpanes.css'
   import TemplateEntryTree from '@/views/gen/template-group/components/TemplateEntryTree.vue'
-  import { TemplateGroup } from '@/api/gen/template-group/types'
+  import type { TemplateGroup } from '@/api/gen/template-group/types'
   import { ref, toRef } from 'vue'
-  import { TemplateEntry } from '@/api/gen/template-entry/types'
+  import type { TemplateEntry } from '@/api/gen/template-entry/types'
   import TemplateEntryContentEditor from '@/views/gen/template-group/components/TemplateEntryContentEditor.vue'
   import { Modal } from 'ant-design-vue'
-  import { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
+  import type { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
   import { useFullscreen } from '@vueuse/core'
 
   const props = defineProps<{

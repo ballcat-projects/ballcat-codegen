@@ -67,19 +67,20 @@
 </template>
 
 <script setup lang="ts">
-  import { CSSProperties, onMounted, reactive, ref, watch } from 'vue'
+  import { onMounted, reactive, ref, watch } from 'vue'
+  import type { CSSProperties } from 'vue'
   import { queryTableInfoPage } from '@/api/gen/generate'
   import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
-  import type { ColumnProps } from 'ant-design-vue/lib/table'
+  import type { ColumnProps } from 'ant-design-vue/es/table'
   import { DownloadOutlined } from '@ant-design/icons-vue'
   import type { TableInfo } from '@/api/gen/generate/types'
-  import { TableInfoPageParam } from '@/api/gen/generate/types'
+  import type { TableInfoPageParam } from '@/api/gen/generate/types'
   import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
-  import { SelectData } from '@/api/types'
+  import type { SelectData } from '@/api/types'
   import { message } from 'ant-design-vue'
   import GenerateModal from '@/views/gen/codegen/GenerateModal.vue'
-  import { GenerateModalInstance } from './types'
+  import type { GenerateModalInstance } from './types'
 
   // 处理数据源菜单的高度问题，保持和表格同高
   const menuStyle: CSSProperties = reactive({

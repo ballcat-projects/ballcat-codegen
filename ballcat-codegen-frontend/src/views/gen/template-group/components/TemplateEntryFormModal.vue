@@ -36,11 +36,9 @@
   import { useForm } from 'ant-design-vue/es/form'
   import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
   import { pick } from 'lodash-es'
-  import {
-    TemplateEntry,
-    TemplateEntryDTO,
-    TemplateEntryTypeEnum
-  } from '@/api/gen/template-entry/types'
+  import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+
+  import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
   import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
 
   const emits = defineEmits<{

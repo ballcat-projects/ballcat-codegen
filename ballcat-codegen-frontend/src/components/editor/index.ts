@@ -1,6 +1,7 @@
 import { basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
-import { EditorView, KeyBinding, keymap, ViewUpdate, showPanel, Panel } from '@codemirror/view'
+import { EditorView, keymap, ViewUpdate, showPanel } from '@codemirror/view'
+import type { KeyBinding, Panel } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 // import { oneDarkTheme } from '@codemirror/theme-one-dark'
 import { StreamLanguage } from '@codemirror/language'
@@ -10,7 +11,7 @@ import { velocity } from '@codemirror/legacy-modes/mode/velocity'
 import { javascript } from '@codemirror/lang-javascript'
 import { java } from '@codemirror/lang-java'
 import { html } from '@codemirror/lang-html'
-import { StyleSpec } from 'style-mod'
+import type { StyleSpec } from 'style-mod'
 
 class Editor {
   editorView: EditorView

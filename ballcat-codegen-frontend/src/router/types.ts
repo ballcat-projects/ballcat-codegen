@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 export interface BallcatRouteRecordRaw extends Omit<RouteRecordRaw, 'meta' | 'children'> {
   meta?: {

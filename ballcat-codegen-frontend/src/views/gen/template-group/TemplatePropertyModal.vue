@@ -76,9 +76,8 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, UnwrapRef } from 'vue'
+  import { reactive, ref } from 'vue'
   import { usePopup } from '@/hooks/popup'
-  import { TemplateGroup } from '@/api/gen/template-group/types'
   import AddButton from '@/components/button/AddButton.vue'
   import cloneDeep from 'lodash-es/cloneDeep'
   import useTable from '@/hooks/table'
@@ -88,13 +87,15 @@
     removeTemplateProperty,
     updateTemplateProperty
   } from '@/api/gen/template-property'
-  import { PageParam } from '@/api/types'
   import { doRequest } from '@/utils/axios/request'
+  import { message } from 'ant-design-vue'
 
   // import type
+  import type { UnwrapRef } from 'vue'
+  import type { PageParam } from '@/api/types'
   import type { TemplateProperty } from '@/api/gen/template-property/types'
-  import { message } from 'ant-design-vue'
-  import { TemplatePropertyModalInstance } from '@/views/gen/template-group/types'
+  import type { TemplatePropertyModalInstance } from '@/views/gen/template-group/types'
+  import type { TemplateGroup } from '@/api/gen/template-group/types'
 
   const { visible, handleOpen, handleClose } = usePopup()
 

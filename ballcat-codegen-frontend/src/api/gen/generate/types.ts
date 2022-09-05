@@ -1,4 +1,4 @@
-import { PageParam } from '@/api/types'
+import type { PageParam } from '@/api/types'
 
 /**
  * 数据库表信息查询对象

@@ -1,7 +1,7 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
-import { TemplateProperty } from '@/api/gen/template-property/types'
-import { PageParam, PageResult } from '@/api/types'
+import type { TemplateProperty } from '@/api/gen/template-property/types'
+import type { PageParam, PageResult } from '@/api/types'
 
 /**
  * 分页查询

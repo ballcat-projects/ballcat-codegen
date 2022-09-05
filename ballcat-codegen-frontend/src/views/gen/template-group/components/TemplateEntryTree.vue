@@ -63,8 +63,8 @@
   import { listToTree } from '@/utils/tree-util'
   import { doRequest } from '@/utils/axios/request'
   import { listTemplateEntry, moveEntry } from '@/api/gen/template-entry'
-  import { TemplateEntry, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
-  import { DataNode, EventDataNode, Key } from 'ant-design-vue/lib/vc-tree/interface'
+  import type { TemplateEntry, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+  import type { DataNode, EventDataNode, Key } from 'ant-design-vue/es/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {
     EditOutlined,
@@ -75,7 +75,7 @@
   import type { NodeDragEventParams } from 'ant-design-vue/es/vc-tree/contextTypes'
   import TemplateEntryRemoveModal from '@/views/gen/template-group/components/TemplateEntryRemoveModal.vue'
   import TemplateEntryFormModal from '@/views/gen/template-group/components/TemplateEntryFormModal.vue'
-  import {
+  import type {
     TemplateEntryFormModalInstance,
     TemplateEntryRemoveModalInstance
   } from '@/views/gen/template-group/components/types'
