@@ -3,12 +3,14 @@
     <a-row type="flex" style="min-height: calc(100vh - 200px); align-items: stretch">
       <a-col :flex="5">
         <div class="database-title">数据源</div>
-        <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
-          <a-menu-item key="master" value="master">master</a-menu-item>
-          <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
-            {{ item.name || item.value }}
-          </a-menu-item>
-        </a-menu>
+        <div style="overflow: auto">
+          <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
+            <a-menu-item key="master" value="master">master</a-menu-item>
+            <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
+              {{ item.name || item.value }}
+            </a-menu-item>
+          </a-menu>
+        </div>
       </a-col>
       <a-col :flex="20">
         <div ref="tableColRef" style="padding: 24px">
@@ -81,7 +83,6 @@
 
   // 处理数据源菜单的高度问题，保持和表格同高
   const menuStyle: CSSProperties = reactive({
-    overflowY: 'auto',
     paddingRight: '1px',
     height: '1px',
     borderRadius: '10px'
