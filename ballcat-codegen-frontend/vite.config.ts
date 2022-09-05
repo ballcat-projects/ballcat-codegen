@@ -3,7 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
-import { resolve } from 'path'
+import { antdvStyleDeps } from './src/utils/resolvers'
+import { fileURLToPath, URL } from 'url'
 
 const serverAddress = 'http://ballcat-admin:7777'
 // const serverAddress = 'http://codegen.ballcat.cn'
@@ -12,7 +13,7 @@ const serverAddress = 'http://ballcat-admin:7777'
 export default defineConfig({
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
   base: '/',
@@ -63,7 +64,27 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['ant-design-vue', 'ant-design-vue/es', '@ant-design/icons-vue']
+    include: [
+      ...antdvStyleDeps,
+      'ant-design-vue',
+      'ant-design-vue/es',
+      '@ant-design/icons-vue',
+      'axios',
+      'vue',
+      'vue-router',
+      '@vueuse/core',
+      '@codemirror/commands',
+      '@codemirror/lang-html',
+      '@codemirror/lang-java',
+      '@codemirror/lang-javascript',
+      '@codemirror/language',
+      '@codemirror/state',
+      '@codemirror/theme-one-dark',
+      '@codemirror/view',
+      '@highlightjs/vue-plugin',
+      'highlight.js',
+      'splitpanes'
+    ]
   },
   build: {
     outDir: 'target/dist',
