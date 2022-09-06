@@ -35,14 +35,15 @@
     updateTemplateGroup,
     copyTemplateGroup
   } from '@/api/gen/template-group'
+  import { useForm } from 'ant-design-vue/es/form'
+  import { doRequest } from '@/utils/axios/request'
 
   // 类型引入
   import type { AxiosResponse } from 'axios'
   import type { R } from '@/utils/axios/types'
   import type { TemplateGroup } from '@/api/gen/template-group/types'
-  import { TemplateGroupFormModalInstance } from '@/views/gen/template-group/types'
-  import { useForm } from 'ant-design-vue/es/form'
-  import { doRequest } from '@/utils/axios/request'
+  import type { TemplateGroupFormModalInstance } from '@/views/gen/template-group/types'
+
 
   // 定义事件
   let emits = defineEmits<{

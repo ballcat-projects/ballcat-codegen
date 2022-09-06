@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-  import * as AntdIcons from '@ant-design/icons-vue/lib/icons'
+  import * as AntdIcons from '@ant-design/icons-vue/es/icons'
   defineProps<{
     type: string
   }>()

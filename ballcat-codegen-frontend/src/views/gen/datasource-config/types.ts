@@ -1,4 +1,4 @@
-import { DataSourceConfig } from '@/api/gen/datasource-config/types'
+import type { DataSourceConfig } from '@/api/gen/datasource-config/types'
 
 /**
  * 数据源配置编辑弹窗

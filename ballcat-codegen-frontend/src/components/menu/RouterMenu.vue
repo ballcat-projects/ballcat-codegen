@@ -21,7 +21,7 @@
   import { ref, watchEffect } from 'vue'
   import SubMenu from './SubMenu.vue'
   import { menuRouters } from '@/router'
-  import { BallcatRouteRecordRaw } from '@/router/types'
+  import type { BallcatRouteRecordRaw } from '@/router/types'
 
   defineProps<{
     mode?: 'inline' | 'vertical' | 'horizontal'

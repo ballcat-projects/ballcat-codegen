@@ -1,11 +1,11 @@
 import { ref, unref } from 'vue'
 import type { Ref } from 'vue'
 import { doRequest } from '@/utils/axios/request'
-import { AxiosResponse } from 'axios'
-import { R } from '@/utils/axios/types'
-import { PageParam, PageResult } from '@/api/types'
-import { PaginationProps } from 'ant-design-vue'
-import { Key, SorterResult } from 'ant-design-vue/es/table/interface'
+import type { AxiosResponse } from 'axios'
+import type { R } from '@/utils/axios/types'
+import type { PageParam, PageResult } from '@/api/types'
+import type { PaginationProps } from 'ant-design-vue'
+import type { Key, SorterResult } from 'ant-design-vue/es/table/interface'
 
 interface TableOptions<RecordType> {
   pageRequest: (pageParams: PageParam) => Promise<AxiosResponse<R<PageResult<RecordType>>>>

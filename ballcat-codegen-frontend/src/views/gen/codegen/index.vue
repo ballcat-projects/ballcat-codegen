@@ -3,12 +3,14 @@
     <a-row type="flex" style="min-height: calc(100vh - 200px); align-items: stretch">
       <a-col :flex="5">
         <div class="database-title">数据源</div>
-        <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
-          <a-menu-item key="master" value="master">master</a-menu-item>
-          <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
-            {{ item.name || item.value }}
-          </a-menu-item>
-        </a-menu>
+        <div style="overflow: auto">
+          <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
+            <a-menu-item key="master" value="master">master</a-menu-item>
+            <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
+              {{ item.name || item.value }}
+            </a-menu-item>
+          </a-menu>
+        </div>
       </a-col>
       <a-col :flex="20">
         <div ref="tableColRef" style="padding: 24px">
@@ -65,23 +67,23 @@
 </template>
 
 <script setup lang="ts">
-  import { CSSProperties, onMounted, reactive, ref, watch } from 'vue'
+  import { onMounted, reactive, ref, watch } from 'vue'
+  import type { CSSProperties } from 'vue'
   import { queryTableInfoPage } from '@/api/gen/generate'
   import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
-  import type { ColumnProps } from 'ant-design-vue/lib/table'
+  import type { ColumnProps } from 'ant-design-vue/es/table'
   import { DownloadOutlined } from '@ant-design/icons-vue'
   import type { TableInfo } from '@/api/gen/generate/types'
-  import { TableInfoPageParam } from '@/api/gen/generate/types'
+  import type { TableInfoPageParam } from '@/api/gen/generate/types'
   import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
-  import { SelectData } from '@/api/types'
+  import type { SelectData } from '@/api/types'
   import { message } from 'ant-design-vue'
   import GenerateModal from '@/views/gen/codegen/GenerateModal.vue'
-  import { GenerateModalInstance } from './types'
+  import type { GenerateModalInstance } from './types'
 
   // 处理数据源菜单的高度问题，保持和表格同高
   const menuStyle: CSSProperties = reactive({
-    overflowY: 'auto',
     paddingRight: '1px',
     height: '1px',
     borderRadius: '10px'

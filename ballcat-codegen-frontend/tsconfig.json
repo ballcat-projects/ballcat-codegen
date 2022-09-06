@@ -1,30 +1,17 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "components.d.ts", "auto-imports.d.ts"],
+  "exclude": ["node_modules/**"],
   "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext", "ES2016", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "types/**/**.d.ts",
-    "components.d.ts"
-  ],
   "references": [
     {
-      "path": "./tsconfig.node.json"
+      "path": "./tsconfig.vite-config.json"
     }
   ]
 }

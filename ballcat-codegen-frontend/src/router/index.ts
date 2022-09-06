@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { BallcatRouteRecordRaw } from '@/router/types'
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import type { BallcatRouteRecordRaw } from '@/router/types'
 
 const menuRouters: Array<BallcatRouteRecordRaw> = [
   {

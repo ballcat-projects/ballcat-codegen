@@ -1,4 +1,4 @@
-import { PageParam } from '@/api/types'
+import type { PageParam } from '@/api/types'
 
 /**
  * 模板组查询对象

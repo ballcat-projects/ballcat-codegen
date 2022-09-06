@@ -23,7 +23,7 @@
   import { reactive, ref } from 'vue'
   import { usePopup } from '@/hooks/popup'
   import { removeTemplateEntry } from '@/api/gen/template-entry'
-  import { TemplateEntryRemoveModalInstance } from '@/views/gen/template-group/components/types'
+  import type { TemplateEntryRemoveModalInstance } from '@/views/gen/template-group/components/types'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'
   import { TemplateEntryRemoveModeEnum } from '@/api/gen/template-entry/types'

@@ -12,9 +12,11 @@ import com.hccake.ballcat.codegen.model.entity.DataSourceConfig;
 import com.hccake.ballcat.codegen.model.qo.DataSourceConfigQO;
 import com.hccake.ballcat.codegen.model.vo.DataSourceConfigPageVO;
 import com.hccake.ballcat.codegen.service.DataSourceConfigService;
+import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.domain.SelectData;
+import com.hccake.ballcat.common.model.result.SystemResultCode;
 import com.hccake.extend.mybatis.plus.service.impl.ExtendServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +66,7 @@ public class DataSourceConfigServiceImpl extends ExtendServiceImpl<DataSourceCon
 				dto.getUrl(), dto.getUsername(), dto.getPass());
 		// 校验数据源配置
 		if (dynamicDataSourceHelper.isErrorDataSourceProperty(dataSourceProperty)) {
-			return false;
+			throw new BusinessException(SystemResultCode.BAD_REQUEST.getCode(), "数据源无法连接");
 		}
 
 		// 转换为实体，并将密码加密

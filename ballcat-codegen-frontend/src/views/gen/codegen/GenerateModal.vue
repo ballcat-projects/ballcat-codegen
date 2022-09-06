@@ -90,16 +90,16 @@
   import { remoteFileDownload } from '@/utils/file-util'
   import { Form, message } from 'ant-design-vue'
   import GeneratePreviewModal from '@/views/gen/codegen/GeneratePreviewModal.vue'
+  import { listTemplateEntry } from '@/api/gen/template-entry'
   import type { SelectData } from '@/api/types'
   import type { GeneratorOption } from '@/api/gen/generate/types'
-  import { TemplateProperty } from '@/api/gen/template-property/types'
-  import { Props } from 'ant-design-vue/es/form/useForm'
-  import { GenerateModalInstance, PreviewModalInstance } from '@/views/gen/codegen/types'
-  import { listTemplateEntry } from '@/api/gen/template-entry'
-  import { TemplateEntry } from '@/api/gen/template-entry/types'
+  import type { TemplateProperty } from '@/api/gen/template-property/types'
+  import type { Props } from 'ant-design-vue/es/form/useForm'
+  import type { GenerateModalInstance, PreviewModalInstance } from '@/views/gen/codegen/types'
+  import type { TemplateEntry } from '@/api/gen/template-entry/types'
   import { listToTree } from '@/utils/tree-util'
-  import { DataNode } from 'ant-design-vue/lib/vc-tree/interface'
-  import { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
+  import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
+  import type { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
 
   const labelCol = {
     xs: { span: 12 },
