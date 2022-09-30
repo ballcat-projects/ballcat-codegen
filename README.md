@@ -1,11 +1,12 @@
 # BallCat-Codegen
 
-执行启动脚本后，创建`ballcat_codegen`数据库，运行启动类
+执行启动脚本后，运行启动类
 
 ```java
 com/hccake/ballcat/codegen/GeneratorApplication.java
 ```
 
+- 启动地址：http://localhost:7777/
 - 预览地址：http://codegen.ballcat.cn/
 - 文档地址：http://www.ballcat.cn/codegen/
 
@@ -13,7 +14,7 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 
 从 v1.1.0 版本开始，sql 表结构以及部分基本数据交由 flyway 管理。
 
-用户只需创建一个新的数据库，并修改 ballcat-codegen-backend/src/main/resources/application-dev.yml 中的数据源配置，项目启动后即可自动生成表结构。
+用户只需修改 ballcat-codegen-backend/src/main/resources/application-dev.yml 中的数据源配置，项目启动后即可自动生成数据库和表结构。
 
 ## 模板文件
 
