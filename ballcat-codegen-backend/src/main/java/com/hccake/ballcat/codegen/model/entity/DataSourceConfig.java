@@ -3,6 +3,7 @@ package com.hccake.ballcat.codegen.model.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -52,6 +53,14 @@ public class DataSourceConfig {
 	 */
 	@Schema(title = "密码")
 	private String password;
+
+	/**
+	 * 逻辑删除
+	 */
+	@TableLogic
+	@TableField(fill = FieldFill.INSERT)
+	@Schema(title = "逻辑删除")
+	private Long deleted;
 
 	/**
 	 * 数据源连接
