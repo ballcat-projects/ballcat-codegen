@@ -63,7 +63,8 @@
   import { listToTree } from '@/utils/tree-util'
   import { doRequest } from '@/utils/axios/request'
   import { listTemplateEntry, moveEntry } from '@/api/gen/template-entry'
-  import type { TemplateEntry, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+  import type { TemplateEntry } from '@/api/gen/template-entry/types'
+  import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
   import type { DataNode, EventDataNode, Key } from 'ant-design-vue/es/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {
