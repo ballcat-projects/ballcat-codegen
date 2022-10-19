@@ -29,8 +29,7 @@ import java.util.List;
 /**
  * 代码生成器
  *
- * @author hccake
- * @date 2018-07-30
+ * @author hccake 2018-07-30
  */
 @CrossOrigin
 @RestController

@@ -18,8 +18,7 @@ import java.util.List;
 /**
  * 模板组
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 @Mapper
 public interface TemplateGroupMapper extends ExtendMapper<TemplateGroup> {

@@ -14,6 +14,8 @@ export interface TemplateGroupPageParam extends PageParam {
 export interface TemplateGroup {
   // ID
   id?: number
+  // 模板组标识
+  groupKey?: string
   // 名称
   name?: string
   // 备注

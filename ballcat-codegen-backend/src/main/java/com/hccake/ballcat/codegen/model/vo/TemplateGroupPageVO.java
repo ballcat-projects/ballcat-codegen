@@ -24,6 +24,12 @@ public class TemplateGroupPageVO {
 	private Integer id;
 
 	/**
+	 * 模板组标识
+	 */
+	@Schema(title = "模板组标识")
+	private String groupKey;
+
+	/**
 	 * 名称
 	 */
 	@Schema(title = "名称")

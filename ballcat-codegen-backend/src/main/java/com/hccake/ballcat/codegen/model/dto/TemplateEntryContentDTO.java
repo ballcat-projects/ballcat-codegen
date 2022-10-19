@@ -12,7 +12,7 @@ import lombok.Data;
 public class TemplateEntryContentDTO {
 
 	@Schema(title = "目录项ID")
-	private Integer id;
+	private String id;
 
 	/**
 	 * 模板内容

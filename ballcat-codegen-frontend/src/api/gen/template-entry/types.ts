@@ -40,15 +40,15 @@ export enum TemplateEntryRemoveModeEnum {
  */
 export interface TemplateEntry {
   // ID
-  id?: number
-  // 模板组Id
-  groupId?: number
+  id?: string
+  // 模板组标识
+  groupKey?: string
   // 文件夹全路径/模板文件名称（支持占位符）
   filename?: string
   // 文件类型 1：文件夹 2：模板文件
   type?: TemplateEntryTypeEnum
   // 父级Id
-  parentId?: number
+  parentId?: string
   // 模板内容
   content?: string
   // 引擎类型

@@ -80,14 +80,14 @@ public class TemplateGroupController {
 
 	/**
 	 * 复制模板组
-	 * @param resourceId 原模板组id
+	 * @param resourceGroupKey 原模板组标识
 	 * @param templateGroup 新模板组实体
 	 * @return R
 	 */
-	@PostMapping("/{resourceId}")
+	@PostMapping("/{resourceGroupKey}")
 	@Operation(summary = "复制模板组")
-	public R<Void> copy(@PathVariable Integer resourceId, @RequestBody TemplateGroup templateGroup) {
-		return templateGroupService.copy(resourceId, templateGroup) ? R.ok()
+	public R<Void> copy(@PathVariable String resourceGroupKey, @RequestBody TemplateGroup templateGroup) {
+		return templateGroupService.copy(resourceGroupKey, templateGroup) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "复制模板组失败");
 	}
 
@@ -107,15 +107,15 @@ public class TemplateGroupController {
 
 	/**
 	 * 通过id删除模板组
-	 * @param id id
+	 * @param groupKey groupKey
 	 * @return R
 	 */
-	@Operation(summary = "通过id删除模板组")
+	@Operation(summary = "通过 groupKey 删除模板组")
 	// @DeleteOperationLogging(msg = "通过id删除模板组" )
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{groupKey}")
 	// @PreAuthorize("@per.hasPermission('codegen:templategroup:del')" )
-	public R<Void> removeById(@PathVariable Integer id) {
-		return templateGroupService.removeGroupById(id) ? R.ok()
+	public R<Void> removeById(@PathVariable String groupKey) {
+		return templateGroupService.removeByGroupKey(groupKey) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除模板组失败");
 	}
 

@@ -4,10 +4,10 @@ import type { TemplateEntry, TemplateEntryRemoveModeEnum } from '@/api/gen/templ
 
 /**
  * 获取模板项列表
- * @param templateGroupId
+ * @param templateGroupKey
  */
-export function listTemplateEntry(templateGroupId: number) {
-  return request.get<R<TemplateEntry[]>>(`/gen/template-entry/list/${templateGroupId}`)
+export function listTemplateEntry(templateGroupKey: string) {
+  return request.get<R<TemplateEntry[]>>(`/gen/template-entry/list/${templateGroupKey}`)
 }
 
 /**
@@ -31,7 +31,7 @@ export function updateTemplateEntry(record: TemplateEntry) {
  * @param id 目录项id
  * @param mode 删除模式
  */
-export function removeTemplateEntry(id?: number, mode?: TemplateEntryRemoveModeEnum) {
+export function removeTemplateEntry(id?: string, mode?: TemplateEntryRemoveModeEnum) {
   return request.delete<R>(`/gen/template-entry/${id}`, {
     params: { mode: mode }
   })
@@ -43,7 +43,7 @@ export function removeTemplateEntry(id?: number, mode?: TemplateEntryRemoveModeE
  * @param targetEntryId 目标目录项ID
  * @param horizontalMove 是否移动到目标目录平级，否则移动到其内部
  */
-export function moveEntry(entryId?: number, targetEntryId?: number, horizontalMove?: boolean) {
+export function moveEntry(entryId?: string, targetEntryId?: string, horizontalMove?: boolean) {
   return request.patch(`/gen/template-entry/${entryId}/position`, null, {
     params: { targetEntryId: targetEntryId, horizontalMove: horizontalMove }
   })
@@ -52,7 +52,7 @@ export function moveEntry(entryId?: number, targetEntryId?: number, horizontalMo
 /**
  * 修改模板内容
  */
-export function updateTemplateEntryContent(id: number, content: string) {
+export function updateTemplateEntryContent(id: string, content: string) {
   const params = new URLSearchParams()
   params.append('id', String(id))
   params.append('content', content)

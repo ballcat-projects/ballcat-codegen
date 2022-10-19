@@ -68,7 +68,7 @@
 
   const modelRef = reactive<TemplateEntryDTO>({
     id: undefined,
-    groupId: undefined,
+    groupKey: undefined,
     parentId: undefined,
     type: TemplateEntryTypeEnum.FOLDER,
     filename: '',

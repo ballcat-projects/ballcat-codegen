@@ -4,8 +4,8 @@
 export interface TemplateProperty {
   // ID
   id?: number
-  // 模板组ID
-  groupId?: number
+  // 模板组标识
+  groupKey?: string
   // 标题
   title?: string
   // 属性键

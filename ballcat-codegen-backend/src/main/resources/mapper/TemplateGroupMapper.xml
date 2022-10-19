@@ -4,7 +4,7 @@
 
 	<select id="listSelectData" resultType="com.hccake.ballcat.common.model.domain.SelectData">
 		select
-			name, id as value
+			name, group_key as value
 		from
 			gen_template_group tg
 		where deleted = 0

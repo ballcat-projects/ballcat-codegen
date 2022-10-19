@@ -16,7 +16,7 @@ public class TemplateEntryUpdateDTO {
 	private static final long serialVersionUID = 1L;
 
 	@Schema(title = "ID")
-	private Integer id;
+	private String id;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）

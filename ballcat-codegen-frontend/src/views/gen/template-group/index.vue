@@ -84,6 +84,10 @@
       dataIndex: 'id'
     },
     {
+      title: '唯一标识',
+      dataIndex: 'groupKey'
+    },
+    {
       title: '名称',
       dataIndex: 'name'
     },

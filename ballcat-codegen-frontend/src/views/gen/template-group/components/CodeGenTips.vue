@@ -62,7 +62,7 @@
   import type { TemplateProperty } from '@/api/gen/template-property/types'
 
   let props = defineProps<{
-    templateGroupId?: number
+    templateGroupKey?: string
   }>()
 
   // 自定义模板
@@ -70,9 +70,9 @@
 
   // 当模板组 id 改变时，刷新对应的模板信息
   watchEffect(() => {
-    props.templateGroupId &&
+    props.templateGroupKey &&
       doRequest({
-        request: listTemplateProperty(props.templateGroupId),
+        request: listTemplateProperty(props.templateGroupKey),
         onSuccess(res) {
           properties.value = res.data as TemplateProperty[]
         }

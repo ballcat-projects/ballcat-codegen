@@ -16,11 +16,14 @@
       <div v-if="isCopy" style="margin-bottom: 24px">
         <h3><span style="margin-right: 12px">源模板组:</span> {{ resourceGroupName }}</h3>
       </div>
+      <a-form-item label="唯一标识" v-bind="validateInfos.groupKey">
+        <a-input v-model:value="modelRef.groupKey" placeholder="请输入" :disabled="isUpdate" />
+      </a-form-item>
       <a-form-item label="名称" v-bind="validateInfos.name">
-        <a-input v-model:value="modelRef.name" placeholder="请输入模板组名称" />
+        <a-input v-model:value="modelRef.name" placeholder="请输入" />
       </a-form-item>
       <a-form-item label="备注信息">
-        <a-textarea v-model:value="modelRef.remarks" placeholder="请输入模板组备注信息" />
+        <a-textarea v-model:value="modelRef.remarks" placeholder="请输入" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -44,7 +47,6 @@
   import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance } from '@/views/gen/template-group/types'
 
-
   // 定义事件
   let emits = defineEmits<{
     (e: 'done'): void // 提交完成事件
@@ -52,7 +54,7 @@
 
   let { visible, handleOpen, handleClose } = usePopup()
 
-  let resourceGroupId = ref<number>()
+  let resourceGroupKey = ref<string>()
   const resourceGroupName = ref<string>()
 
   const title = ref<string>('')
@@ -65,12 +67,14 @@
 
   const modelRef = reactive<TemplateGroup>({
     id: undefined,
+    groupKey: undefined,
     name: '',
     remarks: ''
   })
 
   const rulesRef = reactive({
-    name: [{ required: true, message: '模板组名称不能为空!' }]
+    name: [{ required: true, message: '模板组名称不能为空!' }],
+    groupKey: [{ required: true, message: '模板组标识不能为空!' }]
   })
 
   // 提交按钮的 loading 状态控制
@@ -112,10 +116,10 @@
       formAction.value = 'COPY'
       resetFields()
       handleOpen()
-      resourceGroupId.value = record.id
+      resourceGroupKey.value = record.groupKey
       resourceGroupName.value = record.name
       reqFunction = (record: TemplateGroup) => {
-        return copyTemplateGroup(resourceGroupId.value as number, record)
+        return copyTemplateGroup(resourceGroupKey.value!, record)
       }
     }
   })

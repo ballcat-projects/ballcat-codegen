@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="属性配置"
+    title="代码生成"
     cancel-text="取消"
     :visible="visible"
     :body-style="{ paddingBottom: '8px' }"
@@ -16,10 +16,10 @@
           <a-form-item
             label="模板组"
             :wrapper-col="wrapperCol"
-            v-bind="validateInfos.templateGroupId"
+            v-bind="validateInfos.templateGroupKey"
           >
-            <a-select v-model:value="modelRef.templateGroupId">
-              <a-select-option v-for="item in templateGroupSelectData" :key="Number(item.value)">
+            <a-select v-model:value="modelRef.templateGroupKey">
+              <a-select-option v-for="item in templateGroupSelectData" :key="item.value">
                 {{ item.name }}
               </a-select-option>
             </a-select>
@@ -127,15 +127,16 @@
   // 表单数据
   const modelRef = reactive<GeneratorOption>({
     tableNames: [],
-    templateGroupId: null,
+    templateGroupKey: undefined,
     templateEntryIds: [],
     tablePrefix: '',
     genProperties: {}
   })
   // 校验配置
-  const rulesRef = reactive<Props>({
-    templateGroupId: [{ required: true, message: '必须选择一个模板组' }]
-  })
+  const defaultRef = {
+    templateGroupKey: [{ required: true, message: '必须选择一个模板组' }]
+  }
+  const rulesRef = reactive<Props>(Object.assign({}, defaultRef))
   const { validate, validateInfos } = Form.useForm(modelRef, rulesRef)
 
   // 模板组的选择数据
@@ -146,7 +147,7 @@
       let data = res.data as SelectData[]
       templateGroupSelectData.value = data
       if (data && data.length > 0) {
-        modelRef.templateGroupId = Number(data[0].value)
+        modelRef.templateGroupKey = data[0].value
       }
     }
   })
@@ -154,9 +155,9 @@
   const templateEntryIdsState = reactive({
     indeterminate: false,
     checkAll: true,
-    allIds: [] as number[],
-    halfCheckedKeys: [] as number[],
-    checkedKeys: [] as number[]
+    allIds: [] as string[],
+    halfCheckedKeys: [] as string[],
+    checkedKeys: [] as string[]
   })
   const onCheckAllChange = (e: any): void => {
     templateEntryIdsState.indeterminate = false
@@ -167,7 +168,7 @@
   }
   const onTemplateEntryIdsChange = (checkedList: number[], info: CheckInfo): void => {
     const allIds = templateEntryIdsState.allIds
-    templateEntryIdsState.halfCheckedKeys = info && (info.halfCheckedKeys as number[])
+    templateEntryIdsState.halfCheckedKeys = info && (info.halfCheckedKeys as string[])
     templateEntryIdsState.indeterminate = !!checkedList.length && checkedList.length < allIds.length
     templateEntryIdsState.checkAll = checkedList.length === allIds.length
   }
@@ -180,14 +181,16 @@
   const treeLoading = ref(false)
 
   watchEffect(() => {
-    const templateGroupId = modelRef.templateGroupId
-    if (!templateGroupId) {
+    const templateGroupKey = modelRef.templateGroupKey
+    if (!templateGroupKey) {
       return
     }
     doRequest({
-      request: listTemplateProperty(templateGroupId),
+      request: listTemplateProperty(templateGroupKey),
       onSuccess: res => {
         templateProperties.value = res.data
+        modelRef.genProperties = {}
+        rulesRef.value = Object.assign({}, defaultRef)
         if (templateProperties.value && templateProperties.value.length > 0) {
           for (let property of templateProperties.value) {
             modelRef.genProperties[property.propKey] = property.defaultValue
@@ -203,9 +206,9 @@
     })
     treeLoading.value = true
     doRequest({
-      request: listTemplateEntry(templateGroupId),
+      request: listTemplateEntry(templateGroupKey),
       onSuccess: res => {
-        templateEntryTree.value = listToTree(res.data as TemplateEntry[], 0, {
+        templateEntryTree.value = listToTree(res.data as TemplateEntry[], '0', {
           attributeMapping(treeNode) {
             const dataNode = treeNode as unknown as DataNode
             dataNode.title = treeNode.filename
@@ -215,7 +218,7 @@
         templateEntryIdsState.checkedKeys = []
         nextTick(() => {
           templateEntryIdsState.checkAll = true
-          templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as number[]
+          templateEntryIdsState.allIds = (res.data ? res.data.map(x => x.id) : []) as string[]
           templateEntryIdsState.checkedKeys = templateEntryIdsState.allIds
           templateEntryIdsState.indeterminate = false
         })

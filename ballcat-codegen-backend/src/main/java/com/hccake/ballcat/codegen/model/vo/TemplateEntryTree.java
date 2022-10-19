@@ -6,19 +6,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author Hccake
- * @version 1.0
- * @date 2020/6/21 17:59
+ * @author Hccake 2020/6/21 17:59
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TemplateEntryTree extends SimpleTreeNode<Integer> {
+public class TemplateEntryTree extends SimpleTreeNode<String> {
 
 	/**
-	 * 模板组Id
+	 * 模板组标识
 	 */
-	@Schema(title = "模板组Id")
-	private Integer groupId;
+	@Schema(title = "模板组标识")
+	private String groupKey;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）

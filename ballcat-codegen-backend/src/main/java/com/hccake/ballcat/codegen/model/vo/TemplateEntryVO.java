@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 /**
  * 模板目录项
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 @Data
 @Schema(title = "模板目录项")
@@ -21,13 +20,13 @@ public class TemplateEntryVO {
 	 * ID
 	 */
 	@Schema(title = "ID")
-	private Integer id;
+	private String id;
 
 	/**
-	 * 模板组Id
+	 * 模板组标识
 	 */
-	@Schema(title = "模板组Id")
-	private Integer groupId;
+	@Schema(title = "模板组标识")
+	private String groupKey;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）
@@ -45,7 +44,7 @@ public class TemplateEntryVO {
 	 * 父级Id
 	 */
 	@Schema(title = "父级Id")
-	private Integer parentId;
+	private String parentId;
 
 	/**
 	 * 模板内容

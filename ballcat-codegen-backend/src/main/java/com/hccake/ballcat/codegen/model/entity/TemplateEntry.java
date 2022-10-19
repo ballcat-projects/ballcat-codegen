@@ -1,6 +1,7 @@
 package com.hccake.ballcat.codegen.model.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
@@ -13,8 +14,7 @@ import java.time.LocalDateTime;
 /**
  * 模板目录项
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 @Data
 @TableName("gen_template_entry")
@@ -26,15 +26,15 @@ public class TemplateEntry {
 	/**
 	 * ID
 	 */
-	@TableId
+	@TableId(type = IdType.ASSIGN_ID)
 	@Schema(title = "ID")
-	private Integer id;
+	private String id;
 
 	/**
-	 * 模板组Id
+	 * 模板组标识
 	 */
-	@Schema(title = "模板组Id")
-	private Integer groupId;
+	@Schema(title = "模板组标识")
+	private String groupKey;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）
@@ -52,7 +52,7 @@ public class TemplateEntry {
 	 * 父级Id
 	 */
 	@Schema(title = "父级Id")
-	private Integer parentId;
+	private String parentId;
 
 	/**
 	 * 模板内容

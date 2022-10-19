@@ -24,10 +24,10 @@ public class TemplatePropertyPageVO {
 	private Integer id;
 
 	/**
-	 * 模板组ID
+	 * 模板组标识
 	 */
-	@Schema(title = "模板组ID")
-	private Integer groupId;
+	@Schema(title = "模板组标识")
+	private String groupKey;
 
 	/**
 	 * 标题

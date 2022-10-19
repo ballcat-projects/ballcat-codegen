@@ -39,10 +39,10 @@ public class GenerateHelper {
 
 	private final TypeScriptTypeService typeScriptTypeService;
 
-	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, Integer templateGroupId,
+	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, String templateGroupKey,
 			Map<String, String> customProperties) {
 		// 根据表信息和字段信息获取对应的配置属性
-		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupId);
+		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupKey);
 		// 转换generateProperties为map，模板数据
 		Map<String, Object> context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
@@ -57,7 +57,7 @@ public class GenerateHelper {
 	 * @return GenerateProperties
 	 */
 	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix,
-			Integer templateGroupId) {
+			String templateGroupKey) {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
 		// 表名
@@ -90,7 +90,7 @@ public class GenerateHelper {
 		DbType dbType = tableDetails.getDbType();
 
 		// 类型集合
-		List<FieldType> typeList = dbTypeConverterManager.getDbTypeList(dbType, templateGroupId);
+		List<FieldType> typeList = dbTypeConverterManager.getDbTypeList(dbType, templateGroupKey);
 		Assert.notNull(typeList, "未找到对应的数据库类型转换器集合：{}", dbType);
 
 		for (ColumnInfo columnInfo : tableDetails.getColumnInfos()) {

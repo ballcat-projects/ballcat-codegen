@@ -24,12 +24,15 @@
     <splitpanes class="default-theme">
       <pane size="25" style="border-bottom-left-radius: 10px">
         <template-entry-tree
-          :template-group-id="templateGroup?.id"
+          :template-group-key="templateGroup?.groupKey"
           @edit-template-info="editTemplateInfo"
         />
       </pane>
       <pane size="75" style="border-bottom-right-radius: 10px">
-        <template-entry-content-editor ref="editorRef" :template-group-id="templateGroup?.id" />
+        <template-entry-content-editor
+          ref="editorRef"
+          :template-group-key="templateGroup?.groupKey"
+        />
       </pane>
     </splitpanes>
   </a-card>

@@ -7,8 +7,7 @@ import org.springdoc.api.annotations.ParameterObject;
 /**
  * 模板组 查询对象
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 @Data
 @Schema(title = "模板组查询对象")

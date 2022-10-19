@@ -13,8 +13,7 @@ import java.util.List;
 /**
  * 模板组
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 public interface TemplateGroupService extends ExtendService<TemplateGroup> {
 
@@ -34,17 +33,17 @@ public interface TemplateGroupService extends ExtendService<TemplateGroup> {
 
 	/**
 	 * 复制模板组
-	 * @param resourceId 原模板组ID
+	 * @param resourceGroupKey 原模板组标识
 	 * @param templateGroup 目标模板组
 	 * @return boolean 复制成功: true
 	 */
-	boolean copy(Integer resourceId, TemplateGroup templateGroup);
+	boolean copy(String resourceGroupKey, TemplateGroup templateGroup);
 
 	/**
 	 * 删除模板组
-	 * @param id 模板组ID
+	 * @param groupKey 模板组标识
 	 * @return 删除成功与否
 	 */
-	boolean removeGroupById(Integer id);
+	boolean removeByGroupKey(String groupKey);
 
 }

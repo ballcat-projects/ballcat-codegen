@@ -4,7 +4,7 @@
     class="pane-content pane-scroll"
     style="height: 100%; overflow: auto"
   >
-    <code-gen-tips :template-group-id="templateGroupId" />
+    <code-gen-tips :template-group-key="templateGroupKey" />
   </div>
   <div v-show="templateEntryMap.size !== 0" class="pane-scroll" style="height: 100%">
     <a-spin wrapper-class-name="spin-box" tip="保存中..." :spinning="fileSaving">
@@ -51,7 +51,7 @@
   import type { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
 
   let props = defineProps<{
-    templateGroupId?: number
+    templateGroupKey?: string
   }>()
 
   // 模板信息存储 map
@@ -60,7 +60,7 @@
   const contentStage = reactive(new Map<number, string>())
   // 切换模板组时清空以上两项
   watch(
-    () => props.templateGroupId,
+    () => props.templateGroupKey,
     () => {
       templateEntryMap.clear()
       contentStage.clear()

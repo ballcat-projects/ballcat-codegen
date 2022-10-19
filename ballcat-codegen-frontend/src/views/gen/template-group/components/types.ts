@@ -22,5 +22,5 @@ export interface TemplateEntryFormModalInstance {
  * 模板项删除弹窗实例
  */
 export interface TemplateEntryRemoveModalInstance {
-  open: (templateEntryId: number) => void
+  open: (templateEntryId: string) => void
 }

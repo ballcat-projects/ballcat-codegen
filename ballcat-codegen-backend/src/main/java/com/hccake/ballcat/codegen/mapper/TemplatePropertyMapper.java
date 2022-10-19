@@ -18,8 +18,7 @@ import java.util.List;
 /**
  * 模板属性配置
  *
- * @author hccake
- * @date 2020-06-22 15:46:39
+ * @author hccake 2020-06-22 15:46:39
  */
 @Mapper
 public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
@@ -34,29 +33,29 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 		IPage<TemplateProperty> page = this.prodPage(pageParam);
 		LambdaQueryWrapperX<TemplateProperty> wrapperX = WrappersX.lambdaQueryX(TemplateProperty.class)
 				.eqIfPresent(TemplateProperty::getId, qo.getId())
-				.eqIfPresent(TemplateProperty::getGroupId, qo.getGroupId());
+				.eqIfPresent(TemplateProperty::getGroupKey, qo.getGroupKey());
 		this.selectPage(page, wrapperX);
 		IPage<TemplatePropertyPageVO> voPage = page.convert(TemplatePropertyConverter.INSTANCE::poToPageVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());
 	}
 
 	/**
-	 * 根据模板组ID获取模板组的所有配置
-	 * @param templateGroupId 模板组ID
+	 * 根据模板组标识获取模板组的所有配置
+	 * @param templateGroupKey 模板组标识
 	 * @return List<TemplateProperty> 配置列表
 	 */
-	default List<TemplateProperty> listByTemplateGroupId(Integer templateGroupId) {
-		return this
-				.selectList(Wrappers.<TemplateProperty>lambdaQuery().eq(TemplateProperty::getGroupId, templateGroupId));
+	default List<TemplateProperty> listByTemplateGroupKey(String templateGroupKey) {
+		return this.selectList(
+				Wrappers.<TemplateProperty>lambdaQuery().eq(TemplateProperty::getGroupKey, templateGroupKey));
 
 	}
 
 	/**
-	 * 根据模板组ID 删除模板属性
-	 * @param groupId 模板组ID
+	 * 根据模板组标识 删除模板属性
+	 * @param templateGroupKey 模板组标识
 	 */
-	default void removeByGroupId(Integer groupId) {
-		this.delete(Wrappers.lambdaQuery(TemplateProperty.class).eq(TemplateProperty::getGroupId, groupId));
+	default void removeByGroupKey(String templateGroupKey) {
+		this.delete(Wrappers.lambdaQuery(TemplateProperty.class).eq(TemplateProperty::getGroupKey, templateGroupKey));
 	}
 
 }

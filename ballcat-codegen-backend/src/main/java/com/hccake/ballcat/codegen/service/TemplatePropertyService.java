@@ -27,22 +27,22 @@ public interface TemplatePropertyService extends ExtendService<TemplateProperty>
 
 	/**
 	 * 获取模板组的所有配置
-	 * @param templateGroupId 模板组ID
+	 * @param groupKey 模板组标识
 	 * @return List<TemplatePropertyVO> 配置列表
 	 */
-	List<TemplateProperty> listByTemplateGroupId(Integer templateGroupId);
+	List<TemplateProperty> listByGroupKey(String groupKey);
 
 	/**
 	 * 复制模板属性配置
-	 * @param resourceId 原模板组ID
-	 * @param groupId 模板模板组ID
+	 * @param resourceGroupKey 原模板组标识
+	 * @param targetGroupKey 模板模板组标识
 	 */
-	void copy(Integer resourceId, Integer groupId);
+	void copy(String resourceGroupKey, String targetGroupKey);
 
 	/**
-	 * 根据模板组ID 删除模板属性
-	 * @param groupId 模板组ID
+	 * 根据模板组标识 删除模板属性
+	 * @param groupKey 模板组标识
 	 */
-	void removeByGroupId(Integer groupId);
+	void removeByGroupKey(String groupKey);
 
 }

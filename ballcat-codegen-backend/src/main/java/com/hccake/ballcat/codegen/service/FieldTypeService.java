@@ -29,9 +29,10 @@ public interface FieldTypeService extends ExtendService<FieldType> {
 	/**
 	 * 查询数据库对应数据类型
 	 * @param dbType 数据库类型
+	 * @param templateGroupKey 模板组标识
 	 * @return 字段集合
 	 */
-	List<FieldType> selectDbTypeList(DbType dbType, Integer templateGroupId);
+	List<FieldType> selectDbTypeList(DbType dbType, String templateGroupKey);
 
 	/**
 	 * 查找默认数据类型

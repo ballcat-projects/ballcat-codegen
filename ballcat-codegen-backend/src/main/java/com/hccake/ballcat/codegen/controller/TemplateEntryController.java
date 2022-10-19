@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 模板文件目录项
  *
- * @author hccake
- * @date 2020-06-19 19:11:41
+ * @author hccake 2020-06-19 19:11:41
  */
 @RestController
 @RequiredArgsConstructor
@@ -41,14 +40,14 @@ public class TemplateEntryController {
 
 	/**
 	 * 模板组的文件目录
-	 * @param templateGroupId 模板组ID
+	 * @param groupKey 模板组标识
 	 * @return R
 	 */
 	@Operation(summary = "指定模板组的文件目录项")
-	@GetMapping("/list/{templateGroupId}")
+	@GetMapping("/list/{groupKey}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:read')" )
-	public R<List<TemplateEntryVO>> getTemplateDirectoryEntryPage(@PathVariable Integer templateGroupId) {
-		List<TemplateEntry> entries = templateEntryService.listByTemplateGroupId(templateGroupId);
+	public R<List<TemplateEntryVO>> getTemplateDirectoryEntryPage(@PathVariable String groupKey) {
+		List<TemplateEntry> entries = templateEntryService.listByGroupKey(groupKey);
 		List<TemplateEntryVO> vos = entries.stream().map(TemplateModelConverter.INSTANCE::entryPoToVo)
 				.collect(Collectors.toList());
 		return R.ok(vos);
@@ -59,14 +58,13 @@ public class TemplateEntryController {
 	 * @param entryId 被移动的目录项ID
 	 * @param horizontalMove 是否移动到目标目录平级，否则移动到其内部
 	 * @param targetEntryId 目标目录项ID
-	 * @param groupId 组id
 	 * @return R
 	 */
 	@Operation(summary = "移动目录项")
 	@PatchMapping("/{entryId}/position")
-	public R<Void> move(@PathVariable Integer entryId, @RequestParam boolean horizontalMove,
-			@RequestParam Integer targetEntryId, @RequestParam Integer groupId) {
-		return templateEntryService.move(horizontalMove, entryId, targetEntryId, groupId) ? R.ok()
+	public R<Void> move(@PathVariable String entryId, @RequestParam boolean horizontalMove,
+			@RequestParam String targetEntryId) {
+		return templateEntryService.move(horizontalMove, entryId, targetEntryId) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "移动目录项失败");
 	}
 
@@ -79,8 +77,8 @@ public class TemplateEntryController {
 	// @CreateOperationLogging(msg = "新增模板文件目录项" )
 	@PostMapping
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:add')" )
-	public R<Integer> save(@RequestBody TemplateEntryCreateDTO templateEntryCreateDTO) {
-		Integer entryId = templateEntryService.createEntry(templateEntryCreateDTO);
+	public R<String> save(@RequestBody TemplateEntryCreateDTO templateEntryCreateDTO) {
+		String entryId = templateEntryService.createEntry(templateEntryCreateDTO);
 		return entryId != null ? R.ok(entryId) : R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增模板目录项失败");
 	}
 
@@ -106,7 +104,7 @@ public class TemplateEntryController {
 	// @DeleteOperationLogging(msg = "通过id删除模板文件目录项" )
 	@DeleteMapping("/{id}")
 	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:del')" )
-	public R<Void> removeById(@PathVariable Integer id, @RequestParam Integer mode) {
+	public R<Void> removeById(@PathVariable String id, @RequestParam Integer mode) {
 		return templateEntryService.removeEntry(id, mode) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除模板文件目录项失败");
 	}
@@ -119,7 +117,7 @@ public class TemplateEntryController {
 	 */
 	@Operation(summary = "修改模板目录项内容")
 	@PatchMapping("/content")
-	public R<Void> updateContent(@RequestParam("id") Integer id, @RequestParam("content") String content) {
+	public R<Void> updateContent(@RequestParam("id") String id, @RequestParam("content") String content) {
 		return templateEntryService.updateContent(id, content) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板目录项内容失败");
 	}

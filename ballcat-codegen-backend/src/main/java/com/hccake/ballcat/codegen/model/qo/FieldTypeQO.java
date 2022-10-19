@@ -20,8 +20,8 @@ public class FieldTypeQO {
 	@Schema(title = "id", description = "主键id")
 	private Long id;
 
-	@Schema(title = "groupId", description = "模板组id")
-	private Long groupId;
+	@Schema(title = "groupKey", description = "模板组标识")
+	private String groupKey;
 
 	@Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
 	private String dbType;

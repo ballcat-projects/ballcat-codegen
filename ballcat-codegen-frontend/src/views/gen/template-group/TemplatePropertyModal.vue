@@ -131,12 +131,12 @@
     }
   ]
 
-  // 所属模板组 id
-  const templateGroupId = ref<number>()
+  // 所属模板组标识
+  const templateGroupKey = ref<string>()
   // 数据表格
   let tableState = useTable<TemplateProperty>({
     pageRequest: (query: PageParam) => {
-      const params = Object.assign({ groupId: templateGroupId.value }, query)
+      const params = Object.assign({ groupKey: templateGroupKey.value }, query)
       return queryTemplatePropertyPage(params)
     }
   })
@@ -160,9 +160,9 @@
 
   function handleSave(id: number) {
     let editableDatum = editableData[id]
-    editableDatum.groupId = templateGroupId.value
+    editableDatum.groupKey = templateGroupKey.value
     if (id === 0) {
-      delete editableDatum.id
+      delete editableData[0]
       loading.value = true
       doRequest({
         request: addTemplateProperty(editableDatum),
@@ -203,7 +203,7 @@
   defineExpose<TemplatePropertyModalInstance>({
     open(templateGroup: TemplateGroup) {
       title.value = '属性配置-' + templateGroup.name
-      templateGroupId.value = templateGroup.id
+      templateGroupKey.value = templateGroup.groupKey
       tableState.loadData()
       handleOpen()
     }

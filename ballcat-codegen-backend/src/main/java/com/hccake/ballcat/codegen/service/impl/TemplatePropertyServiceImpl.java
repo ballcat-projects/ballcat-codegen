@@ -1,6 +1,6 @@
 package com.hccake.ballcat.codegen.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.hccake.ballcat.codegen.mapper.TemplatePropertyMapper;
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplatePropertyQO;
@@ -17,8 +17,7 @@ import java.util.List;
 /**
  * 模板属性配置
  *
- * @author hccake
- * @date 2020-06-22 15:46:39
+ * @author hccake 2020-06-22 15:46:39
  */
 @Service
 public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePropertyMapper, TemplateProperty>
@@ -36,30 +35,30 @@ public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePrope
 	}
 
 	/**
-	 * 根据模板组ID获取模板组的所有配置
-	 * @param templateGroupId 模板组ID
+	 * 根据模板组标识获取模板组的所有配置
+	 * @param groupKey 模板组标识
 	 * @return List<TemplateProperty> 配置列表
 	 */
 	@Override
-	public List<TemplateProperty> listByTemplateGroupId(Integer templateGroupId) {
-		return baseMapper.listByTemplateGroupId(templateGroupId);
+	public List<TemplateProperty> listByGroupKey(String groupKey) {
+		return baseMapper.listByTemplateGroupKey(groupKey);
 	}
 
 	/**
 	 * 复制模板属性配置
-	 * @param resourceGroupId 原模板组ID
-	 * @param targetGroupId 模板模板组ID
+	 * @param resourceGroupKey 原模板组标识
+	 * @param targetGroupKey 模板模板组标识
 	 */
 	@Override
-	public void copy(Integer resourceGroupId, Integer targetGroupId) {
-		List<TemplateProperty> templateProperties = baseMapper.listByTemplateGroupId(resourceGroupId);
-		if (CollectionUtil.isNotEmpty(templateProperties)) {
+	public void copy(String resourceGroupKey, String targetGroupKey) {
+		List<TemplateProperty> templateProperties = baseMapper.listByTemplateGroupKey(resourceGroupKey);
+		if (CollUtil.isNotEmpty(templateProperties)) {
 			List<TemplateProperty> list = new ArrayList<>();
 			for (TemplateProperty x : templateProperties) {
 				x.setId(null);
 				x.setCreateTime(null);
 				x.setUpdateTime(null);
-				x.setGroupId(targetGroupId);
+				x.setGroupKey(targetGroupKey);
 				list.add(x);
 			}
 			baseMapper.insertBatchSomeColumn(list);
@@ -67,12 +66,12 @@ public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePrope
 	}
 
 	/**
-	 * 根据模板组ID 删除模板属性
-	 * @param groupId 模板组ID
+	 * 根据模板组标识 删除模板属性
+	 * @param groupKey 模板组标识
 	 */
 	@Override
-	public void removeByGroupId(Integer groupId) {
-		baseMapper.removeByGroupId(groupId);
+	public void removeByGroupKey(String groupKey) {
+		baseMapper.removeByGroupKey(groupKey);
 	}
 
 }

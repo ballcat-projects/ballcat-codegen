@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 /**
  * 模板属性配置
  *
- * @author hccake
- * @date 2020-06-22 15:46:39
+ * @author hccake 2020-06-22 15:46:39
  */
 @RestController
 @RequiredArgsConstructor
@@ -41,13 +40,13 @@ public class TemplatePropertyController {
 
 	/**
 	 * 查询模板组对应的所有属性
-	 * @param templateGroupId 模板组ID
+	 * @param groupKey 模板组标识
 	 * @return R
 	 */
 	@Operation(summary = "模板组属性")
-	@GetMapping("/list/{groupId}")
-	public R<List<TemplatePropertyPageVO>> getTemplatePropertyList(@PathVariable("groupId") Integer templateGroupId) {
-		List<TemplateProperty> templateProperties = templatePropertyService.listByTemplateGroupId(templateGroupId);
+	@GetMapping("/list/{groupKey}")
+	public R<List<TemplatePropertyPageVO>> getTemplatePropertyList(@PathVariable("groupKey") String groupKey) {
+		List<TemplateProperty> templateProperties = templatePropertyService.listByGroupKey(groupKey);
 		List<TemplatePropertyPageVO> vos = templateProperties.stream()
 				.map(TemplatePropertyConverter.INSTANCE::poToPageVo).collect(Collectors.toList());
 		return R.ok(vos);

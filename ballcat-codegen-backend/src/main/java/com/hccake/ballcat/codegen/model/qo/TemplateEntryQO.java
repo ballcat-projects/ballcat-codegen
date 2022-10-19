@@ -20,7 +20,7 @@ public class TemplateEntryQO {
 	/**
 	 *
 	 */
-	@Schema(title = "")
-	private Integer id;
+	@Schema(title = "ID")
+	private String id;
 
 }

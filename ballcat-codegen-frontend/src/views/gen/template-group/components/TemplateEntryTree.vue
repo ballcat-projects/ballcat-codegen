@@ -82,7 +82,7 @@
   } from '@/views/gen/template-group/components/types'
 
   const props = defineProps<{
-    templateGroupId?: number
+    templateGroupKey?: string
   }>()
 
   const emits = defineEmits<{
@@ -100,16 +100,16 @@
   const treeData = ref<TemplateEntry[]>([])
   // 当切换模板组时，初始化该模板组对应的目录项
   watchEffect(() => {
-    if (props.templateGroupId) {
+    if (props.templateGroupKey) {
       firstInitTree = true
       treeLoad()
     }
   })
 
   // 当前已选中的 keys
-  const selectedKeys = ref<number[]>([])
+  const selectedKeys = ref<string[]>([])
   // 当前已展开的 keys
-  const expandedKeys = ref<number[]>([])
+  const expandedKeys = ref<string[]>([])
   // 当前选中的目录项
   const selectedEntry = ref<TemplateEntry>()
 
@@ -139,13 +139,13 @@
    * 加载 Entry Tree
    */
   function treeLoad() {
-    let templateGroupId = props.templateGroupId
-    templateGroupId &&
+    let templateGroupKey = props.templateGroupKey
+    templateGroupKey &&
       doRequest({
-        request: listTemplateEntry(templateGroupId),
+        request: listTemplateEntry(templateGroupKey),
         onSuccess(res) {
           let list = res.data as TemplateEntry[]
-          treeData.value = listToTree(list, 0, {
+          treeData.value = listToTree(list, '0', {
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
               dataNode.isLeaf = treeNode.type === 2
@@ -155,7 +155,7 @@
           })
           // 只在第一次加载时默认展开第一级的文件，防止用户提交表单后tree被折叠
           if (firstInitTree) {
-            expandedKeys.value = treeData.value.map(item => item.id) as number[]
+            expandedKeys.value = treeData.value.map(item => item.id) as string[]
             firstInitTree = false
           }
         }
@@ -168,7 +168,7 @@
     const node = info.node
     const dataRef = node.dataRef as TemplateEntry
     // 设置选中数据
-    selectedKeys.value = [dataRef.id] as number[]
+    selectedKeys.value = [dataRef.id] as string[]
     selectedEntry.value = dataRef
 
     // 防止冒泡
@@ -261,16 +261,16 @@
    * @param entryType 文件类型
    */
   function createdEntry(entryType: TemplateEntryTypeEnum) {
-    let parentId = 0
+    let parentId = '0'
     let parentFilename = '根目录'
     if (selectedEntry.value) {
       const dataRef = selectedEntry.value
       parentFilename = dataRef?.filename as string
-      parentId = dataRef.id as number
+      parentId = dataRef.id as string
     }
     // 打开弹窗
     templateEntryFormModalRef.value?.add(parentFilename, {
-      groupId: props.templateGroupId,
+      groupKey: props.templateGroupKey,
       parentId: parentId,
       type: entryType
     })

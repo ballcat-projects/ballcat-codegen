@@ -116,7 +116,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			TableDetails tableDetails = tableInfoQuery.queryTableDetails(tableName);
 			// 生成代码
 			Map<String, FileEntry> fileEntryMap = generatorCode(tableDetails, generateOptionDTO.getTablePrefix(),
-					generateOptionDTO.getGenProperties(), generateOptionDTO.getTemplateGroupId(), templateFiles);
+					generateOptionDTO.getGenProperties(), generateOptionDTO.getTemplateGroupKey(), templateFiles);
 			map.putAll(fileEntryMap);
 		}
 		return map;
@@ -127,13 +127,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 * @return Map<String, FileEntry>
 	 */
 	public Map<String, FileEntry> generatorCode(TableDetails tableDetails, String tablePrefix,
-			Map<String, String> customProperties, Integer templateGroupId, List<TemplateFile> templateFiles) {
+			Map<String, String> customProperties, String groupKey, List<TemplateFile> templateFiles) {
 
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, templateGroupId,
-				customProperties);
+		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, groupKey, customProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();

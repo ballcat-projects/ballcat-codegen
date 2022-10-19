@@ -19,9 +19,9 @@ public class GeneratorOptionDTO {
 	private String tablePrefix;
 
 	/**
-	 * 模板组Id
+	 * 模板组标识
 	 */
-	private Integer templateGroupId;
+	private String templateGroupKey;
 
 	/**
 	 * 表名称
@@ -31,7 +31,7 @@ public class GeneratorOptionDTO {
 	/**
 	 * 需要生成的的模板目录项
 	 */
-	private Set<Integer> templateEntryIds;
+	private Set<String> templateEntryIds;
 
 	/**
 	 * 配置

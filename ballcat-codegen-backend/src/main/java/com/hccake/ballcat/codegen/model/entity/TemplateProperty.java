@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 /**
  * 模板属性配置
  *
- * @author hccake
- * @date 2020-06-22 15:46:39
+ * @author hccake 2020-06-22 15:46:39
  */
 @Data
 @TableName("gen_template_property")
@@ -32,10 +31,10 @@ public class TemplateProperty {
 	private Integer id;
 
 	/**
-	 * 模板组ID
+	 * 模板组标识
 	 */
-	@Schema(title = "模板组ID")
-	private Integer groupId;
+	@Schema(title = "模板组标识")
+	private String groupKey;
 
 	/**
 	 * 标题

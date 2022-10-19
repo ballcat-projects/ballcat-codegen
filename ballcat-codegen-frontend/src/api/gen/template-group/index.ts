@@ -36,13 +36,13 @@ export function updateTemplateGroup(record: TemplateGroup) {
 /**
  * 复制模板组
  */
-export function copyTemplateGroup(resourceGroupId: number, record: TemplateGroup) {
-  return request.post<R<void>>(`/gen/template/group/${resourceGroupId}`, record)
+export function copyTemplateGroup(resourceGroupKey: string, record: TemplateGroup) {
+  return request.post<R<void>>(`/gen/template/group/${resourceGroupKey}`, record)
 }
 
 /**
  * 删除模板组
  */
-export function removeTemplateGroup(recordId: number) {
-  return request.delete<R<void>>(`/gen/template/group/${recordId}`)
+export function removeTemplateGroup(groupKey: string) {
+  return request.delete<R<void>>(`/gen/template/group/${groupKey}`)
 }

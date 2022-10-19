@@ -27,8 +27,8 @@ public class TypeScriptType {
 	@Schema(title = "id", description = "主键id")
 	private Long id;
 
-	@Schema(title = "groupId", description = "模板组id")
-	private Long groupId;
+	@Schema(title = "groupKey", description = "模板组标识")
+	private String groupKey;
 
 	@Schema(title = "codeKey", description = "Java对应类型")
 	private String codeKey;
