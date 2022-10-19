@@ -16,6 +16,8 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 
 用户只需修改 ballcat-codegen-backend/src/main/resources/application-dev.yml 中的数据源配置，项目启动后即可自动生成数据库和表结构。
 
+> 注意：自动生成数据库依赖 jdbc 的连接参数：createDatabaseIfNotExist=true
+
 ## 模板文件
 
 模板组的 sql 不在 flyway 的管理之下，用户再启动后按需选择自己需要的模板组进行插入。
