@@ -22,7 +22,7 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 
 模板组的 sql 不在 flyway 的管理之下，用户再启动后按需选择自己需要的模板组进行插入。
 
-模板组的 sql 在 `ballcat-codegen-backend/src/main/resources/db/template` 下
+模板组的 sql 在 根目录下的 `template` 文件夹下
 
 目前只有 ballcat-admin 的模板，用户可在插入后，自行在 web 界面中复制模板组然后进行模板定制
 
