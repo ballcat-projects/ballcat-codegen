@@ -10,7 +10,7 @@
 <script setup lang="ts">
   import type { BallcatRouteRecordRaw } from '@/router/types'
   import { computed } from 'vue'
-  import type { ComputedRef } from '@vue/reactivity'
+  import type { ComputedRef } from 'vue'
   import Icon from '@/components/Icon/index.vue'
 
   const props = defineProps<{

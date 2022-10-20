@@ -50,7 +50,6 @@
   import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
   import type { DataSourceConfigEditModalInstance } from './types'
 
-
   // 编辑弹窗
   const editModal = ref<DataSourceConfigEditModalInstance>()
 

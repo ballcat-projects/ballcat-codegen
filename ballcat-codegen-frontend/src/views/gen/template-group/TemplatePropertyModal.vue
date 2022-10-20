@@ -6,7 +6,6 @@
     :footer="null"
     :body-style="{ padding: '12px 18px' }"
     :width="900"
-    :centered="true"
     @cancel="handleClose"
   >
     <!-- 操作按钮区域 -->

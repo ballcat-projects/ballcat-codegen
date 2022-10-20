@@ -46,6 +46,7 @@
   <template-entry-edit-page
     v-show="!tableShow"
     :template-group="editedTemplateGroup"
+    @handle-property="handleProperty(editedTemplateGroup)"
     @go-back="tableShow = true"
   />
 

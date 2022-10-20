@@ -12,11 +12,14 @@
       <div style="position: relative; height: 32px; line-height: 32px; padding-left: 1%">
         <span>{{ templateGroup?.name }}</span>
         <span style="position: absolute; right: 1%">
-          <a-button style="margin-right: 8px" @click="toggle">
-            <template v-if="isFullscreen"> 退出全屏 </template>
-            <template v-else> 全屏显示 </template>
-          </a-button>
-          <a-button @click="handleGoBack">返回上级</a-button>
+          <a-space>
+            <a-button @click="handleProperty">属性配置</a-button>
+            <a-button @click="toggle">
+              <template v-if="isFullscreen"> 退出全屏 </template>
+              <template v-else> 全屏显示 </template>
+            </a-button>
+            <a-button @click="handleGoBack">返回上级</a-button>
+          </a-space>
         </span>
       </div>
     </template>
@@ -55,6 +58,7 @@
   }>()
 
   let emits = defineEmits<{
+    (e: 'handle-property'): void
     (e: 'go-back'): void
   }>()
 
@@ -66,6 +70,11 @@
 
   // 模板信息编辑器实例
   const editorRef = ref<TemplateContentEditorInstance>()
+
+  /** 模板修改属性 **/
+  const handleProperty = () => {
+    emits('handle-property')
+  }
 
   /** 返回上级 */
   function handleGoBack() {
