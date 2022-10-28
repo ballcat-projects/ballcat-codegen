@@ -29,7 +29,9 @@ module.exports = defineConfig({
   rules: {
     // 换行符检测关闭，避免跨系统时的冲突
     "prettier/prettier": ["error", {"endOfLine": "auto"}],
-    'linebreak-style': 'off'
+    'linebreak-style': 'off',
+    // 允许忽略 ts 检测的注释
+    '@typescript-eslint/ban-ts-comment': 'off'
   },
   globals: {
     defineProps: 'readonly',
