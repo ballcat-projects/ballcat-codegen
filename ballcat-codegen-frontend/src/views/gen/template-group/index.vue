@@ -29,7 +29,7 @@
           <a-divider type="vertical" />
           <a @click="handleCopy(record)">复制</a>
           <a-divider type="vertical" />
-          <a-popconfirm title="确认要删除吗？" @confirm="handleRemove(record.id)">
+          <a-popconfirm title="确认要删除吗？" @confirm="handleRemove(record)">
             <a class="ballcat-text-danger">删除</a>
           </a-popconfirm>
         </template>
@@ -134,9 +134,9 @@
   function handleCopy(record: TemplateGroup) {
     templateGroupFormModalRef.value?.copy(record)
   }
-  function handleRemove(recordId: number) {
+  function handleRemove(record: TemplateGroup) {
     doRequest({
-      request: removeTemplateGroup(recordId),
+      request: removeTemplateGroup(record.groupKey as string),
       successMessage: '删除成功！',
       onSuccess() {
         tableState.reloadTable(false)
