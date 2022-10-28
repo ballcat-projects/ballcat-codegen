@@ -24,7 +24,7 @@
       @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'templateAction'">
+        <template v-if="column.dataIndex === 'action'">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a @click="handleCopy(record)">复制</a>
@@ -33,10 +33,23 @@
             <a class="ballcat-text-danger">删除</a>
           </a-popconfirm>
         </template>
-        <template v-else-if="column.dataIndex === 'action'">
+        <template v-else-if="column.dataIndex === 'templateFileAction'">
           <a @click="handleEntry(record)">模板编辑</a>
-          <a-divider type="vertical" />
+        </template>
+        <template v-else-if="column.dataIndex === 'templatePropertyAction'">
           <a @click="handleProperty(record)">属性配置</a>
+          <a-divider type="vertical" />
+          <div style="position: relative; display: inline-block">
+            <a-upload
+              accept=".json"
+              :show-upload-list="false"
+              :custom-request="(fileInfo: UploadRequestOption) => handlePropertyImport(fileInfo, record)"
+            >
+              <a>属性导入</a>
+            </a-upload>
+          </div>
+          <a-divider type="vertical" />
+          <a @click="handlePropertyExport(record)">属性导出</a>
         </template>
       </template>
     </a-table>
@@ -63,7 +76,12 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import useTable from '@/hooks/table'
-  import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/template-group'
+  import {
+    exportTemplateGroupProperties,
+    importTemplateGroupProperties,
+    queryTemplateGroupPage,
+    removeTemplateGroup
+  } from '@/api/gen/template-group'
   import AddButton from '@/components/button/AddButton.vue'
   import TemplateEntryEditPage from '@/views/gen/template-group/TemplateEntryEditPage.vue'
   import TemplatePropertyModal from '@/views/gen/template-group/TemplatePropertyModal.vue'
@@ -72,6 +90,8 @@
   import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance, TemplatePropertyModalInstance } from './types'
   import type { TemplateGroupPageParam } from '@/api/gen/template-group/types'
+  import { remoteFileDownload } from '@/utils/file-util'
+  import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 
   const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
   const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()
@@ -104,13 +124,18 @@
     },
     {
       title: '模板组操作',
-      dataIndex: 'templateAction',
+      dataIndex: 'action',
       width: '150px'
     },
     {
       title: '模板操作',
-      dataIndex: 'action',
+      dataIndex: 'templateFileAction',
       width: '150px'
+    },
+    {
+      title: '模板属性操作',
+      dataIndex: 'templatePropertyAction',
+      width: '250px'
     }
   ]
 
@@ -147,8 +172,26 @@
     tableShow.value = false
     editedTemplateGroup.value = record
   }
+
+  /** 模板组属性编辑新建 **/
   function handleProperty(record: TemplateGroup) {
     templatePropertyModalRef.value?.open(record)
+  }
+  /** 模板组属性导入 **/
+  function handlePropertyImport(fileInfo: UploadRequestOption, record: TemplateGroup) {
+    doRequest({
+      request: importTemplateGroupProperties(record.groupKey as string, fileInfo.file as File),
+      successMessage: '导入模板组属性成功！',
+      onSuccess() {
+        tableState.reloadTable(false)
+      }
+    })
+  }
+  /** 模板组属性导出 **/
+  function handlePropertyExport(record: TemplateGroup) {
+    exportTemplateGroupProperties(record.groupKey as string).then(response => {
+      remoteFileDownload(response)
+    })
   }
 </script>
 

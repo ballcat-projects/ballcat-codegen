@@ -46,3 +46,23 @@ export function copyTemplateGroup(resourceGroupKey: string, record: TemplateGrou
 export function removeTemplateGroup(groupKey: string) {
   return request.delete<R<void>>(`/gen/template/group/${groupKey}`)
 }
+
+/**
+ * 导入模板组属性
+ */
+export function importTemplateGroupProperties(groupKey: string, file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('groupKey', groupKey)
+
+  return request.post(`/gen/template/group/import/property`, formData)
+}
+
+/**
+ * 导出模板组属性
+ */
+export function exportTemplateGroupProperties(groupKey: string) {
+  return request.get(`/gen/template/group/export/property?groupKey=${groupKey}`, {
+    responseType: 'blob'
+  })
+}
