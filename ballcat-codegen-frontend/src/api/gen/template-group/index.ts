@@ -66,3 +66,12 @@ export function exportTemplateGroupProperties(groupKey: string) {
     responseType: 'blob'
   })
 }
+
+/**
+ * 导出模板组文件
+ */
+export function exportTemplateGroupEntries(groupKey: string) {
+  return request.get(`/gen/template/group/export/entry?groupKey=${groupKey}`, {
+    responseType: 'blob'
+  })
+}

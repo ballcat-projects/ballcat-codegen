@@ -1,10 +1,16 @@
 package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.IoUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.converter.TemplatePropertyConverter;
+import com.hccake.ballcat.codegen.model.bo.FileEntry;
+import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.TemplatePropertyDTO;
+import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
@@ -12,6 +18,7 @@ import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
 import com.hccake.ballcat.codegen.service.TemplatePropertyService;
+import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.domain.SelectData;
@@ -36,12 +43,18 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 模板组
@@ -135,7 +148,7 @@ public class TemplateGroupController {
 	 * @return R
 	 */
 	@Operation(summary = "导入模板")
-	@PostMapping("/import/template")
+	@PostMapping("/import/entry")
 	public R<Void> importTemplate(@RequestPart("file") MultipartFile file) {
 		return R.ok();
 	}
@@ -145,9 +158,39 @@ public class TemplateGroupController {
 	 * @param groupKey 模板组标识
 	 */
 	@Operation(summary = "导出模板")
-	@GetMapping("/export/template")
-	public void exportTemplate(@RequestParam("groupKey") String groupKey, HttpServletResponse response) {
+	@GetMapping("/export/entry")
+	public void exportTemplate(@RequestParam("groupKey") String groupKey, HttpServletResponse response) throws IOException {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-disposition", "attachment;filename=" + groupKey + "-templates.zip");
 
+		List<TemplateEntry> templateEntries = templateEntryService.listByGroupKey(groupKey);
+		if (CollUtil.isEmpty(templateEntries)) {
+			return;
+		}
+
+		List<TemplateFile> templateFiles = templateEntryService.convertToTemplateFile(templateEntries);
+
+		ServletOutputStream responseOutputStream = response.getOutputStream();
+		try (ZipOutputStream zip = new ZipOutputStream(responseOutputStream)) {
+			for (TemplateFile templateFile : templateFiles) {
+				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(), templateFile.getFilename());
+				Integer type = templateFile.getType();
+				// 文件夹必须尾缀 “/”
+				if (TemplateEntryTypeEnum.FOLDER.getType().equals(type)) {
+					filePath = filePath + "/";
+				}
+				ZipEntry zipEntry = new ZipEntry(filePath);
+				zip.putNextEntry(zipEntry);
+				// 文件需要额外写入内容
+				if (TemplateEntryTypeEnum.FILE.getType().equals(type)) {
+					IoUtil.write(zip, StandardCharsets.UTF_8, false, templateFile.getContent());
+				}
+				zip.closeEntry();
+			}
+
+			// 手动结束 zip，防止文件末端未被写入
+			zip.finish();
+		}
 	}
 
 	/**

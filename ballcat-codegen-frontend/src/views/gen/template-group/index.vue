@@ -35,6 +35,8 @@
         </template>
         <template v-else-if="column.dataIndex === 'templateFileAction'">
           <a @click="handleEntry(record)">模板编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEntryExport(record)">模板导出</a>
         </template>
         <template v-else-if="column.dataIndex === 'templatePropertyAction'">
           <a @click="handleProperty(record)">属性配置</a>
@@ -77,6 +79,7 @@
   import { reactive, ref } from 'vue'
   import useTable from '@/hooks/table'
   import {
+    exportTemplateGroupEntries,
     exportTemplateGroupProperties,
     importTemplateGroupProperties,
     queryTemplateGroupPage,
@@ -168,9 +171,16 @@
       }
     })
   }
+
   function handleEntry(record: TemplateGroup) {
     tableShow.value = false
     editedTemplateGroup.value = record
+  }
+  /** 模板组文件导出 **/
+  function handleEntryExport(record: TemplateGroup) {
+    exportTemplateGroupEntries(record.groupKey as string).then(response => {
+      remoteFileDownload(response)
+    })
   }
 
   /** 模板组属性编辑新建 **/
