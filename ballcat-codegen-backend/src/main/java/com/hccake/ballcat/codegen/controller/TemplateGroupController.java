@@ -2,18 +2,24 @@ package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
+import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
 import com.hccake.ballcat.codegen.converter.TemplatePropertyConverter;
-import com.hccake.ballcat.codegen.model.bo.FileEntry;
+import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
+import com.hccake.ballcat.codegen.model.bo.TemplateEntryFileTree;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.TemplatePropertyDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
+import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
@@ -25,11 +31,12 @@ import com.hccake.ballcat.common.model.domain.SelectData;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
 import com.hccake.ballcat.common.model.result.SystemResultCode;
-import com.hccake.ballcat.common.util.JsonUtils;
+import com.hccake.ballcat.common.util.tree.TreeUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.util.IdGenerator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,15 +52,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -149,7 +157,51 @@ public class TemplateGroupController {
 	 */
 	@Operation(summary = "导入模板")
 	@PostMapping("/import/entry")
-	public R<Void> importTemplate(@RequestPart("file") MultipartFile file) {
+	public R<Void> importTemplate(@RequestParam("groupKey") String groupKey, @RequestPart("file") MultipartFile file)
+			throws IOException {
+		ZipInputStream zis = new ZipInputStream(file.getInputStream());
+
+		List<TemplateEntryFileTree> list = new ArrayList<>();
+		ZipEntry ze;
+		while ((ze = zis.getNextEntry()) != null) {
+			String zipEntryName = ze.getName();
+			Path path = Paths.get(zipEntryName);
+			String filename = path.getFileName().toString();
+
+			Path parent = path.getParent();
+			String parentPath = parent != null ? parent.toString() : "/";
+
+			TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
+			entryTree.setGroupKey(groupKey);
+			entryTree.setFilename(filename);
+			entryTree.setPath(path.toString());
+			entryTree.setParentPath(parentPath);
+			boolean directory = ze.isDirectory();
+			if (directory) {
+				entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
+			}
+			else {
+				entryTree.setType(TemplateEntryTypeEnum.FILE.getType());
+				// TODO 考虑文件上传时如何传递文件模板引擎类型的字段
+				entryTree.setEngineType(TemplateEngineTypeEnum.VELOCITY.getType());
+				String content = StrUtil.str(IoUtil.readBytes(zis, false), StandardCharsets.UTF_8);
+				entryTree.setContent(content);
+			}
+			// 生成一个 id
+			entryTree.setId(IdUtil.getSnowflakeNextIdStr());
+			list.add(entryTree);
+		}
+
+		List<TemplateEntryFileTree> treeNodeList = TreeUtils.buildTree(list, "/");
+		List<TemplateEntry> templateEntries = new ArrayList<>();
+		TreeUtils.forEachDFS(treeNodeList, null, (treeNode, parentTreeNode) -> {
+			TemplateEntry templateEntry = TemplateModelConverter.INSTANCE.entryFileTreeToPo(treeNode);
+			String parentId = parentTreeNode != null ? parentTreeNode.getId() : TemplateEntryConstants.TREE_ROOT_ID;
+			templateEntry.setParentId(parentId);
+			templateEntries.add(templateEntry);
+		});
+		templateEntryService.saveBatch(templateEntries);
+
 		return R.ok();
 	}
 
@@ -159,7 +211,8 @@ public class TemplateGroupController {
 	 */
 	@Operation(summary = "导出模板")
 	@GetMapping("/export/entry")
-	public void exportTemplate(@RequestParam("groupKey") String groupKey, HttpServletResponse response) throws IOException {
+	public void exportTemplate(@RequestParam("groupKey") String groupKey, HttpServletResponse response)
+			throws IOException {
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-disposition", "attachment;filename=" + groupKey + "-templates.zip");
 
@@ -173,7 +226,8 @@ public class TemplateGroupController {
 		ServletOutputStream responseOutputStream = response.getOutputStream();
 		try (ZipOutputStream zip = new ZipOutputStream(responseOutputStream)) {
 			for (TemplateFile templateFile : templateFiles) {
-				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(), templateFile.getFilename());
+				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(),
+						templateFile.getFilename());
 				Integer type = templateFile.getType();
 				// 文件夹必须尾缀 “/”
 				if (TemplateEntryTypeEnum.FOLDER.getType().equals(type)) {

@@ -36,6 +36,16 @@
         <template v-else-if="column.dataIndex === 'templateFileAction'">
           <a @click="handleEntry(record)">模板编辑</a>
           <a-divider type="vertical" />
+          <div style="position: relative; display: inline-block">
+            <a-upload
+              accept=".zip,.7z,.rar"
+              :show-upload-list="false"
+              :custom-request="(fileInfo: UploadRequestOption) => handleEntryImport(fileInfo, record)"
+            >
+              <a>模板导入</a>
+            </a-upload>
+          </div>
+          <a-divider type="vertical" />
           <a @click="handleEntryExport(record)">模板导出</a>
         </template>
         <template v-else-if="column.dataIndex === 'templatePropertyAction'">
@@ -80,7 +90,7 @@
   import useTable from '@/hooks/table'
   import {
     exportTemplateGroupEntries,
-    exportTemplateGroupProperties,
+    exportTemplateGroupProperties, importTemplateGroupEntries,
     importTemplateGroupProperties,
     queryTemplateGroupPage,
     removeTemplateGroup
@@ -133,12 +143,12 @@
     {
       title: '模板操作',
       dataIndex: 'templateFileAction',
-      width: '150px'
+      width: '230px'
     },
     {
       title: '模板属性操作',
       dataIndex: 'templatePropertyAction',
-      width: '250px'
+      width: '230px'
     }
   ]
 
@@ -175,6 +185,16 @@
   function handleEntry(record: TemplateGroup) {
     tableShow.value = false
     editedTemplateGroup.value = record
+  }
+  /** 模板组文件导入 **/
+  function handleEntryImport(fileInfo: UploadRequestOption, record: TemplateGroup) {
+    doRequest({
+      request: importTemplateGroupEntries(record.groupKey as string, fileInfo.file as File),
+      successMessage: '导入模板组文件成功！',
+      onSuccess() {
+        tableState.reloadTable(false)
+      }
+    })
   }
   /** 模板组文件导出 **/
   function handleEntryExport(record: TemplateGroup) {

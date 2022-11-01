@@ -68,6 +68,18 @@ export function exportTemplateGroupProperties(groupKey: string) {
 }
 
 /**
+ * 导入模板组文件
+ */
+export function importTemplateGroupEntries(groupKey: string, file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('groupKey', groupKey)
+
+  return request.post(`/gen/template/group/import/entry`, formData)
+}
+
+
+/**
  * 导出模板组文件
  */
 export function exportTemplateGroupEntries(groupKey: string) {

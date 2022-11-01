@@ -1,6 +1,6 @@
 package com.hccake.ballcat.codegen.model.vo;
 
-import com.hccake.ballcat.common.util.tree.SimpleTreeNode;
+import com.hccake.ballcat.common.util.tree.AbstractIdTreeNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TemplateEntryTree extends SimpleTreeNode<String> {
+public class TemplateEntryTree extends AbstractIdTreeNode<String> {
 
 	/**
 	 * 模板组标识

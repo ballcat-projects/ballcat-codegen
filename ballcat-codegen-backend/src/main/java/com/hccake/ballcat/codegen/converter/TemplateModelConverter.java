@@ -1,5 +1,6 @@
 package com.hccake.ballcat.codegen.converter;
 
+import com.hccake.ballcat.codegen.model.bo.TemplateEntryFileTree;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
@@ -54,5 +55,12 @@ public interface TemplateModelConverter {
 	 * @return TemplateDirectoryTree
 	 */
 	TemplateEntryTree entryPoToTree(TemplateEntry templateEntry);
+
+	/**
+	 * 树转换为 po
+	 * @param templateEntryFileTree TemplateEntryTree
+	 * @return TemplateEntry
+	 */
+	TemplateEntry entryFileTreeToPo(TemplateEntryFileTree templateEntryFileTree);
 
 }
