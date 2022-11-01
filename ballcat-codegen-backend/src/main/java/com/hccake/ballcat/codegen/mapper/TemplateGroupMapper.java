@@ -44,4 +44,13 @@ public interface TemplateGroupMapper extends ExtendMapper<TemplateGroup> {
 	 */
 	List<SelectData<Void>> listSelectData();
 
+	/**
+	 * 根据 groupKey 删除模板组
+	 * @param groupKey 模板组标识
+	 * @return 删除的条数
+	 */
+	default int deleteByGroupKey(String groupKey) {
+		return this.delete(WrappersX.lambdaQueryX(TemplateGroup.class).eq(TemplateGroup::getGroupKey, groupKey));
+	}
+
 }

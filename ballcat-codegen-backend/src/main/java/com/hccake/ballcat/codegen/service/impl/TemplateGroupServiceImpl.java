@@ -85,7 +85,7 @@ public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMap
 	@Transactional(rollbackFor = Exception.class)
 	public boolean removeByGroupKey(String groupKey) {
 		// 删除模板组
-		baseMapper.deleteById(groupKey);
+		baseMapper.deleteByGroupKey(groupKey);
 		// 删除关联文件
 		templateEntryService.removeByGroupKey(groupKey);
 		// 删除模板属性
