@@ -55,10 +55,7 @@ export default defineConfig({
         javascriptEnabled: true,
         modifyVars: {
           'root-entry-name': 'default',
-          'primary-color': '#9f6ae0',
-          'border-radius-base': '10px',
-          'btn-border-radius-base': '30px',
-          'checkbox-border-radius': '3px'
+          'primary-color': '#9f6ae0'
         }
       }
     }
