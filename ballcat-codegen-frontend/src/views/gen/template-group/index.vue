@@ -90,7 +90,8 @@
   import useTable from '@/hooks/table'
   import {
     exportTemplateGroupEntries,
-    exportTemplateGroupProperties, importTemplateGroupEntries,
+    exportTemplateGroupProperties,
+    importTemplateGroupEntries,
     importTemplateGroupProperties,
     queryTemplateGroupPage,
     removeTemplateGroup

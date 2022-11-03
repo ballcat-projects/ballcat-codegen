@@ -89,7 +89,7 @@
   import { doRequest } from '@/utils/axios/request'
   import { remoteFileDownload } from '@/utils/file-util'
   import { Form, message } from 'ant-design-vue'
-  import GeneratePreviewModal from '@/views/gen/codegen/GeneratePreviewModal.vue'
+  import GeneratePreviewModal from '@/views/gen/codegen1/GeneratePreviewModal.vue'
   import { listTemplateEntry } from '@/api/gen/template-entry'
   import type { SelectData } from '@/api/types'
   import type { GeneratorOption } from '@/api/gen/generate/types'
