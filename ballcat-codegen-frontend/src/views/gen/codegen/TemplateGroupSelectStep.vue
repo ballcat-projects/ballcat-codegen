@@ -5,7 +5,7 @@
         hoverable
         style="width: 300px; height: 120px"
         :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
-        @click="selectGroupKey(item.value)"
+        @click="selectGroup(item)"
       >
         <a-card-meta :title="item.name" :description="item.attributes?.remarks">
           <template #avatar>
@@ -23,13 +23,17 @@
   import type { SelectData } from '@/api/types'
   import { doRequest } from '@/utils/axios/request'
   import { listSelectData } from '@/api/gen/template-group'
-  import { useGeneratorOptionStore } from '@/store'
+  import { useGeneratorConfigStore } from '@/store'
   import type { GenerateStepInstance } from '@/views/gen/codegen/types'
+
+  const generatorConfigStore = useGeneratorConfigStore()
 
   // 当前选中的模板组 key
   const templateGroupKey = ref<string>()
-  function selectGroupKey(groupKey: string) {
-    templateGroupKey.value = groupKey
+  function selectGroup(groupItem: SelectData) {
+    templateGroupKey.value = groupItem.value
+    // @ts-ignore
+    generatorConfigStore.useTable = groupItem.attributes.useTable
   }
 
   const templateGroupSelectData = ref<SelectData[]>([])
@@ -39,14 +43,14 @@
       const data = res.data as SelectData[]
       templateGroupSelectData.value = data
       if (data && data.length > 0) {
-        selectGroupKey(data[0].value)
+        selectGroup(data[0])
       }
     }
   })
 
   defineExpose<GenerateStepInstance>({
     next: () => {
-      useGeneratorOptionStore().templateGroupKey = templateGroupKey.value
+      generatorConfigStore.options.templateGroupKey = templateGroupKey.value
     }
   })
 </script>

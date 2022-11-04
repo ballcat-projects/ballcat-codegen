@@ -109,17 +109,32 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 */
 	private Map<String, FileEntry> getStringFileEntryMap(GeneratorOptionDTO generateOptionDTO,
 			List<TemplateFile> templateFiles) {
-		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
-		for (String tableName : generateOptionDTO.getTableNames()) {
+		String[] tableNames = generateOptionDTO.getTableNames();
+		Map<String, String> genProperties = generateOptionDTO.getGenProperties();
+		String templateGroupKey = generateOptionDTO.getTemplateGroupKey();
+
+		// 没有表数据则直接进行代码生成
+		if (tableNames == null || tableNames.length == 0) {
+			return generatorCode(genProperties, templateGroupKey, templateFiles);
+		}
+
+		// 有表数据，则根据表数据进行循环生成
+		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
+		for (String tableName : tableNames) {
 			// 查询表详情
 			TableDetails tableDetails = tableInfoQuery.queryTableDetails(tableName);
 			// 生成代码
 			Map<String, FileEntry> fileEntryMap = generatorCode(tableDetails, generateOptionDTO.getTablePrefix(),
-					generateOptionDTO.getGenProperties(), generateOptionDTO.getTemplateGroupKey(), templateFiles);
+					genProperties, templateGroupKey, templateFiles);
 			map.putAll(fileEntryMap);
 		}
 		return map;
+	}
+
+	private Map<String, FileEntry> generatorCode(Map<String, String> genProperties, String templateGroupKey,
+			List<TemplateFile> templateFiles) {
+		return generatorCode(null, null, genProperties, templateGroupKey, templateFiles);
 	}
 
 	/**

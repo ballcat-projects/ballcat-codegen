@@ -23,7 +23,7 @@
         </a-form-item>
       </a-col>
       <a-col :sm="24" :md="10">
-        <a-form-item label="表前缀截取">
+        <a-form-item v-if="generatorConfigStore.isUseTable" label="表前缀截取">
           <a-input
             v-model:value="modelRef.tablePrefix"
             placeholder="填写则会将表名的前缀截取后，再生成类名"
@@ -69,10 +69,10 @@
   import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
   import type { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
   import { QuestionCircleOutlined } from '@ant-design/icons-vue'
-  import { useGeneratorOptionStore } from '@/store'
+  import { useGeneratorConfigStore } from '@/store'
 
   // 代码生成配置信息
-  const generatorOptionStore = useGeneratorOptionStore()
+  const generatorConfigStore = useGeneratorConfigStore()
 
   // 表单数据
   const modelRef = reactive<
@@ -115,7 +115,7 @@
   const treeLoading = ref(false)
 
   const initPage = () => {
-    const templateGroupKey = generatorOptionStore.templateGroupKey
+    const templateGroupKey = generatorConfigStore.options.templateGroupKey
     if (!templateGroupKey) {
       return
     }
@@ -176,9 +176,9 @@
       return validate()
     },
     next: () => {
-      generatorOptionStore.tablePrefix = modelRef.tablePrefix
-      generatorOptionStore.genProperties = modelRef.genProperties
-      generatorOptionStore.templateEntryIds = [
+      generatorConfigStore.options.tablePrefix = modelRef.tablePrefix
+      generatorConfigStore.options.genProperties = modelRef.genProperties
+      generatorConfigStore.options.templateEntryIds = [
         ...templateEntryIdsState.halfCheckedKeys,
         ...templateEntryIdsState.checkedKeys
       ]

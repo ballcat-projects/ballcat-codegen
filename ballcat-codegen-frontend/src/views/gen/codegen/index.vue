@@ -54,14 +54,14 @@
   import type { GenerateStepInstance } from '@/views/gen/codegen/types'
   import TableSelectStep from '@/views/gen/codegen/TableSelectStep.vue'
   import GenerateStep from '@/views/gen/codegen/GenerateStep.vue'
-  import { useGeneratorOptionStore } from '@/store'
+  import { useGeneratorConfigStore } from '@/store'
   import TemplateGroupSelectStep from '@/views/gen/codegen/TemplateGroupSelectStep.vue'
   import { message } from 'ant-design-vue'
   import { generate } from '@/api/gen/generate'
   import { remoteFileDownload } from '@/utils/file-util'
 
   // 进页面的时候先重置下，代码生成的配置
-  useGeneratorOptionStore().$reset()
+  useGeneratorConfigStore().$reset()
 
   const templateGroupSelectStepRef = ref<GenerateStepInstance>()
   const templateConfigStepRef = ref<GenerateStepInstance>()
@@ -122,8 +122,8 @@
   }
 
   function download() {
-    const generatorOptionStore = useGeneratorOptionStore()
-    generate(generatorOptionStore.dsName, generatorOptionStore.$state)
+    const generatorConfigStore = useGeneratorConfigStore()
+    generate(generatorConfigStore.dsName, generatorConfigStore.options)
       .then(response => {
         remoteFileDownload(response, 'BallCat-CodeGen.zip')
       })

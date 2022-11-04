@@ -48,6 +48,12 @@ public class TemplateGroup {
 	private String icon;
 
 	/**
+	 * 是否需要使用使用数据表
+	 */
+	@Schema(title = "是否需要使用使用数据表")
+	private Integer useTable;
+
+	/**
 	 * 备注
 	 */
 	@Schema(title = "备注")

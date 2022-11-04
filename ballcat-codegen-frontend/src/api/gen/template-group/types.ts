@@ -20,6 +20,8 @@ export interface TemplateGroup {
   name?: string
   // 图标
   icon?: string
+  // 是否使用 table
+  useTable: 1 | 0
   // 备注
   remarks?: string
   // 创建时间

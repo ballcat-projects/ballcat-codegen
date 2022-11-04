@@ -13,9 +13,12 @@
       <a-form-item v-if="isUpdate" style="display: none">
         <a-input v-model:value="modelRef.id" />
       </a-form-item>
-      <div v-if="isCopy" style="margin-bottom: 24px">
-        <h3><span style="margin-right: 12px">源模板组:</span> {{ resourceGroupName }}</h3>
-      </div>
+      <a-row v-if="isCopy" style="margin-bottom: 24px" :gutter="8">
+        <a-col :span="6"><h3 style="text-align: right">复制来源:</h3></a-col>
+        <a-col :span="16">
+          <h3>{{ resourceGroupName }}</h3>
+        </a-col>
+      </a-row>
       <a-form-item label="唯一标识" v-bind="validateInfos.groupKey">
         <a-input v-model:value="modelRef.groupKey" placeholder="请输入" :disabled="isUpdate" />
       </a-form-item>
@@ -24,17 +27,18 @@
       </a-form-item>
       <a-form-item label="图标">
         <div class="icon-uploader" @click="handleUpload">
-          <img
-            v-if="modelRef.icon"
-            :src="modelRef.icon"
-            alt="icon"
-            style="height: 100%"
-          />
+          <img v-if="modelRef.icon" :src="modelRef.icon" alt="icon" style="height: 100%" />
           <div v-else>
             <plus-outlined />
             <div class="ant-upload-text">Upload</div>
           </div>
         </div>
+      </a-form-item>
+      <a-form-item label="需要数据表" v-bind="validateInfos.name">
+        <a-radio-group v-model:value="modelRef.useTable" name="radioGroup">
+          <a-radio :value="1">是</a-radio>
+          <a-radio :value="0">否</a-radio>
+        </a-radio-group>
       </a-form-item>
       <a-form-item label="备注信息">
         <a-textarea v-model:value="modelRef.remarks" placeholder="请输入" />
@@ -90,6 +94,7 @@
     groupKey: undefined,
     name: '',
     icon: '',
+    useTable: 1,
     remarks: ''
   })
 

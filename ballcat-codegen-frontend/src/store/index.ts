@@ -1,13 +1,27 @@
 import { defineStore } from 'pinia'
 import type { GeneratorOption } from '@/api/gen/generate/types'
 
-export const useGeneratorOptionStore = defineStore('counter', {
-  state: (): GeneratorOption => ({
+interface GeneratorConfig {
+  dsName: string
+  useTable: 1 | 0
+  options: GeneratorOption
+}
+
+export const useGeneratorConfigStore = defineStore('generatorConfigStore', {
+  state: (): GeneratorConfig => ({
     dsName: '',
-    tableNames: [],
-    templateGroupKey: '',
-    templateEntryIds: [],
-    genProperties: {},
-    tablePrefix: ''
-  })
+    useTable: 0,
+    options: {
+      tableNames: [],
+      templateGroupKey: '',
+      templateEntryIds: [],
+      genProperties: {},
+      tablePrefix: ''
+    }
+  }),
+  getters: {
+    isUseTable: state => {
+      return state.useTable === 1
+    }
+  }
 })

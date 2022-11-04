@@ -26,8 +26,6 @@ export interface TableInfo {
  * 代码生成的选项
  */
 export interface GeneratorOption {
-  // 数据源名称
-  dsName: string
   // 表名称集合
   tableNames: string[]
   // 模板组标识

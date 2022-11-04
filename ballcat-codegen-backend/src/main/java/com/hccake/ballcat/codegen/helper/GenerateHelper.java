@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,10 +42,16 @@ public class GenerateHelper {
 
 	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, String templateGroupKey,
 			Map<String, String> customProperties) {
-		// 根据表信息和字段信息获取对应的配置属性
-		GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupKey);
-		// 转换generateProperties为map，模板数据
-		Map<String, Object> context = BeanUtil.beanToMap(generateProperties);
+		Map<String, Object> context;
+		if (tableDetails != null) {
+			// 根据表信息和字段信息获取对应的配置属性
+			GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupKey);
+			// 转换generateProperties为map，模板数据
+			context = BeanUtil.beanToMap(generateProperties);
+		}
+		else {
+			context = new HashMap<>(customProperties.size());
+		}
 		// 追加用户自定义属性
 		context.putAll(customProperties);
 		return context;

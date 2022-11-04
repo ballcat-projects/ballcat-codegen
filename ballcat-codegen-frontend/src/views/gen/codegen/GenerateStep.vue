@@ -54,7 +54,7 @@
   import type { GenerateStepInstance } from './types'
   import { doRequest } from '@/utils/axios/request'
   import { preview } from '@/api/gen/generate'
-  import { useGeneratorOptionStore } from '@/store'
+  import { useGeneratorConfigStore } from '@/store'
 
   // 当前选中的 entry
   const selectedEntry = ref<FileEntry>()
@@ -114,9 +114,9 @@
 
   defineExpose<GenerateStepInstance>({
     enter: () => {
-      const generatorOptionStore = useGeneratorOptionStore()
+      const generatorConfigStore = useGeneratorConfigStore()
       doRequest({
-        request: preview(generatorOptionStore.dsName, toRaw(generatorOptionStore.$state)),
+        request: preview(generatorConfigStore.dsName, toRaw(generatorConfigStore.options)),
         onSuccess: res => {
           fileEntryTree.value = res.data ? buildTree(res.data) : []
           code.value = '双击文件查看代码信息'
