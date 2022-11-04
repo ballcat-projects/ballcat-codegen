@@ -7,12 +7,13 @@
 		<result property="value" column="value" />
 		<association property="attributes" javaType="com.hccake.ballcat.codegen.model.vo.TemplateGroupSelectDataAttributes">
 			<result property="icon" column="icon" />
+			<result property="remarks" column="remarks" />
 		</association>
 	</resultMap>
 
 	<select id="listSelectData" resultMap="templateGroupResultMap">
 		select
-			name, group_key as value , icon
+			name, group_key as value , icon, remarks
 		from
 			gen_template_group tg
 		where deleted = 0

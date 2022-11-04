@@ -7,9 +7,9 @@
         :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
         @click="selectGroupKey(item.value)"
       >
-        <a-card-meta :title="item.name" :description="item.value">
+        <a-card-meta :title="item.name" :description="item.attributes?.remarks">
           <template #avatar>
-            <a-avatar src="https://joeschmoe.io/api/v1/random" />
+            <a-avatar :src="item.attributes?.icon" />
           </template>
         </a-card-meta>
       </a-card>

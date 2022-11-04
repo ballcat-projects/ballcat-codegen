@@ -36,6 +36,6 @@ export interface SelectData<T = unknown> {
   disabled?: boolean
   // 类型，可分组
   type?: string
-  // 扩展对象
-  extendObj?: T
+  // 额外属性
+  attributes?: T
 }
