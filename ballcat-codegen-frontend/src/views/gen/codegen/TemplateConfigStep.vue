@@ -166,6 +166,13 @@
   defineExpose<GenerateStepInstance>({
     enter: initPage,
     validate: () => {
+      const selectedEntries = [
+        ...templateEntryIdsState.halfCheckedKeys,
+        ...templateEntryIdsState.checkedKeys
+      ]
+      if (selectedEntries.length == 0) {
+        return Promise.reject({ message: '请至少选择一个文件' })
+      }
       return validate()
     },
     next: () => {
