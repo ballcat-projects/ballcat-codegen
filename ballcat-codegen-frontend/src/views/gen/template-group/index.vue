@@ -24,7 +24,10 @@
       @change="tableState.handleTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
+        <template v-if="column.dataIndex === 'icon'">
+          <a-avatar shape="square" :src="record.icon" size="large" />
+        </template>
+        <template v-else-if="column.dataIndex === 'action'">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a @click="handleCopy(record)">复制</a>
@@ -121,6 +124,10 @@
     {
       title: '唯一标识',
       dataIndex: 'groupKey'
+    },
+    {
+      title: '图标',
+      dataIndex: 'icon'
     },
     {
       title: '名称',

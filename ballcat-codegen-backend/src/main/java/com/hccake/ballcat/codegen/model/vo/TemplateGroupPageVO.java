@@ -36,6 +36,12 @@ public class TemplateGroupPageVO {
 	private String name;
 
 	/**
+	 * 图标（Base64）
+	 */
+	@Schema(title = "图标（Base64）")
+	private String icon;
+
+	/**
 	 * 备注
 	 */
 	@Schema(title = "备注")

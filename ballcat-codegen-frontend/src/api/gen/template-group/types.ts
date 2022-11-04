@@ -18,6 +18,8 @@ export interface TemplateGroup {
   groupKey?: string
   // 名称
   name?: string
+  // 图标
+  icon?: string
   // 备注
   remarks?: string
   // 创建时间

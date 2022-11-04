@@ -6,6 +6,7 @@ import com.hccake.ballcat.codegen.mapper.TemplateGroupMapper;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
+import com.hccake.ballcat.codegen.model.vo.TemplateGroupSelectDataAttributes;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
 import com.hccake.ballcat.codegen.service.TemplatePropertyService;
@@ -49,7 +50,7 @@ public class TemplateGroupServiceImpl extends ExtendServiceImpl<TemplateGroupMap
 	 * @return List<SelectData<?>>
 	 */
 	@Override
-	public List<SelectData<Void>> listSelectData() {
+	public List<SelectData<TemplateGroupSelectDataAttributes>> listSelectData() {
 		return baseMapper.listSelectData();
 	}
 

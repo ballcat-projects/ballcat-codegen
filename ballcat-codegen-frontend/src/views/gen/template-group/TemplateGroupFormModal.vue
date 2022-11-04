@@ -5,11 +5,11 @@
     :mask-closable="false"
     :body-style="{ paddingBottom: '8px' }"
     :confirm-loading="submitLoading"
-    :width="350"
+    :width="480"
     @ok="handleSubmit"
     @cancel="handleClose"
   >
-    <a-form layout="vertical" :label-col="{ span: 24 }" :wrapper-col="{ span: 24 }">
+    <a-form :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
       <a-form-item v-if="isUpdate" style="display: none">
         <a-input v-model:value="modelRef.id" />
       </a-form-item>
@@ -22,11 +22,27 @@
       <a-form-item label="名称" v-bind="validateInfos.name">
         <a-input v-model:value="modelRef.name" placeholder="请输入" />
       </a-form-item>
+      <a-form-item label="图标">
+        <div class="icon-uploader" @click="handleUpload">
+          <img
+            v-if="modelRef.icon"
+            :src="modelRef.icon"
+            alt="icon"
+            style="height: 100%"
+          />
+          <div v-else>
+            <plus-outlined />
+            <div class="ant-upload-text">Upload</div>
+          </div>
+        </div>
+      </a-form-item>
       <a-form-item label="备注信息">
         <a-textarea v-model:value="modelRef.remarks" placeholder="请输入" />
       </a-form-item>
     </a-form>
   </a-modal>
+
+  <cropper-modal ref="cropperModalRef" :upload-processor="uploadProcess" />
 </template>
 
 <script setup lang="ts">
@@ -40,12 +56,16 @@
   } from '@/api/gen/template-group'
   import { useForm } from 'ant-design-vue/es/form'
   import { doRequest } from '@/utils/axios/request'
+  import CropperModal from '@/components/cropper-modal/index.vue'
+  import { PlusOutlined } from '@ant-design/icons-vue'
 
   // 类型引入
   import type { AxiosResponse } from 'axios'
   import type { R } from '@/utils/axios/types'
   import type { TemplateGroup } from '@/api/gen/template-group/types'
   import type { TemplateGroupFormModalInstance } from '@/views/gen/template-group/types'
+
+  const cropperModalRef = ref()
 
   // 定义事件
   let emits = defineEmits<{
@@ -69,6 +89,7 @@
     id: undefined,
     groupKey: undefined,
     name: '',
+    icon: '',
     remarks: ''
   })
 
@@ -81,6 +102,15 @@
   const submitLoading = ref<boolean>(false)
 
   const { validate, validateInfos, resetFields } = useForm(modelRef, rulesRef)
+
+  function handleUpload() {
+    cropperModalRef.value?.open(modelRef.icon)
+  }
+
+  function uploadProcess(dataURL: string) {
+    modelRef.icon = dataURL
+    return Promise.resolve()
+  }
 
   function handleSubmit() {
     validate().then(() => {
@@ -124,3 +154,22 @@
     }
   })
 </script>
+
+<style scoped lang="less">
+  .icon-uploader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 104px;
+    height: 104px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    vertical-align: top;
+    background-color: #fafafa;
+    border: 1px dashed #d9d9d9;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+</style>

@@ -3,6 +3,7 @@ package com.hccake.ballcat.codegen.service;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
+import com.hccake.ballcat.codegen.model.vo.TemplateGroupSelectDataAttributes;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.domain.SelectData;
@@ -29,7 +30,7 @@ public interface TemplateGroupService extends ExtendService<TemplateGroup> {
 	 * 获取SelectData数据
 	 * @return List<SelectData<Void>>
 	 */
-	List<SelectData<Void>> listSelectData();
+	List<SelectData<TemplateGroupSelectDataAttributes>> listSelectData();
 
 	/**
 	 * 复制模板组

@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
@@ -19,8 +18,8 @@ import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
-import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
+import com.hccake.ballcat.codegen.model.vo.TemplateGroupSelectDataAttributes;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
 import com.hccake.ballcat.codegen.service.TemplatePropertyService;
@@ -36,7 +35,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.util.IdGenerator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +56,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -325,7 +322,7 @@ public class TemplateGroupController {
 	// @DeleteOperationLogging(msg = "通过id删除模板组" )
 	@GetMapping("/select")
 	// @PreAuthorize("@per.hasPermission('codegen:templategroup:del')" )
-	public R<List<SelectData<Void>>> listSelectData() {
+	public R<List<SelectData<TemplateGroupSelectDataAttributes>>> listSelectData() {
 		return R.ok(templateGroupService.listSelectData());
 	}
 
