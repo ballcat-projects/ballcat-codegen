@@ -1,30 +1,44 @@
 <template>
-  <a-row type="flex" justify="center" :gutter="[20, 20]">
-    <a-col v-for="item in templateGroupSelectData" :key="item.value">
-      <a-card
-        hoverable
-        style="width: 300px; height: 120px"
-        :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
-        @click="selectGroup(item)"
-      >
-        <a-card-meta :title="item.name" :description="item.attributes?.remarks">
-          <template #avatar>
-            <a-avatar :src="item.attributes?.icon" />
-          </template>
-        </a-card-meta>
-      </a-card>
-    </a-col>
-  </a-row>
+  <div>
+    <a-result
+      v-show="!hasTemplateGroup"
+      status="warning"
+      title="请先创建一个模板组"
+      sub-title="在项目的 /template 文件夹下有预置的模板信息，可以在创建模板组时直接导入模板信息"
+    >
+      <template #extra>
+        <a-button key="console" type="primary" @click="goToTemplateGroupPage">创建模板组</a-button>
+      </template>
+    </a-result>
+
+    <a-row v-show="hasTemplateGroup" type="flex" justify="center" :gutter="[20, 20]">
+      <a-col v-for="item in templateGroupSelectData" :key="item.value">
+        <a-card
+          hoverable
+          style="width: 300px; height: 120px"
+          :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
+          @click="selectGroup(item)"
+        >
+          <a-card-meta :title="item.name" :description="item.attributes?.remarks">
+            <template #avatar>
+              <a-avatar :src="item.attributes?.icon" />
+            </template>
+          </a-card-meta>
+        </a-card>
+      </a-col>
+    </a-row>
+  </div>
 </template>
 
 <script setup lang="ts">
   // 模板组的选择数据
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
   import type { SelectData } from '@/api/types'
   import { doRequest } from '@/utils/axios/request'
   import { listSelectData } from '@/api/gen/template-group'
   import { useGeneratorConfigStore } from '@/store'
   import type { GenerateStepInstance } from '@/views/gen/codegen/types'
+  import { useRouter } from 'vue-router'
 
   const generatorConfigStore = useGeneratorConfigStore()
 
@@ -37,6 +51,9 @@
   }
 
   const templateGroupSelectData = ref<SelectData[]>([])
+  const hasTemplateGroup = computed(
+    () => templateGroupSelectData.value && templateGroupSelectData.value.length > 0
+  )
   doRequest({
     request: listSelectData(),
     onSuccess: res => {
@@ -48,7 +65,17 @@
     }
   })
 
+  const router = useRouter()
+  const goToTemplateGroupPage = () => {
+    router.push({ name: 'TemplateGroup' })
+  }
+
   defineExpose<GenerateStepInstance>({
+    validate: () => {
+      return templateGroupKey.value
+        ? Promise.resolve()
+        : Promise.reject({ message: '请选择一个模板组' })
+    },
     next: () => {
       generatorConfigStore.options.templateGroupKey = templateGroupKey.value
     }
