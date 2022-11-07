@@ -185,11 +185,13 @@
       tableState.loadData()
     },
     validate: () => {
+      if (!generatorConfigStore.isUseTable) {
+        return Promise.resolve()
+      }
       if (tableState.selectedRowKeys.value && tableState.selectedRowKeys.value.length > 0) {
         return Promise.resolve()
-      } else {
-        return Promise.reject({ message: '请至少选择一张数据表' })
       }
+      return Promise.reject({ message: '请至少选择一张数据表' })
     },
     next: () => {
       generatorConfigStore.dsName = dsName.value
