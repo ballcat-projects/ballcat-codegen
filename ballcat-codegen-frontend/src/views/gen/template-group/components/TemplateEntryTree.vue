@@ -145,6 +145,10 @@
         request: listTemplateEntry(templateGroupKey),
         onSuccess(res) {
           let list = res.data as TemplateEntry[]
+          list.sort((a, b) =>
+            // @ts-ignore
+            a.type === b.type ? a.filename.localeCompare(b.filename) : a.type - b.type
+          )
           treeData.value = listToTree(list, '0', {
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
