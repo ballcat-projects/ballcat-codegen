@@ -1,7 +1,9 @@
 package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,6 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -162,17 +165,16 @@ public class TemplateGroupController {
 		ZipEntry ze;
 		while ((ze = zis.getNextEntry()) != null) {
 			String zipEntryName = ze.getName();
-			Path path = Paths.get(zipEntryName);
-			String filename = path.getFileName().toString();
-
-			Path parent = path.getParent();
-			String parentPath = parent != null ? parent.toString() : "/";
+			String pathStr = Paths.get(zipEntryName).toString();
+			int lastIndexOf = pathStr.lastIndexOf("\\");
+			String filename = pathStr.substring(lastIndexOf + 1);
+			String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : "/";
 
 			TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
 			entryTree.setGroupKey(groupKey);
 			entryTree.setFilename(filename);
-			entryTree.setPath(path.toString());
-			entryTree.setParentPath(parentPath);
+			entryTree.setPath(pathStr);
+			entryTree.setParentPath(parentPathStr);
 			boolean directory = ze.isDirectory();
 			if (directory) {
 				entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
