@@ -55,9 +55,9 @@
   }>()
 
   // 模板信息存储 map
-  const templateEntryMap = reactive(new Map<number, TemplateEntry>())
+  const templateEntryMap = reactive(new Map<string, TemplateEntry>())
   // 内容暂存区
-  const contentStage = reactive(new Map<number, string>())
+  const contentStage = reactive(new Map<string, string>())
   // 切换模板组时清空以上两项
   watch(
     () => props.templateGroupKey,
@@ -70,7 +70,7 @@
   // 文件保存中
   const fileSaving = ref<boolean>(false)
   // 当前选中的节点 key
-  const activeKey = ref<number>(0)
+  const activeKey = ref<string>('0')
   // 是否全屏
   const fullScreen = ref<boolean>(false)
 
@@ -132,11 +132,11 @@
     { immediate: true }
   )
 
-  function handlePaneChange(newActiveKey: number) {
+  function handlePaneChange(newActiveKey: string) {
     activeKey.value = newActiveKey
   }
 
-  function handlePaneEdit(targetKey: number, action: string) {
+  function handlePaneEdit(targetKey: string, action: string) {
     if (action === 'remove') {
       if (templateEntryMap.get(targetKey)?.content === contentStage.get(targetKey)) {
         handleRemove(targetKey)
@@ -149,7 +149,7 @@
     }
   }
 
-  function handleRemove(targetKey: number) {
+  function handleRemove(targetKey: string) {
     // 是否关闭当前标签
     const closeCurrent = activeKey.value === targetKey
     // 获取关闭标签的前一个标签
@@ -167,7 +167,7 @@
     contentStage.delete(targetKey)
     // 当全部标签删除时，显示提示
     if (templateEntryMap.size === 0) {
-      activeKey.value = 0
+      activeKey.value = '0'
     } else if (closeCurrent) {
       // 当关闭标签为第一个的时候，默认打开现在的第一个标签
       activeKey.value = preKey ? preKey : templateEntryMap.keys().next().value
@@ -216,7 +216,7 @@
       return true
     },
     editContent(entry: TemplateEntry): void {
-      const targetKey = entry.id as number
+      const targetKey = entry.id as string
       if (templateEntryMap.has(targetKey)) {
         activeKey.value = targetKey
         return

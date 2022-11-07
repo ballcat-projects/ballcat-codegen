@@ -114,7 +114,7 @@
   const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()
 
   const tableShow = ref<boolean>(true)
-  const editedTemplateGroup = ref<TemplateGroup>({})
+  const editedTemplateGroup = ref<TemplateGroup>()
 
   const columns = [
     {

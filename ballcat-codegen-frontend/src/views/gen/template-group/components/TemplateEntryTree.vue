@@ -152,9 +152,12 @@
           treeData.value = listToTree(list, '0', {
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
-              dataNode.isLeaf = treeNode.type === 2
+              dataNode.isLeaf = treeNode.type !== 1
               dataNode.title = treeNode.filename
               dataNode.style = { whiteSpace: 'nowrap' }
+              if (!dataNode.content) {
+                dataNode.content = ''
+              }
             }
           })
           // 只在第一次加载时默认展开第一级的文件，防止用户提交表单后tree被折叠
