@@ -3,6 +3,8 @@ package com.hccake.ballcat.codegen.model.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 模板文件目录项
  *
@@ -17,19 +19,23 @@ public class TemplateEntryCreateDTO {
 	/**
 	 * 模板组标识
 	 */
+	@NotNull(message = "模板组标识不允许为空")
 	@Schema(title = "模板组标识")
 	private String groupKey;
 
 	/**
 	 * 文件夹全路径/模板文件名称（支持占位符）
 	 */
+	@NotNull(message = "文件名不允许为空")
 	@Schema(title = "文件夹路径/模板文件名称（支持占位符）")
 	private String filename;
 
 	/**
-	 * 文件类型 1：文件夹 2：模板文件
+	 * 文件类型
+	 * @see com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum
 	 */
-	@Schema(title = "文件类型 1：文件夹 2：模板文件")
+	@NotNull(message = "文件类型不允许为空")
+	@Schema(title = "文件类型")
 	private Integer type;
 
 	/**

@@ -10,7 +10,7 @@
       <a-form-item v-if="isCreate" label="父目录">
         <span> {{ parentFilename }}</span>
       </a-form-item>
-      <a-form-item label="文件名">
+      <a-form-item label="文件名" v-bind="validateInfos.filename">
         <a-input v-model:value="modelRef.filename" placeholder="请输入文件名" />
       </a-form-item>
       <!-- 模板文件需要以下额外属性 -->
@@ -80,6 +80,16 @@
   //  弹窗相关
   const { visible, handleOpen, handleClose } = usePopup()
 
+  // 上传文件列表
+  const fileList = ref<UploadProps['fileList']>([])
+  function selectFile(file: UploadFile) {
+    if (!modelRef.filename) {
+      modelRef.filename = file.name
+    }
+    fileList.value = [file]
+    return false
+  }
+
   const modelRef = reactive<TemplateEntryDTO>({
     id: undefined,
     groupKey: undefined,
@@ -91,19 +101,19 @@
     remarks: ''
   })
 
-  const fileList = ref<UploadProps['fileList']>([])
-  function selectFile(file: UploadFile) {
-    if (!modelRef.filename) {
-      modelRef.filename = file.name
-    }
-    fileList.value = [file]
-    return false
-  }
+  const rulesRef = reactive({
+    filename: [
+      {
+        required: true,
+        message: '请输入文件名'
+      }
+    ]
+  })
 
   // 提交按钮的 loading 状态控制
   const submitLoading = ref<boolean>(false)
 
-  const { validate, resetFields } = useForm(modelRef)
+  const { validate, resetFields, validateInfos } = useForm(modelRef, rulesRef)
 
   function handleSubmit() {
     validate().then(() => {
