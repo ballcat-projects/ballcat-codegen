@@ -1,4 +1,4 @@
-import type { FileEntry } from '@/api/gen/template-entry/types'
+import type { PreviewFile } from '@/api/gen/template-entry/types'
 
 export interface GenerateStepInstance {
   enter?: (...args: any[]) => void
@@ -12,5 +12,5 @@ export interface GenerateModalInstance {
 }
 
 export interface PreviewModalInstance {
-  open: (fileEntryList?: FileEntry[]) => void
+  open: (fileEntryList?: PreviewFile[]) => void
 }

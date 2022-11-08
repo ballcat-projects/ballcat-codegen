@@ -1,5 +1,6 @@
 package com.hccake.ballcat.codegen.controller;
 
+import cn.hutool.core.io.IoUtil;
 import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
@@ -11,17 +12,21 @@ import com.hccake.ballcat.common.model.result.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +50,6 @@ public class TemplateEntryController {
 	 */
 	@Operation(summary = "指定模板组的文件目录项")
 	@GetMapping("/list/{groupKey}")
-	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:read')" )
 	public R<List<TemplateEntryVO>> getTemplateDirectoryEntryPage(@PathVariable String groupKey) {
 		List<TemplateEntry> entries = templateEntryService.listByGroupKey(groupKey);
 		List<TemplateEntryVO> vos = entries.stream().map(TemplateModelConverter.INSTANCE::entryPoToVo)
@@ -74,11 +78,10 @@ public class TemplateEntryController {
 	 * @return R
 	 */
 	@Operation(summary = "新增模板目录项")
-	// @CreateOperationLogging(msg = "新增模板文件目录项" )
 	@PostMapping
-	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:add')" )
-	public R<String> save(@RequestBody TemplateEntryCreateDTO templateEntryCreateDTO) {
-		String entryId = templateEntryService.createEntry(templateEntryCreateDTO);
+	public R<String> save(@RequestPart("templateEntry") TemplateEntryCreateDTO templateEntryCreateDTO,
+			@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+		String entryId = templateEntryService.createEntry(templateEntryCreateDTO, file);
 		return entryId != null ? R.ok(entryId) : R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增模板目录项失败");
 	}
 
@@ -89,8 +92,9 @@ public class TemplateEntryController {
 	 */
 	@Operation(summary = "修改目录项")
 	@PutMapping
-	public R<Void> updateEntry(@RequestBody TemplateEntryUpdateDTO templateEntryUpdateDTO) {
-		return templateEntryService.updateEntry(templateEntryUpdateDTO) ? R.ok()
+	public R<Void> updateEntry(@RequestPart("templateEntry") TemplateEntryUpdateDTO templateEntryUpdateDTO,
+			@RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+		return templateEntryService.updateEntry(templateEntryUpdateDTO, file) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改目录项失败");
 	}
 
@@ -101,9 +105,7 @@ public class TemplateEntryController {
 	 * @return R
 	 */
 	@Operation(summary = "通过id删除模板文件目录项")
-	// @DeleteOperationLogging(msg = "通过id删除模板文件目录项" )
 	@DeleteMapping("/{id}")
-	// @PreAuthorize("@per.hasPermission('codegen:templatedirectoryentry:del')" )
 	public R<Void> removeById(@PathVariable String id, @RequestParam Integer mode) {
 		return templateEntryService.removeEntry(id, mode) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除模板文件目录项失败");
@@ -120,6 +122,22 @@ public class TemplateEntryController {
 	public R<Void> updateContent(@RequestParam("id") String id, @RequestParam("content") String content) {
 		return templateEntryService.updateContent(id, content) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板目录项内容失败");
+	}
+
+	/**
+	 * 下载二进制文件
+	 */
+	@Operation(summary = "下载二进制文件")
+	@GetMapping("/download/{id}")
+	public void generateCode(@PathVariable String id, HttpServletResponse response) throws IOException {
+		TemplateEntry templateEntry = templateEntryService.getById(id);
+		byte[] fileContent = templateEntry.getFileContent();
+		response.reset();
+		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + templateEntry.getFilename());
+		response.addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileContent.length));
+		response.setContentType("application/octet-stream; charset=UTF-8");
+
+		IoUtil.write(response.getOutputStream(), Boolean.TRUE, fileContent);
 	}
 
 }

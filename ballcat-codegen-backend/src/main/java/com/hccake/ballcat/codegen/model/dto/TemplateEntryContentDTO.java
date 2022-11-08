@@ -18,6 +18,6 @@ public class TemplateEntryContentDTO {
 	 * 模板内容
 	 */
 	@Schema(title = "模板内容")
-	private String content;
+	private String templateContent;
 
 }

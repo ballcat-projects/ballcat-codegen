@@ -1,10 +1,13 @@
 package com.hccake.ballcat.codegen.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TableInfo;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.qo.TableInfoQO;
+import com.hccake.ballcat.codegen.model.vo.GeneratePreviewFileVO;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.common.model.domain.PageParam;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器
@@ -77,8 +81,14 @@ public class GenerateController {
 	 */
 	@Operation(summary = "生成预览代码")
 	@PostMapping("/preview")
-	public R<List<FileEntry>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
-		return R.ok(generatorService.previewCode(preGenerateOptionDTO));
+	public R<List<GeneratePreviewFileVO>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
+		List<FileEntry> fileEntries = generatorService.previewCode(preGenerateOptionDTO);
+		if (CollUtil.isEmpty(fileEntries)) {
+			return R.ok();
+		}
+		List<GeneratePreviewFileVO> list = fileEntries.stream()
+				.map(TemplateModelConverter.INSTANCE::fileEntryToPreviewVo).collect(Collectors.toList());
+		return R.ok(list);
 	}
 
 }

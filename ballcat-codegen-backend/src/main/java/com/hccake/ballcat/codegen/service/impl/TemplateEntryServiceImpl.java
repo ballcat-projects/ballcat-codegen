@@ -15,7 +15,6 @@ import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.util.GenerateUtils;
-import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.util.tree.TreeUtils;
@@ -23,7 +22,10 @@ import com.hccake.extend.mybatis.plus.service.impl.ExtendServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -202,7 +204,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	public boolean updateContent(String id, String content) {
 		TemplateEntry entry = new TemplateEntry();
 		entry.setId(id);
-		entry.setContent(content);
+		entry.setFileContent(content.getBytes(StandardCharsets.UTF_8));
 		return SqlHelper.retBool(baseMapper.updateById(entry));
 	}
 
@@ -227,7 +229,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	private void fillTemplateFiles(TemplateEntryTree current, List<TemplateFile> list, String path) {
 
 		// 文件夹类型则递归子节点
-		if (TemplateEntryTypeEnum.FOLDER.getType().equals(current.getType())) {
+		if (TemplateEntryTypeEnum.FOLDER.equals(current.getType())) {
 			List<TemplateEntryTree> children = current.getChildren();
 			// 递归调用子节点，查找叶子节点
 			if (CollUtil.isNotEmpty(children)) {
@@ -237,13 +239,14 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			}
 		}
 
-		TemplateFile templateFile = new TemplateFile().setFilename(current.getFilename()).setParentFilePath(path)
-				.setType(current.getType());
+		TemplateFile templateFile = new TemplateFile().setId(current.getId()).setFilename(current.getFilename())
+				.setParentFilePath(path).setType(current.getType());
 		// 目录项类型为文件则记录（文件必然是叶子节点）
-		if (TemplateEntryTypeEnum.FILE.getType().equals(current.getType())) {
+		if (TemplateEntryTypeEnum.TEMPLATE_FILE.equals(current.getType())) {
 			// 查找对应的模板文件详情信息
-			templateFile.setContent(current.getContent()).setEngineType(current.getEngineType());
+			templateFile.setEngineType(current.getEngineType());
 		}
+		templateFile.setFileContent(current.getFileContent());
 
 		list.add(templateFile);
 	}
@@ -251,11 +254,16 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	/**
 	 * 新建一个目录项
 	 * @param entryDTO 目录项新建传输对象
+	 * @param file 二进制文件
 	 * @return entryId
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String createEntry(TemplateEntryCreateDTO entryDTO) {
+	public String createEntry(TemplateEntryCreateDTO entryDTO, MultipartFile file) throws IOException {
+		boolean isBinaryFile = TemplateEntryTypeEnum.BINARY_FILE.getType().equals(entryDTO.getType());
+		if (isBinaryFile && file == null) {
+			throw new IllegalArgumentException("二进制模板项必须要上传对应的文件");
+		}
 		// 若父节点不是根，则校验父级节点是否有效
 		String parentId = entryDTO.getParentId();
 		Assert.isTrue(TemplateEntryConstants.TREE_ROOT_ID.equals(parentId) || this.exists(parentId),
@@ -264,6 +272,9 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		this.duplicateNameCheck(parentId, entryDTO.getFilename());
 		// 转持久层对象
 		TemplateEntry entity = TemplateModelConverter.INSTANCE.entryCreateDtoToPo(entryDTO);
+		if (isBinaryFile) {
+			entity.setFileContent(file.getBytes());
+		}
 		// 落库
 		baseMapper.insert(entity);
 		return entity.getId();
@@ -272,11 +283,12 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 	/**
 	 * 更新目录项
 	 * @param entryDTO 目录项修改传输对象
+	 * @param file 二进制文件
 	 * @return success:true
 	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean updateEntry(TemplateEntryUpdateDTO entryDTO) {
+	public boolean updateEntry(TemplateEntryUpdateDTO entryDTO, MultipartFile file) throws IOException {
 		String entryId = entryDTO.getId();
 		String filename = entryDTO.getFilename();
 		// 目录项必须存在
@@ -288,6 +300,9 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		}
 		// 更新 entry
 		TemplateEntry entry = TemplateModelConverter.INSTANCE.entryUpdateDtoToPo(entryDTO);
+		if (TemplateEntryTypeEnum.BINARY_FILE.getType().equals(entryDTO.getType()) && file != null) {
+			entry.setFileContent(file.getBytes());
+		}
 		return SqlHelper.retBool(baseMapper.updateById(entry));
 	}
 

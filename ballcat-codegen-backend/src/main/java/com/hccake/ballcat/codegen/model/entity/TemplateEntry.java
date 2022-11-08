@@ -55,10 +55,10 @@ public class TemplateEntry {
 	private String parentId;
 
 	/**
-	 * 模板内容
+	 * 文件内容
 	 */
-	@Schema(title = "模板内容")
-	private String content;
+	@Schema(title = "文件内容")
+	private byte[] fileContent;
 
 	/**
 	 * 模板引擎类型 1：velocity

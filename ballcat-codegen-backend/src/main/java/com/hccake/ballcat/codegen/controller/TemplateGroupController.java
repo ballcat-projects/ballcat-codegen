@@ -1,11 +1,8 @@
 package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
@@ -52,10 +49,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,11 +175,10 @@ public class TemplateGroupController {
 				entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
 			}
 			else {
-				entryTree.setType(TemplateEntryTypeEnum.FILE.getType());
+				entryTree.setType(TemplateEntryTypeEnum.TEMPLATE_FILE.getType());
 				// TODO 考虑文件上传时如何传递文件模板引擎类型的字段
 				entryTree.setEngineType(TemplateEngineTypeEnum.VELOCITY.getType());
-				String content = StrUtil.str(IoUtil.readBytes(zis, false), StandardCharsets.UTF_8);
-				entryTree.setContent(content);
+				entryTree.setFileContent(IoUtil.readBytes(zis, false));
 			}
 			// 生成一个 id
 			entryTree.setId(IdUtil.getSnowflakeNextIdStr());
@@ -227,16 +221,16 @@ public class TemplateGroupController {
 			for (TemplateFile templateFile : templateFiles) {
 				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(),
 						templateFile.getFilename());
-				Integer type = templateFile.getType();
+				TemplateEntryTypeEnum type = templateFile.getType();
 				// 文件夹必须尾缀 “/”
-				if (TemplateEntryTypeEnum.FOLDER.getType().equals(type)) {
+				if (TemplateEntryTypeEnum.FOLDER.equals(type)) {
 					filePath = filePath + "/";
 				}
 				ZipEntry zipEntry = new ZipEntry(filePath);
 				zip.putNextEntry(zipEntry);
 				// 文件需要额外写入内容
-				if (TemplateEntryTypeEnum.FILE.getType().equals(type)) {
-					IoUtil.write(zip, StandardCharsets.UTF_8, false, templateFile.getContent());
+				if (TemplateEntryTypeEnum.TEMPLATE_FILE.equals(type)) {
+					zip.write(templateFile.getFileContent());
 				}
 				zip.closeEntry();
 			}

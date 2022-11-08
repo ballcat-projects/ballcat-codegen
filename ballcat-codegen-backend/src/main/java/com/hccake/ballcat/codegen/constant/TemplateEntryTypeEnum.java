@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * @author Hccake
- * @version 1.0
- * @date 2020/6/23 14:36 模板目录项类型
+ * @version 1.0 2020/6/23 14:36 模板目录项类型
  */
 @Getter
 @RequiredArgsConstructor
@@ -17,9 +16,13 @@ public enum TemplateEntryTypeEnum {
 	 */
 	FOLDER(1),
 	/**
-	 * 文件
+	 * 模板文件
 	 */
-	FILE(2);
+	TEMPLATE_FILE(2),
+	/**
+	 * 二进制文件
+	 */
+	BINARY_FILE(3);
 
 	private final Integer type;
 

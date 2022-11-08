@@ -20,7 +20,7 @@
         <a-tab-pane v-for="[key, info] in templateEntryMap" :key="key">
           <template #tab>
             <a-badge
-              v-if="info.content !== contentStage.get(key)"
+              v-if="info.templateContent !== contentStage.get(key)"
               color="#978d8d"
               status="processing"
             />
@@ -29,10 +29,22 @@
         </a-tab-pane>
       </a-tabs>
       <div
+        v-show="TemplateEntryTypeEnum.TEMPLATE_FILE === templateEntryMap.get(activeKey)?.type"
         ref="editorBox"
         style="height: calc(100% - 32px)"
         :class="fullScreen && 'editor-fullscreen'"
       />
+      <div
+        v-show="TemplateEntryTypeEnum.BINARY_FILE === templateEntryMap.get(activeKey)?.type"
+        style="height: calc(100% - 32px)"
+        class="flex"
+      >
+        <h3>二进制文件不允许编辑内容</h3>
+        <div>
+          <a-button type="link" @click="handleBinaryDownload">下载文件</a-button>
+          <a-button type="link" @click="emits('re-upload')">重新上传</a-button>
+        </div>
+      </div>
     </a-spin>
   </div>
 </template>
@@ -40,18 +52,23 @@
 <script setup lang="ts">
   import { onMounted, reactive, ref, watch } from 'vue'
   import { doRequest } from '@/utils/axios/request'
-  import { TemplateEngines } from '@/api/gen/template-entry/types'
+  import { TemplateEngines, TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
   import CodeGenTips from '@/views/gen/template-group/components/CodeGenTips.vue'
   import Editor from '@/components/editor'
   import { ViewUpdate } from '@codemirror/view'
   import { message, Modal } from 'ant-design-vue'
-  import { updateTemplateEntryContent } from '@/api/gen/template-entry'
+  import { binaryFileDownload, updateTemplateEntryContent } from '@/api/gen/template-entry'
 
   import type { TemplateEntry } from '@/api/gen/template-entry/types'
   import type { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
+  import { remoteFileDownload } from '@/utils/file-util'
 
-  let props = defineProps<{
+  const props = defineProps<{
     templateGroupKey?: string
+  }>()
+
+  const emits = defineEmits<{
+    (e: 're-upload'): void
   }>()
 
   // 模板信息存储 map
@@ -80,7 +97,7 @@
   onMounted(() => {
     const handleUpdate = (v: ViewUpdate) => {
       if (v.docChanged) {
-        contentStage.set(activeKey.value, editor?.getEditorDoc() || '')
+        contentStage.set(activeKey.value, editor?.getEditorDoc())
       }
     }
     editor = new Editor(
@@ -138,7 +155,7 @@
 
   function handlePaneEdit(targetKey: string, action: string) {
     if (action === 'remove') {
-      if (templateEntryMap.get(targetKey)?.content === contentStage.get(targetKey)) {
+      if (templateEntryMap.get(targetKey)?.templateContent === contentStage.get(targetKey)) {
         handleRemove(targetKey)
       } else {
         Modal.confirm({
@@ -185,7 +202,7 @@
 
     // 文件内容没改，则不更新
     const templateEntry = templateEntryMap.get(id) as TemplateEntry
-    if (content === templateEntry.content) {
+    if (content === templateEntry.templateContent) {
       return
     }
 
@@ -196,7 +213,7 @@
       successMessage: '保存成功！',
       onSuccess() {
         // 同步更新本地内容
-        templateEntry.content = content
+        templateEntry.templateContent = content
       },
       onFinally() {
         fileSaving.value = false
@@ -204,12 +221,22 @@
     })
   }
 
+  /** 二进制文件下载 */
+  const handleBinaryDownload = () => {
+    const entry = templateEntryMap.get(activeKey.value)
+    if (entry && entry.id) {
+      binaryFileDownload(entry.id).then(response => {
+        remoteFileDownload(response)
+      })
+    }
+  }
+
   defineExpose<TemplateContentEditorInstance>({
     checkSaveState(): boolean {
       // 检查是否有未保存的文件
       for (let key of contentStage.keys()) {
         let templateEntry = templateEntryMap.get(key)
-        if (templateEntry && templateEntry.content !== contentStage.get(key)) {
+        if (templateEntry && templateEntry.templateContent !== contentStage.get(key)) {
           return false
         }
       }
@@ -222,7 +249,7 @@
         return
       }
       templateEntryMap.set(targetKey, entry)
-      contentStage.set(targetKey, entry.content || '')
+      contentStage.set(targetKey, entry.templateContent)
       activeKey.value = targetKey
     }
   })
@@ -302,5 +329,17 @@
     box-sizing: border-box;
     z-index: 9999;
     background: white;
+  }
+
+  .flex {
+    /*flex 布局*/
+    display: flex;
+    // 垂直布局
+    flex-direction: column;
+    /*实现垂直居中*/
+    align-items: center;
+    /*实现水平居中*/
+    justify-content: center;
+    text-align: justify;
   }
 </style>

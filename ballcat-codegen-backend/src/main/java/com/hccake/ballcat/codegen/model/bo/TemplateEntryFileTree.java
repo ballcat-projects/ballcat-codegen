@@ -52,7 +52,7 @@ public class TemplateEntryFileTree implements TreeNode<String> {
 	 * 文件内容
 	 */
 	@Schema(title = "文件内容")
-	private String content;
+	private byte[] fileContent;
 
 	/**
 	 * 模板引擎类型 1：velocity

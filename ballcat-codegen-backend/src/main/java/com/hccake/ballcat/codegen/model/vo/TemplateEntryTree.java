@@ -1,5 +1,8 @@
 package com.hccake.ballcat.codegen.model.vo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.common.util.tree.AbstractIdTreeNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -11,6 +14,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class TemplateEntryTree extends AbstractIdTreeNode<String> {
+
+	/**
+	 * ID
+	 */
+	@Schema(title = "ID")
+	private String id;
 
 	/**
 	 * 模板组标识
@@ -28,13 +37,13 @@ public class TemplateEntryTree extends AbstractIdTreeNode<String> {
 	 * 文件类型 1：文件夹 2：模板文件
 	 */
 	@Schema(title = "文件类型 1：文件夹 2：模板文件")
-	private Integer type;
+	private TemplateEntryTypeEnum type;
 
 	/**
 	 * 文件内容
 	 */
 	@Schema(title = "文件内容")
-	private String content;
+	private byte[] fileContent;
 
 	/**
 	 * 模板引擎类型 1：velocity

@@ -66,11 +66,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 			for (Map.Entry<String, FileEntry> entry : map.entrySet()) {
 				FileEntry fileEntry = entry.getValue();
 				// 只处理文件
-				if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
+				if (!TemplateEntryTypeEnum.FOLDER.equals(fileEntry.getType())) {
 					// 添加到zip
 					String filePath = entry.getKey();
 					zip.putNextEntry(new ZipEntry(filePath));
-					IoUtil.write(zip, StandardCharsets.UTF_8, false, fileEntry.getContent());
+					zip.write(fileEntry.getFileContent());
 					zip.closeEntry();
 				}
 			}
@@ -151,6 +151,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();
+			fileEntry.setId(templateFile.getId());
 			fileEntry.setType(templateFile.getType());
 
 			// 替换路径中的占位符
@@ -161,26 +162,35 @@ public class GeneratorServiceImpl implements GeneratorService {
 			String parentFilePath = GenerateUtils.evaluateRealPath(templateFile.getParentFilePath(), context);
 			fileEntry.setParentFilePath(parentFilePath);
 
-			// 如果是文件
-			if (TemplateEntryTypeEnum.FILE.getType().equals(fileEntry.getType())) {
-				String filePath = GenerateUtils.concatFilePath(parentFilePath, filename);
-				fileEntry.setFilePath(filePath);
-				// 文件内容渲染
-				TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
+			switch (fileEntry.getType()) {
+				case TEMPLATE_FILE:
+					String filePath = GenerateUtils.concatFilePath(parentFilePath, filename);
+					fileEntry.setFilePath(filePath);
+					// 文件内容渲染
+					TemplateEngineTypeEnum engineTypeEnum = TemplateEngineTypeEnum.of(templateFile.getEngineType());
 
-				try {
-					String content = templateEngineDelegator.render(engineTypeEnum, templateFile.getContent(), context);
-					fileEntry.setContent(content);
-				}
-				catch (TemplateRenderException ex) {
-					String errorMessage = CharSequenceUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
-							ex.getMessage());
-					throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
-				}
-			}
-			else {
-				String currentPath = GenerateUtils.evaluateRealPath(templateFilename, context);
-				fileEntry.setFilePath(GenerateUtils.concatFilePath(parentFilePath, currentPath));
+					try {
+						String templateContent = StrUtil.str(templateFile.getFileContent(), StandardCharsets.UTF_8);
+						String content = templateEngineDelegator.render(engineTypeEnum, templateContent, context);
+						fileEntry.setFileContent(content.getBytes(StandardCharsets.UTF_8));
+					}
+					catch (TemplateRenderException ex) {
+						String errorMessage = CharSequenceUtil.format("模板渲染异常，模板文件名：【{}】，错误详情：{}", templateFilename,
+								ex.getMessage());
+						throw new BusinessException(SystemResultCode.SERVER_ERROR.getCode(), errorMessage);
+					}
+					break;
+				case BINARY_FILE:
+					String binaryFilePath = GenerateUtils.concatFilePath(parentFilePath, filename);
+					fileEntry.setFilePath(binaryFilePath);
+					fileEntry.setFileContent(templateFile.getFileContent());
+					break;
+				case FOLDER:
+					String currentPath = GenerateUtils.evaluateRealPath(templateFilename, context);
+					fileEntry.setFilePath(GenerateUtils.concatFilePath(parentFilePath, currentPath));
+					break;
+				default:
+					log.warn("错误的文件类型: {}", templateFile);
 			}
 
 			map.put(fileEntry.getFilePath(), fileEntry);

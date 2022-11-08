@@ -50,7 +50,7 @@ public class TemplateEntryVO {
 	 * 模板内容
 	 */
 	@Schema(title = "模板内容")
-	private String content;
+	private String templateContent;
 
 	/**
 	 * 模板引擎类型 1：velocity

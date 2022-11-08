@@ -42,10 +42,18 @@
           <a-menu-item
             key="4"
             :style="menuItemStyle"
-            @click="createdEntry(TemplateEntryTypeEnum.FILE)"
+            @click="createdEntry(TemplateEntryTypeEnum.TEMPLATE_FILE)"
           >
             <file-add-outlined />
-            <span>新建文件</span>
+            <span>新建模板文件</span>
+          </a-menu-item>
+          <a-menu-item
+            key="5"
+            :style="menuItemStyle"
+            @click="createdEntry(TemplateEntryTypeEnum.BINARY_FILE)"
+          >
+            <file-add-outlined />
+            <span>新建二进制文件</span>
           </a-menu-item>
         </template>
       </a-menu>
@@ -68,9 +76,9 @@
   import type { DataNode, EventDataNode, Key } from 'ant-design-vue/es/vc-tree/interface'
   import { message } from 'ant-design-vue'
   import {
-    EditOutlined,
     DeleteOutlined,
     DiffOutlined,
+    EditOutlined,
     FileAddOutlined
   } from '@ant-design/icons-vue'
   import type { NodeDragEventParams } from 'ant-design-vue/es/vc-tree/contextTypes'
@@ -152,11 +160,11 @@
           treeData.value = listToTree(list, '0', {
             attributeMapping: treeNode => {
               const dataNode = treeNode as unknown as DataNode
-              dataNode.isLeaf = treeNode.type !== 1
+              dataNode.isLeaf = treeNode.type !== TemplateEntryTypeEnum.FOLDER
               dataNode.title = treeNode.filename
               dataNode.style = { whiteSpace: 'nowrap' }
-              if (!dataNode.content) {
-                dataNode.content = ''
+              if (!dataNode.templateContent) {
+                dataNode.templateContent = ''
               }
             }
           })
@@ -173,7 +181,7 @@
   function selectAndShowMenu(info: { event: MouseEvent; node: EventDataNode }) {
     const event = info.event
     const node = info.node
-    const dataRef = node.dataRef as TemplateEntry
+    const dataRef = node.dataRef as unknown as TemplateEntry
     // 设置选中数据
     selectedKeys.value = [dataRef.id] as string[]
     selectedEntry.value = dataRef
@@ -211,8 +219,9 @@
    */
   function handleDblClick(e: MouseEvent, node: EventDataNode) {
     // 非文件类型不加载
-    const entry = node.dataRef as TemplateEntry
-    if (entry.type === 2) {
+    const entry = node.dataRef as unknown as TemplateEntry
+    selectedEntry.value = entry
+    if (entry.type !== TemplateEntryTypeEnum.FOLDER) {
       emits('edit-template-info', entry)
     }
   }
@@ -229,9 +238,9 @@
     }
   ) {
     // 被移动的目录项
-    const entry = info.dragNode.dataRef as TemplateEntry
+    const entry = info.dragNode.dataRef as unknown as TemplateEntry
     // 目标目录项
-    const targetEntry = info.node.dataRef as TemplateEntry
+    const targetEntry = info.node.dataRef as unknown as TemplateEntry
     // 是否移动到其子节点，否则是平级
     const horizontalMove = info.dropToGap
     // 无需移动
@@ -279,7 +288,8 @@
     templateEntryFormModalRef.value?.add(parentFilename, {
       groupKey: props.templateGroupKey,
       parentId: parentId,
-      type: entryType
+      type: entryType,
+      templateContent: ''
     })
   }
 
@@ -291,4 +301,8 @@
       message.warning('请选择一个目录项')
     }
   }
+
+  defineExpose({
+    updateEntry: updateEntry
+  })
 </script>

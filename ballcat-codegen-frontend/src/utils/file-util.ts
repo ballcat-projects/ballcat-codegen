@@ -28,6 +28,7 @@ export function remoteFileDownload(response: AxiosResponse, filename?: string) {
     // 不存在则从响应头中解析
     if (!filename) {
       filename = resolveFilename(headers)
+      console.log(filename)
     }
     fileDownload(blob, filename)
   }

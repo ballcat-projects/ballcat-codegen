@@ -56,15 +56,16 @@
   import 'highlight.js/styles/github.css'
   import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
   import type { PreviewModalInstance } from './types'
-  import type { FileEntry } from '@/api/gen/template-entry/types'
-  import { Splitpanes, Pane } from 'splitpanes'
+  import type { PreviewFile } from '@/api/gen/template-entry/types'
+  import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+  import { Pane, Splitpanes } from 'splitpanes'
   import 'splitpanes/dist/splitpanes.css'
-  import { CopyOutlined, CheckOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+  import { CheckOutlined, CopyOutlined, DownloadOutlined } from '@ant-design/icons-vue'
   import { useClipboard } from '@vueuse/core'
   import { fileDownload } from '@/utils/file-util'
 
   // 当前选中的 entry
-  const selectedEntry = ref<FileEntry>()
+  const selectedEntry = ref<PreviewFile>()
 
   // vueuse copy
   const { copy, copied } = useClipboard()
@@ -95,34 +96,38 @@
   const language = ref<string>('javascript')
   const code = ref<string>('双击文件查看代码信息')
   const modalTitle = ref<string>('代码预览')
-  const fileEntryTree = ref<FileEntry[]>()
+  const fileEntryTree = ref<PreviewFile[]>()
 
-  const ondblclick = (e: Event, node: { dataRef: FileEntry }) => {
+  const ondblclick = (e: Event, node: { dataRef: PreviewFile }) => {
     // 非文件类型不加载
     const entry = node.dataRef
     if (entry.type === 2) {
       selectedEntry.value = entry
       language.value = entry.filename
-      code.value = entry.content ? entry.content : ''
+      code.value = entry.templateContent ? entry.templateContent : ''
       modalTitle.value = '代码预览 - ' + entry.filename
     }
   }
 
-  function buildTree(fileEntryList: FileEntry[]) {
+  function buildTree(fileEntryList: PreviewFile[]) {
+    fileEntryList.sort((a, b) =>
+      // @ts-ignore
+      a.type === b.type ? a.filename.localeCompare(b.filename) : a.type - b.type
+    )
     return listToTree(fileEntryList, '', {
       idKey: 'filePath',
       parentIdKey: 'parentFilePath',
       attributeMapping: treeNode => {
         const dataNode = treeNode as unknown as DataNode
         dataNode.key = treeNode.filePath
-        dataNode.isLeaf = treeNode.type === 2
+        dataNode.isLeaf = treeNode.type !== TemplateEntryTypeEnum.FOLDER
         dataNode.title = treeNode.filename
       }
     })
   }
 
   defineExpose<PreviewModalInstance>({
-    open: (fileEntryList?: FileEntry[]) => {
+    open: (fileEntryList?: PreviewFile[]) => {
       fileEntryTree.value = fileEntryList ? buildTree(fileEntryList) : []
       code.value = '双击文件查看代码信息'
       selectedEntry.value = undefined

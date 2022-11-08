@@ -1,6 +1,8 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
 import type { TemplateEntry, TemplateEntryRemoveModeEnum } from '@/api/gen/template-entry/types'
+import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+import type { UploadFile } from 'ant-design-vue/lib/upload/interface'
 
 /**
  * 获取模板项列表
@@ -10,20 +12,37 @@ export function listTemplateEntry(templateGroupKey: string) {
   return request.get<R<TemplateEntry[]>>(`/gen/template-entry/list/${templateGroupKey}`)
 }
 
+function getFormData(record: TemplateEntry, file?: UploadFile) {
+  const formData = new FormData()
+  const json = JSON.stringify(record)
+  const blob = new Blob([json], {
+    type: 'application/json'
+  })
+  formData.append('templateEntry', blob)
+  if (record.type === TemplateEntryTypeEnum.BINARY_FILE) {
+    formData.append('file', file as any)
+  }
+  return formData
+}
+
 /**
  * 添加模板目录项
  * @param record
+ * @param file
  */
-export function addTemplateEntry(record: TemplateEntry) {
-  return request.post<R<void>>('/gen/template-entry', record)
+export function addTemplateEntry(record: TemplateEntry, file?: UploadFile) {
+  const formData = getFormData(record, file)
+  return request.post<R<void>>('/gen/template-entry', formData)
 }
 
 /**
  * 修改模板目录项
  * @param record
+ * @param file
  */
-export function updateTemplateEntry(record: TemplateEntry) {
-  return request.put<R<void>>('/gen/template-entry', record)
+export function updateTemplateEntry(record: TemplateEntry, file?: UploadFile) {
+  const formData = getFormData(record, file)
+  return request.put<R<void>>('/gen/template-entry', formData)
 }
 
 /**
@@ -60,5 +79,15 @@ export function updateTemplateEntryContent(id: string, content: string) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
+  })
+}
+
+/**
+ * 下载二进制文件
+ * @param id
+ */
+export function binaryFileDownload(id: string) {
+  return request.get('/gen/template-entry/download/' + id, {
+    responseType: 'blob'
   })
 }

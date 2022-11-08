@@ -52,7 +52,6 @@ declare module '@vue/runtime-core' {
     ATextarea: typeof import('ant-design-vue/es')['Textarea']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     AUpload: typeof import('ant-design-vue/es')['Upload']
-    Cropper: typeof import('./src/components/cropper/index.vue')['default']
     CropperModal: typeof import('./src/components/cropper-modal/index.vue')['default']
     Icon: typeof import('./src/components/Icon/index.vue')['default']
     ImportButton: typeof import('./src/components/button/ImportButton.vue')['default']

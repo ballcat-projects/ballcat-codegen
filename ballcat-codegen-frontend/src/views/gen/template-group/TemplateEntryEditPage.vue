@@ -27,6 +27,7 @@
     <splitpanes class="default-theme">
       <pane size="25" style="border-bottom-left-radius: 10px">
         <template-entry-tree
+          ref="templateEntryTreeRef"
           :template-group-key="templateGroup?.groupKey"
           @edit-template-info="editTemplateInfo"
         />
@@ -35,6 +36,7 @@
         <template-entry-content-editor
           ref="editorRef"
           :template-group-key="templateGroup?.groupKey"
+          @re-upload="updateTemplateEntry"
         />
       </pane>
     </splitpanes>
@@ -63,6 +65,7 @@
   }>()
 
   const entryEditor = ref<HTMLElement | null>(null)
+  const templateEntryTreeRef = ref()
   const { isFullscreen, exit, toggle } = useFullscreen(entryEditor)
 
   // 模板组
@@ -92,6 +95,11 @@
   /** 编辑模板信息内容 */
   function editTemplateInfo(entry: TemplateEntry) {
     editorRef.value?.editContent(entry)
+  }
+
+  /** 编辑模板 */
+  function updateTemplateEntry() {
+    templateEntryTreeRef.value?.updateEntry()
   }
 </script>
 

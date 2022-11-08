@@ -1,5 +1,6 @@
 package com.hccake.ballcat.codegen.model.bo;
 
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,6 +19,12 @@ public class TemplateFile {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * ID
+	 */
+	@Schema(title = "ID")
+	private String id;
+
+	/**
 	 * 文件名称
 	 */
 	@Schema(title = "文件名称")
@@ -30,15 +37,15 @@ public class TemplateFile {
 	private String parentFilePath;
 
 	/**
-	 * 类型 1：文件夹 2：文件
+	 * 类型
 	 */
-	private Integer type;
+	private TemplateEntryTypeEnum type;
 
 	/**
-	 * 模板内容
+	 * 文件内容
 	 */
-	@Schema(title = "模板内容")
-	private String content;
+	@Schema(title = "文件内容")
+	private byte[] fileContent;
 
 	/**
 	 * 模板引擎类型 1：velocity

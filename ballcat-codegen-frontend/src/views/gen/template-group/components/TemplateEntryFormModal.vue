@@ -14,12 +14,23 @@
         <a-input v-model:value="modelRef.filename" placeholder="请输入文件名" />
       </a-form-item>
       <!-- 模板文件需要以下额外属性 -->
-      <template v-if="modelRef.type === 2">
-        <a-form-item label="引擎">
+      <template v-if="modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE">
+        <a-form-item label="模板引擎">
           <a-radio-group v-model:value="modelRef.engineType">
             <a-radio :value="1">Velocity</a-radio>
             <a-radio :value="2">Freemarker</a-radio>
           </a-radio-group>
+        </a-form-item>
+      </template>
+      <!-- 二进制文件需要进行文件上传 -->
+      <template v-if="modelRef.type === TemplateEntryTypeEnum.BINARY_FILE">
+        <a-form-item label="文件上传">
+          <a-upload :file-list="fileList" :before-upload="selectFile" :max-count="1">
+            <a-button>
+              <UploadOutlined />
+              上传文件
+            </a-button>
+          </a-upload>
         </a-form-item>
       </template>
       <a-form-item label="备注">
@@ -37,9 +48,12 @@
   import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
   import { pick } from 'lodash-es'
   import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+  import { UploadOutlined } from '@ant-design/icons-vue'
 
   import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
   import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
+  import type { UploadFile } from 'ant-design-vue/lib/upload/interface'
+  import type { UploadProps } from 'ant-design-vue'
 
   const emits = defineEmits<{
     (e: 'done'): void
@@ -47,11 +61,11 @@
 
   const labelCol = {
     sm: { span: 24 },
-    md: { span: 3 }
+    md: { span: 4 }
   }
   const wrapperCol = {
     sm: { span: 24 },
-    md: { span: 20 }
+    md: { span: 19 }
   }
 
   // 表单类型是否是新建
@@ -71,10 +85,20 @@
     groupKey: undefined,
     parentId: undefined,
     type: TemplateEntryTypeEnum.FOLDER,
+    templateContent: '',
     filename: '',
     engineType: 1,
     remarks: ''
   })
+
+  const fileList = ref<UploadProps['fileList']>([])
+  function selectFile(file: UploadFile) {
+    if (!modelRef.filename) {
+      modelRef.filename = file.name
+    }
+    fileList.value = [file]
+    return false
+  }
 
   // 提交按钮的 loading 状态控制
   const submitLoading = ref<boolean>(false)
@@ -88,7 +112,9 @@
         delete modelRef.engineType
       }
       doRequest({
-        request: isCreate.value ? addTemplateEntry(modelRef) : updateTemplateEntry(modelRef),
+        request: isCreate.value
+          ? addTemplateEntry(modelRef, fileList.value?.[0])
+          : updateTemplateEntry(modelRef, fileList.value?.[0]),
         successMessage: '保存成功！',
         onSuccess() {
           emits('done')
@@ -98,20 +124,33 @@
     })
   }
 
+  function mapTypeName(entryType: TemplateEntryTypeEnum) {
+    switch (entryType) {
+      case TemplateEntryTypeEnum.FOLDER:
+        return '文件夹'
+      case TemplateEntryTypeEnum.TEMPLATE_FILE:
+        return '模板文件'
+      case TemplateEntryTypeEnum.BINARY_FILE:
+        return '二进制文件'
+    }
+  }
+
   defineExpose<TemplateEntryFormModalInstance>({
     add(currentParentFileName: string, record: TemplateEntry) {
       isCreate.value = true
-      title.value = record.type === 1 ? '新建文件夹' : '新建模板文件'
+      title.value = '新建' + mapTypeName(record.type)
       resetFields()
+      fileList.value = []
       Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
       parentFilename.value = currentParentFileName
       handleOpen()
     },
     update(record: TemplateEntry) {
       isCreate.value = false
+      title.value = '编辑' + mapTypeName(record.type)
       resetFields()
+      fileList.value = []
       Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
-      title.value = record.type === 1 ? '编辑文件夹' : '编辑模板文件'
       handleOpen()
     }
   })

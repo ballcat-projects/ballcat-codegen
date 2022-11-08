@@ -4,8 +4,10 @@
 export enum TemplateEntryTypeEnum {
   // 文件夹
   FOLDER = 1,
-  // 文件
-  FILE = 2
+  // 模板文件
+  TEMPLATE_FILE = 2,
+  // 二进制文件
+  BINARY_FILE = 3
 }
 
 /**
@@ -46,11 +48,11 @@ export interface TemplateEntry {
   // 文件夹全路径/模板文件名称（支持占位符）
   filename?: string
   // 文件类型 1：文件夹 2：模板文件
-  type?: TemplateEntryTypeEnum
+  type: TemplateEntryTypeEnum
   // 父级Id
   parentId?: string
   // 模板内容
-  content?: string
+  templateContent: string
   // 引擎类型
   engineType?: number
   // 备注信息
@@ -67,9 +69,12 @@ export interface TemplateEntry {
 export type TemplateEntryDTO = TemplateEntry
 
 /**
- * 模板目录项
+ * 预览模板文件
  */
-export interface FileEntry {
+export interface PreviewFile {
+  // id
+  id: string
+
   // 文件名
   filename: string
 
@@ -83,8 +88,8 @@ export interface FileEntry {
   type: TemplateEntryTypeEnum
 
   // 文件内容
-  content: string
+  templateContent: string
 
   // 子文件
-  children?: FileEntry[]
+  children?: PreviewFile[]
 }

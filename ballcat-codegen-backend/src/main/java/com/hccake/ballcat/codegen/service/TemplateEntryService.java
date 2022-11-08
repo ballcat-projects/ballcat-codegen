@@ -5,7 +5,9 @@ import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.extend.mybatis.plus.service.ExtendService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,16 +51,18 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 	/**
 	 * 新建一个目录项
 	 * @param templateEntryCreateDTO 目录项新建传输对象
+	 * @param file 二进制文件
 	 * @return entryId
 	 */
-	String createEntry(TemplateEntryCreateDTO templateEntryCreateDTO);
+	String createEntry(TemplateEntryCreateDTO templateEntryCreateDTO, MultipartFile file) throws IOException;
 
 	/**
 	 * 更新目录项
 	 * @param templateEntryUpdateDTO 目录项修改传输对象
+	 * @param file
 	 * @return success:true
 	 */
-	boolean updateEntry(TemplateEntryUpdateDTO templateEntryUpdateDTO);
+	boolean updateEntry(TemplateEntryUpdateDTO templateEntryUpdateDTO, MultipartFile file) throws IOException;
 
 	/**
 	 * 删除目录项
