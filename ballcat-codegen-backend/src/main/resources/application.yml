@@ -15,6 +15,10 @@ spring:
     clean-disabled: true
     baseline-on-migrate: true
     placeholder-replacement: false # 取消占位符检测
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
 
 mybatis-plus:
   mapper-locations:
