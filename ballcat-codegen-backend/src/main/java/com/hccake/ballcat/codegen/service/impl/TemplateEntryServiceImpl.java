@@ -298,6 +298,10 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		if (!filename.equals(oldEntry.getFilename())) {
 			this.duplicateNameCheck(oldEntry.getParentId(), filename);
 		}
+		// 如果修改类型为模板文件或者二进制文件，则现在不能有子文件存在
+		if (!TemplateEntryTypeEnum.FOLDER.getType().equals(entryDTO.getType())) {
+			Assert.isFalse(baseMapper.existSubEntry(entryId), "当前文件是文件夹类型且其路径下有子文件，不允许修改为其他类型！");
+		}
 		// 更新 entry
 		TemplateEntry entry = TemplateModelConverter.INSTANCE.entryUpdateDtoToPo(entryDTO);
 		if (TemplateEntryTypeEnum.BINARY_FILE.getType().equals(entryDTO.getType()) && file != null) {

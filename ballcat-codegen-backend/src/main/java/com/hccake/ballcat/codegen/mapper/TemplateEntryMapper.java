@@ -3,6 +3,7 @@ package com.hccake.ballcat.codegen.mapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
+import com.hccake.ballcat.common.core.constant.GlobalConstants;
 import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -66,6 +67,17 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 */
 	default void deleteByGroupKey(String groupKey) {
 		this.delete(Wrappers.lambdaQuery(TemplateEntry.class).eq(TemplateEntry::getGroupKey, groupKey));
+	}
+
+	/**
+	 * 是否存在子文件
+	 * @param entryId 目录下id
+	 * @return boolean
+	 */
+	default boolean existSubEntry(String entryId) {
+		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getParentId, entryId)
+				.eq(TemplateEntry::getDeleted, GlobalConstants.NOT_DELETED_FLAG));
+		return count != null && count > 0;
 	}
 
 }

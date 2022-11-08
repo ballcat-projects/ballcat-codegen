@@ -13,9 +13,16 @@
       <a-form-item label="文件名" v-bind="validateInfos.filename">
         <a-input v-model:value="modelRef.filename" placeholder="请输入文件名" />
       </a-form-item>
+      <a-form-item label="文件类型">
+        <a-radio-group v-model:value="modelRef.type" name="radioGroup">
+          <a-radio-button :value="TemplateEntryTypeEnum.FOLDER">文件夹</a-radio-button>
+          <a-radio-button :value="TemplateEntryTypeEnum.TEMPLATE_FILE">模板文件</a-radio-button>
+          <a-radio-button :value="TemplateEntryTypeEnum.BINARY_FILE">二进制文件</a-radio-button>
+        </a-radio-group>
+      </a-form-item>
       <!-- 模板文件需要以下额外属性 -->
       <template v-if="modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE">
-        <a-form-item label="模板引擎">
+        <a-form-item label="模板引擎" v-bind="validateInfos.engineType">
           <a-radio-group v-model:value="modelRef.engineType">
             <a-radio :value="1">Velocity</a-radio>
             <a-radio :value="2">Freemarker</a-radio>
@@ -102,12 +109,8 @@
   })
 
   const rulesRef = reactive({
-    filename: [
-      {
-        required: true,
-        message: '请输入文件名'
-      }
-    ]
+    filename: [{ required: true, message: '请输入文件名' }],
+    engineType: [{ required: true, message: '请选择模板引擎类型' }]
   })
 
   // 提交按钮的 loading 状态控制
