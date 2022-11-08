@@ -91,3 +91,23 @@ export function binaryFileDownload(id: string) {
     responseType: 'blob'
   })
 }
+
+/**
+ * 导入模板组文件
+ */
+export function importTemplateGroupEntries(groupKey: string, file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('groupKey', groupKey)
+
+  return request.post(`/gen/template-entry/import`, formData)
+}
+
+/**
+ * 导出模板组文件
+ */
+export function exportTemplateGroupEntries(groupKey: string) {
+  return request.get(`/gen/template-entry/export?groupKey=${groupKey}`, {
+    responseType: 'blob'
+  })
+}

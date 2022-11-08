@@ -1,39 +1,21 @@
 package com.hccake.ballcat.codegen.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.IdUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
-import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
-import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
-import com.hccake.ballcat.codegen.converter.TemplatePropertyConverter;
-import com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum;
-import com.hccake.ballcat.codegen.model.bo.TemplateEntryFileTree;
-import com.hccake.ballcat.codegen.model.bo.TemplateFile;
-import com.hccake.ballcat.codegen.model.dto.TemplatePropertyDTO;
-import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.entity.TemplateGroup;
-import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplateGroupQO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupPageVO;
 import com.hccake.ballcat.codegen.model.vo.TemplateGroupSelectDataAttributes;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
 import com.hccake.ballcat.codegen.service.TemplateGroupService;
 import com.hccake.ballcat.codegen.service.TemplatePropertyService;
-import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.model.domain.PageParam;
 import com.hccake.ballcat.common.model.domain.PageResult;
 import com.hccake.ballcat.common.model.domain.SelectData;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
-import com.hccake.ballcat.common.model.result.SystemResultCode;
-import com.hccake.ballcat.common.util.tree.TreeUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,22 +24,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 /**
  * 模板组
@@ -71,12 +40,6 @@ import java.util.zip.ZipOutputStream;
 public class TemplateGroupController {
 
 	private final TemplateGroupService templateGroupService;
-
-	private final TemplateEntryService templateEntryService;
-
-	private final TemplatePropertyService templatePropertyService;
-
-	private final ObjectMapper objectMapper;
 
 	/**
 	 * 分页查询
@@ -143,157 +106,6 @@ public class TemplateGroupController {
 	public R<Void> updateById(@RequestBody TemplateGroup templateGroup) {
 		return templateGroupService.updateById(templateGroup) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板组失败");
-	}
-
-	/**
-	 * 导入模板组
-	 * @param file 模板组压缩包
-	 * @return R
-	 */
-	@Operation(summary = "导入模板")
-	@PostMapping("/import/entry")
-	public R<Void> importTemplate(@RequestParam("groupKey") String groupKey, @RequestPart("file") MultipartFile file)
-			throws IOException {
-		ZipInputStream zis = new ZipInputStream(file.getInputStream());
-
-		List<TemplateEntryFileTree> list = new ArrayList<>();
-		ZipEntry ze;
-		while ((ze = zis.getNextEntry()) != null) {
-			String zipEntryName = ze.getName();
-			String pathStr = Paths.get(zipEntryName).toString();
-			int lastIndexOf = pathStr.lastIndexOf("\\");
-			String filename = pathStr.substring(lastIndexOf + 1);
-			String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : "/";
-
-			TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
-			entryTree.setGroupKey(groupKey);
-			entryTree.setFilename(filename);
-			entryTree.setPath(pathStr);
-			entryTree.setParentPath(parentPathStr);
-			boolean directory = ze.isDirectory();
-			if (directory) {
-				entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
-			}
-			else {
-				entryTree.setType(TemplateEntryTypeEnum.TEMPLATE_FILE.getType());
-				// TODO 考虑文件上传时如何传递文件模板引擎类型的字段
-				entryTree.setEngineType(TemplateEngineTypeEnum.VELOCITY.getType());
-				entryTree.setFileContent(IoUtil.readBytes(zis, false));
-			}
-			// 生成一个 id
-			entryTree.setId(IdUtil.getSnowflakeNextIdStr());
-			list.add(entryTree);
-		}
-
-		List<TemplateEntryFileTree> treeNodeList = TreeUtils.buildTree(list, "/");
-		List<TemplateEntry> templateEntries = new ArrayList<>();
-		TreeUtils.forEachDFS(treeNodeList, null, (treeNode, parentTreeNode) -> {
-			TemplateEntry templateEntry = TemplateModelConverter.INSTANCE.entryFileTreeToPo(treeNode);
-			String parentId = parentTreeNode != null ? parentTreeNode.getId() : TemplateEntryConstants.TREE_ROOT_ID;
-			templateEntry.setParentId(parentId);
-			templateEntries.add(templateEntry);
-		});
-		templateEntryService.saveBatch(templateEntries);
-
-		return R.ok();
-	}
-
-	/**
-	 * 导出模板组文件
-	 * @param groupKey 模板组标识
-	 */
-	@Operation(summary = "导出模板")
-	@GetMapping("/export/entry")
-	public void exportTemplate(@RequestParam("groupKey") String groupKey, HttpServletResponse response)
-			throws IOException {
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-disposition", "attachment;filename=" + groupKey + "-templates.zip");
-
-		List<TemplateEntry> templateEntries = templateEntryService.listByGroupKey(groupKey);
-		if (CollUtil.isEmpty(templateEntries)) {
-			return;
-		}
-
-		List<TemplateFile> templateFiles = templateEntryService.convertToTemplateFile(templateEntries);
-
-		ServletOutputStream responseOutputStream = response.getOutputStream();
-		try (ZipOutputStream zip = new ZipOutputStream(responseOutputStream)) {
-			for (TemplateFile templateFile : templateFiles) {
-				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(),
-						templateFile.getFilename());
-				TemplateEntryTypeEnum type = templateFile.getType();
-				// 文件夹必须尾缀 “/”
-				if (TemplateEntryTypeEnum.FOLDER.equals(type)) {
-					filePath = filePath + "/";
-				}
-				ZipEntry zipEntry = new ZipEntry(filePath);
-				zip.putNextEntry(zipEntry);
-				// 文件需要额外写入内容
-				if (TemplateEntryTypeEnum.TEMPLATE_FILE.equals(type)) {
-					zip.write(templateFile.getFileContent());
-				}
-				zip.closeEntry();
-			}
-
-			// 手动结束 zip，防止文件末端未被写入
-			zip.finish();
-		}
-	}
-
-	/**
-	 * 导入模板组属性
-	 * @param groupKey 模板组标识
-	 * @param file 模板组属性文件
-	 */
-	@Operation(summary = "导入模板组属性")
-	@PostMapping("/import/property")
-	public R<String> importProperty(@RequestParam("groupKey") String groupKey, @RequestPart("file") MultipartFile file)
-			throws IOException {
-		List<TemplatePropertyDTO> dtoList = objectMapper.readValue(file.getInputStream(),
-				new TypeReference<List<TemplatePropertyDTO>>() {
-				});
-		if (CollUtil.isEmpty(dtoList)) {
-			return R.ok();
-		}
-
-		List<TemplateProperty> list = dtoList.stream().map(x -> TemplatePropertyConverter.INSTANCE.dtoToPo(groupKey, x))
-				.collect(Collectors.toList());
-
-		try {
-			templatePropertyService.saveBatch(list);
-			return R.ok();
-		}
-		catch (DuplicateKeyException ex) {
-			Throwable rootCause = ex.getRootCause();
-			String message = "模板组属性重复：" + (rootCause == null ? ex.getMessage() : rootCause.getMessage());
-			return R.failed(SystemResultCode.BAD_REQUEST, message);
-		}
-
-	}
-
-	/**
-	 * 导出模板组属性
-	 * @param groupKey 模板组标识
-	 */
-	@Operation(summary = "导出模板组属性")
-	@GetMapping("/export/property")
-	public void exportProperty(@RequestParam("groupKey") String groupKey, HttpServletResponse response)
-			throws IOException {
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-disposition", "attachment;filename=" + groupKey + "-properties.json");
-
-		List<TemplateProperty> templateProperties = templatePropertyService.listByGroupKey(groupKey);
-		if (CollUtil.isEmpty(templateProperties)) {
-			return;
-		}
-
-		// 剔除无用属性
-		List<TemplatePropertyDTO> list = templateProperties.stream().map(TemplatePropertyConverter.INSTANCE::poToDto)
-				.collect(Collectors.toList());
-		// 美化 json
-		String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);
-		// 输出内容
-		response.getOutputStream().write(json.getBytes(StandardCharsets.UTF_8));
 	}
 
 	/**

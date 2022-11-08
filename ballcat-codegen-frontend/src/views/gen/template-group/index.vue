@@ -91,14 +91,12 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue'
   import useTable from '@/hooks/table'
+  import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/template-group'
+  import { exportTemplateGroupEntries, importTemplateGroupEntries } from '@/api/gen/template-entry'
   import {
-    exportTemplateGroupEntries,
     exportTemplateGroupProperties,
-    importTemplateGroupEntries,
-    importTemplateGroupProperties,
-    queryTemplateGroupPage,
-    removeTemplateGroup
-  } from '@/api/gen/template-group'
+    importTemplateGroupProperties
+  } from '@/api/gen/template-property'
   import AddButton from '@/components/button/AddButton.vue'
   import TemplateEntryEditPage from '@/views/gen/template-group/TemplateEntryEditPage.vue'
   import TemplatePropertyModal from '@/views/gen/template-group/TemplatePropertyModal.vue'
