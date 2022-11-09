@@ -99,7 +99,7 @@
   } from '@/api/gen/template-property'
   import AddButton from '@/components/button/AddButton.vue'
   import TemplateEntryEditPage from '@/views/gen/template-group/TemplateEntryEditPage.vue'
-  import TemplatePropertyModal from '@/views/gen/template-group/TemplatePropertyModal.vue'
+  import TemplatePropertyModal from '@/views/gen/template-property/TemplatePropertyModal.vue'
   import TemplateGroupFormModal from '@/views/gen/template-group/TemplateGroupFormModal.vue'
   import { doRequest } from '@/utils/axios/request'
   import type { TemplateGroup } from '@/api/gen/template-group/types'

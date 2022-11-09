@@ -44,9 +44,41 @@
               </a-space>
             </template>
             <a-input
+              v-if="item.componentType === ComponentType.INPUT"
               v-model:value="modelRef.genProperties[item.propKey]"
               :placeholder="'请输入' + item.title"
             />
+            <a-input-number
+              v-else-if="item.componentType === ComponentType.INPUT_NUMBER"
+              v-model:value="modelRef.genProperties[item.propKey]"
+              :placeholder="'请输入' + item.title"
+            />
+            <a-select
+              v-else-if="item.componentType === ComponentType.SELECT"
+              v-model:value="modelRef.genProperties[item.propKey]"
+              :placeholder="'请输入' + item.title"
+            >
+              <a-select-option
+                v-for="option in item.componentOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.name }}
+              </a-select-option>
+            </a-select>
+            <a-radio-group
+              v-else-if="item.componentType === ComponentType.RADIO"
+              v-model:value="modelRef.genProperties[item.propKey]"
+              :placeholder="'请输入' + item.title"
+            >
+              <a-radio
+                v-for="option in item.componentOptions"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.name }}
+              </a-radio>
+            </a-radio-group>
           </a-form-item>
         </template>
       </a-col>
@@ -61,7 +93,6 @@
   import { Form } from 'ant-design-vue'
   import { listTemplateEntry } from '@/api/gen/template-entry'
   import type { GeneratorOption } from '@/api/gen/generate/types'
-  import type { TemplateProperty } from '@/api/gen/template-property/types'
   import type { Props } from 'ant-design-vue/es/form/useForm'
   import type { GenerateStepInstance } from '@/views/gen/codegen/types'
   import type { TemplateEntry } from '@/api/gen/template-entry/types'
@@ -70,6 +101,7 @@
   import type { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
   import { QuestionCircleOutlined } from '@ant-design/icons-vue'
   import { useGeneratorConfigStore } from '@/store'
+  import { ComponentType, type TemplateProperty } from '@/api/gen/template-property/types'
 
   // 代码生成配置信息
   const generatorConfigStore = useGeneratorConfigStore()

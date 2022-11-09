@@ -1,9 +1,13 @@
 package com.hccake.ballcat.codegen.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.hccake.ballcat.codegen.model.entity.ComponentOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 模板属性配置
@@ -46,6 +50,20 @@ public class TemplatePropertyPageVO {
 	 */
 	@Schema(title = "默认值")
 	private String defaultValue;
+
+	/**
+	 * 前端显示的组件类型
+	 * @see com.hccake.ballcat.codegen.constant.ComponentTypeEnum
+	 */
+	@Schema(title = "组件类型")
+	private String componentType;
+
+	/**
+	 * 选择组件使用的选项
+	 */
+	@Schema(title = "组件选项")
+	@TableField(typeHandler = JacksonTypeHandler.class)
+	private List<ComponentOption> componentOptions;
 
 	/**
 	 * 必填，1：是，0：否

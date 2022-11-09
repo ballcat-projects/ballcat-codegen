@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 
 /**
  * 服务端统一返回信息

@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 模板属性配置
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
  * @author hccake 2020-06-22 15:46:39
  */
 @Data
-@TableName("gen_template_property")
+@TableName(value = "gen_template_property", autoResultMap = true)
 @Schema(title = "模板属性配置")
 public class TemplateProperty {
 
@@ -54,6 +56,20 @@ public class TemplateProperty {
 	@TableField(updateStrategy = FieldStrategy.IGNORED)
 	@Schema(title = "默认值")
 	private String defaultValue;
+
+	/**
+	 * 前端显示的组件类型
+	 * @see com.hccake.ballcat.codegen.constant.ComponentTypeEnum
+	 */
+	@Schema(title = "组件类型")
+	private String componentType;
+
+	/**
+	 * 选择组件使用的选项
+	 */
+	@Schema(title = "组件选项")
+	@TableField(typeHandler = JacksonTypeHandler.class)
+	private List<ComponentOption> componentOptions;
 
 	/**
 	 * 必填，1：是，0：否
