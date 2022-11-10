@@ -51,7 +51,6 @@
 						<!-- Optional configuration which provides for running any npm command -->
 						<configuration>
 							<arguments>install</arguments>
-							<npmRegistryURL>http://registry.npmmirror.com/</npmRegistryURL>
 						</configuration>
 					</execution>
 					<!-- Build and minify static files -->
