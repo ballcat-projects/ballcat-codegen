@@ -10,12 +10,6 @@ const menuRouters: Array<BallcatRouteRecordRaw> = [
     component: () => import('@/views/gen/codegen/index.vue')
   },
   {
-    path: '/codegen1',
-    name: 'CodeGen1',
-    meta: { title: '代码生成老版本' },
-    component: () => import('@/views/gen/codegen1/index.vue')
-  },
-  {
     path: '/template/group',
     name: 'TemplateGroup',
     meta: { title: '模板管理' },
