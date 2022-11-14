@@ -1,7 +1,8 @@
 export function copyProperties<T>(target: T, source: any, excludes?: string[]): T {
-  Object.keys(target as object).forEach(key => {
+  if (!source) return target
+  Object.keys(target as any).forEach(key => {
     const result = target as any
-    if (!excludes?.includes(key) && source[key]) {
+    if (!excludes?.includes(key)) {
       result[key] = source[key]
     }
   })

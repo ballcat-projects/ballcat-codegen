@@ -34,8 +34,8 @@
           </div>
         </div>
       </a-form-item>
-      <a-form-item label="需要数据表" v-bind="validateInfos.name">
-        <a-radio-group v-model:value="modelRef.useTable" name="radioGroup">
+      <a-form-item label="需要数据表" v-bind="validateInfos.useTable">
+        <a-radio-group v-model:value="modelRef.useTable">
           <a-radio :value="1">是</a-radio>
           <a-radio :value="0">否</a-radio>
         </a-radio-group>
@@ -100,7 +100,8 @@
 
   const rulesRef = reactive({
     name: [{ required: true, message: '模板组名称不能为空!' }],
-    groupKey: [{ required: true, message: '模板组标识不能为空!' }]
+    groupKey: [{ required: true, message: '模板组标识不能为空!' }],
+    useTable: [{ required: true, message: '请选择使用是否需要数据表支持!' }]
   })
 
   // 提交按钮的 loading 状态控制
