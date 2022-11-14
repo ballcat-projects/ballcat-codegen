@@ -26,18 +26,10 @@
 
     <splitpanes class="default-theme">
       <pane size="25" style="border-bottom-left-radius: 10px">
-        <template-entry-tree
-          ref="templateEntryTreeRef"
-          :template-group-key="templateGroup?.groupKey"
-          @edit-template-info="editTemplateInfo"
-        />
+        <template-entry-tree ref="templateEntryTreeRef" @edit-template-info="editTemplateInfo" />
       </pane>
       <pane size="75" style="border-bottom-right-radius: 10px">
-        <template-entry-content-editor
-          ref="editorRef"
-          :template-group-key="templateGroup?.groupKey"
-          @re-upload="updateTemplateEntry"
-        />
+        <template-entry-content-editor ref="editorRef" @re-upload="updateTemplateEntry" />
       </pane>
     </splitpanes>
   </a-card>
@@ -48,16 +40,12 @@
   import 'splitpanes/dist/splitpanes.css'
   import TemplateEntryTree from '@/views/gen/template-group/components/TemplateEntryTree.vue'
   import type { TemplateGroup } from '@/api/gen/template-group/types'
-  import { ref, toRef } from 'vue'
+  import { ref } from 'vue'
   import type { TemplateEntry } from '@/api/gen/template-entry/types'
   import TemplateEntryContentEditor from '@/views/gen/template-group/components/TemplateEntryContentEditor.vue'
   import { Modal } from 'ant-design-vue'
   import type { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
   import { useFullscreen } from '@vueuse/core'
-
-  const props = defineProps<{
-    templateGroup: TemplateGroup
-  }>()
 
   let emits = defineEmits<{
     (e: 'handle-property'): void
@@ -69,7 +57,7 @@
   const { isFullscreen, exit, toggle } = useFullscreen(entryEditor)
 
   // 模板组
-  const templateGroup = toRef(props, 'templateGroup')
+  const templateGroup = ref<TemplateGroup>()
 
   // 模板信息编辑器实例
   const editorRef = ref<TemplateContentEditorInstance>()
@@ -101,6 +89,16 @@
   function updateTemplateEntry() {
     templateEntryTreeRef.value?.updateEntry()
   }
+
+  defineExpose({
+    edit(record: TemplateGroup) {
+      templateGroup.value = record
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      let templateGroupKey = record.groupKey!
+      templateEntryTreeRef.value?.load(templateGroupKey)
+      editorRef.value?.load(templateGroupKey)
+    }
+  })
 </script>
 
 <style lang="less">

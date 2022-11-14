@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, watchEffect } from 'vue'
+  import { reactive, ref } from 'vue'
   import { listToTree } from '@/utils/tree-util'
   import { doRequest } from '@/utils/axios/request'
   import { listTemplateEntry, moveEntry } from '@/api/gen/template-entry'
@@ -89,30 +89,19 @@
     TemplateEntryRemoveModalInstance
   } from '@/views/gen/template-group/components/types'
 
-  const props = defineProps<{
-    templateGroupKey?: string
-  }>()
-
   const emits = defineEmits<{
     (e: 'edit-template-info', entry: TemplateEntry): void
   }>()
+
+  const templateGroupKey = ref<string>()
 
   // 删除弹窗
   const templateEntryRemoveModalRef = ref<TemplateEntryRemoveModalInstance>()
   // 新建修改的表单弹窗
   const templateEntryFormModalRef = ref<TemplateEntryFormModalInstance>()
 
-  // 是否是第一次加载目录项树
-  let firstInitTree = false
   // 目录项的树结构数据
   const treeData = ref<TemplateEntry[]>([])
-  // 当切换模板组时，初始化该模板组对应的目录项
-  watchEffect(() => {
-    if (props.templateGroupKey) {
-      firstInitTree = true
-      treeLoad()
-    }
-  })
 
   // 当前已选中的 keys
   const selectedKeys = ref<string[]>([])
@@ -146,35 +135,32 @@
   /**
    * 加载 Entry Tree
    */
-  function treeLoad() {
-    let templateGroupKey = props.templateGroupKey
-    templateGroupKey &&
-      doRequest({
-        request: listTemplateEntry(templateGroupKey),
-        onSuccess(res) {
-          let list = res.data as TemplateEntry[]
-          list.sort((a, b) =>
-            // @ts-ignore
-            a.type === b.type ? a.filename.localeCompare(b.filename) : a.type - b.type
-          )
-          treeData.value = listToTree(list, '0', {
-            attributeMapping: treeNode => {
-              const dataNode = treeNode as unknown as DataNode
-              dataNode.isLeaf = treeNode.type !== TemplateEntryTypeEnum.FOLDER
-              dataNode.title = treeNode.filename
-              dataNode.style = { whiteSpace: 'nowrap' }
-              if (!dataNode.templateContent) {
-                dataNode.templateContent = ''
-              }
+  function treeLoad(expand = false) {
+    doRequest({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      request: listTemplateEntry(templateGroupKey.value!),
+      onSuccess(res) {
+        let list = res.data as TemplateEntry[]
+        list.sort((a, b) =>
+          // @ts-ignore
+          a.type === b.type ? a.filename.localeCompare(b.filename) : a.type - b.type
+        )
+        treeData.value = listToTree(list, '0', {
+          attributeMapping: treeNode => {
+            const dataNode = treeNode as unknown as DataNode
+            dataNode.isLeaf = treeNode.type !== TemplateEntryTypeEnum.FOLDER
+            dataNode.title = treeNode.filename
+            dataNode.style = { whiteSpace: 'nowrap' }
+            if (!dataNode.templateContent) {
+              dataNode.templateContent = ''
             }
-          })
-          // 只在第一次加载时默认展开第一级的文件，防止用户提交表单后tree被折叠
-          if (firstInitTree) {
-            expandedKeys.value = treeData.value.map(item => item.id) as string[]
-            firstInitTree = false
           }
+        })
+        if (expand) {
+          expandedKeys.value = treeData.value.map(item => item.id) as string[]
         }
-      })
+      }
+    })
   }
 
   /** 选中属性，显示右键菜单 */
@@ -286,7 +272,7 @@
     }
     // 打开弹窗
     templateEntryFormModalRef.value?.add(parentFilename, {
-      groupKey: props.templateGroupKey,
+      groupKey: templateGroupKey.value,
       parentId: parentId,
       type: entryType,
       templateContent: ''
@@ -303,6 +289,12 @@
   }
 
   defineExpose({
-    updateEntry: updateEntry
+    updateEntry: updateEntry,
+    load(key: string) {
+      // 只在第一次加载时默认展开第一级的文件，防止用户提交表单后tree被折叠
+      const expand = templateGroupKey.value !== key
+      templateGroupKey.value = key
+      treeLoad(expand)
+    }
   })
 </script>

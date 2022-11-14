@@ -73,7 +73,7 @@
   <!-- 模板组编辑页面 -->
   <template-entry-edit-page
     v-show="!tableShow"
-    :template-group="editedTemplateGroup"
+    ref="templateEntryEditPageRef"
     @handle-property="handleProperty(editedTemplateGroup)"
     @go-back="tableShow = true"
   />
@@ -110,6 +110,7 @@
 
   const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
   const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()
+  const templateEntryEditPageRef = ref()
 
   const tableShow = ref<boolean>(true)
   const editedTemplateGroup = ref<TemplateGroup>()
@@ -191,6 +192,7 @@
   function handleEntry(record: TemplateGroup) {
     tableShow.value = false
     editedTemplateGroup.value = record
+    templateEntryEditPageRef.value.edit(record)
   }
   /** 模板组文件导入 **/
   function handleEntryImport(fileInfo: UploadRequestOption, record: TemplateGroup) {

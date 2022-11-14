@@ -4,7 +4,7 @@
     class="pane-content pane-scroll"
     style="height: 100%; overflow: auto"
   >
-    <code-gen-tips :template-group-key="templateGroupKey" />
+    <code-gen-tips ref="codeGenTipsRef" />
   </div>
   <div v-show="templateEntryMap.size !== 0" class="pane-scroll" style="height: 100%">
     <a-spin wrapper-class-name="spin-box" tip="保存中..." :spinning="fileSaving">
@@ -70,6 +70,8 @@
   const emits = defineEmits<{
     (e: 're-upload'): void
   }>()
+
+  const codeGenTipsRef = ref()
 
   // 模板信息存储 map
   const templateEntryMap = reactive(new Map<string, TemplateEntry>())
@@ -232,6 +234,9 @@
   }
 
   defineExpose<TemplateContentEditorInstance>({
+    load(templateGroupKey: string) {
+      codeGenTipsRef.value?.load(templateGroupKey)
+    },
     checkSaveState(): boolean {
       // 检查是否有未保存的文件
       for (let key of contentStage.keys()) {
