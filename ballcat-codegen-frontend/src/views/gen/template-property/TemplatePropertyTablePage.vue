@@ -73,6 +73,11 @@
       width: 60
     },
     {
+      title: '排序',
+      dataIndex: 'orderValue',
+      width: 60
+    },
+    {
       title: '备注信息',
       dataIndex: 'remarks',
       width: 180
@@ -89,7 +94,7 @@
   // 数据表格
   let tableState = useTable<TemplateProperty>({
     pageRequest: (query: PageParam) => {
-      const params = Object.assign({ groupKey: templateGroupKey.value }, query)
+      const params = Object.assign({ groupKey: templateGroupKey.value, sort: 'orderValue' }, query)
       return queryTemplatePropertyPage(params)
     }
   })

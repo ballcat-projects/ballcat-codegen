@@ -45,8 +45,8 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	 * @return List<TemplateProperty> 配置列表
 	 */
 	default List<TemplateProperty> listByTemplateGroupKey(String templateGroupKey) {
-		return this.selectList(
-				Wrappers.<TemplateProperty>lambdaQuery().eq(TemplateProperty::getGroupKey, templateGroupKey));
+		return this.selectList(Wrappers.<TemplateProperty>lambdaQuery()
+				.eq(TemplateProperty::getGroupKey, templateGroupKey).orderByAsc(TemplateProperty::getOrderValue));
 
 	}
 

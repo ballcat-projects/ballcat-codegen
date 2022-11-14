@@ -12,12 +12,14 @@ export interface TemplateProperty {
   propKey: string
   // 默认值(可为空值)
   defaultValue?: string
-  // 是否必填，1：是，0：否
-  required?: 1 | 0
   // 组件类型
   componentType: ComponentType
   // 组件选项
   componentOptions: ComponentOption[]
+  // 是否必填，1：是，0：否
+  required?: 1 | 0
+  // 排序值
+  orderValue: number
   // 备注信息
   remarks?: string
 }

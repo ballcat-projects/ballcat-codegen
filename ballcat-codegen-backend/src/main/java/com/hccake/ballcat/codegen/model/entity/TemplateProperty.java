@@ -74,8 +74,14 @@ public class TemplateProperty {
 	/**
 	 * 必填，1：是，0：否
 	 */
-	@Schema(title = "必填，1：是，0：否")
+	@Schema(title = "必填", description = "1：是，0：否")
 	private Integer required;
+
+	/**
+	 * 排序值，越小越靠前
+	 */
+	@Schema(title = "排序值", description = "越小越靠前")
+	private Integer orderValue;
 
 	/**
 	 * 备注信息

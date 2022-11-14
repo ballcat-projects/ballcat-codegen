@@ -72,6 +72,12 @@ public class TemplatePropertyPageVO {
 	private Integer required;
 
 	/**
+	 * 排序值，越小越靠前
+	 */
+	@Schema(title = "排序值", description = "越小越靠前")
+	private Integer orderValue;
+
+	/**
 	 * 备注信息
 	 */
 	@Schema(title = "备注信息")

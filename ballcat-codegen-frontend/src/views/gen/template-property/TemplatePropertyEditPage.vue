@@ -69,6 +69,9 @@
           添加选项
         </a-button>
       </a-form-item>
+      <a-form-item label="排序值" name="orderValue">
+        <a-input-number v-model:value="modelRef.orderValue" placeholder="请输入" />
+      </a-form-item>
       <a-form-item label="是否必填" name="required">
         <a-switch
           v-model:checked="modelRef.required"
@@ -127,6 +130,7 @@
     required: 0,
     componentOptions: [],
     componentType: ComponentType.INPUT,
+    orderValue: 0,
     remarks: ''
   })
 
