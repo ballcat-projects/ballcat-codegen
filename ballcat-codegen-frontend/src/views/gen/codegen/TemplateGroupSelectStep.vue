@@ -1,32 +1,46 @@
 <template>
   <div>
-    <a-result
-      v-show="!hasTemplateGroup"
-      status="warning"
-      title="请先创建一个模板组"
-      sub-title="在项目的 /template 文件夹下有预置的模板信息，可以在创建模板组时直接导入模板信息"
-    >
-      <template #extra>
-        <a-button key="console" type="primary" @click="goToTemplateGroupPage">创建模板组</a-button>
-      </template>
-    </a-result>
+    <template v-if="!initialized">
+      <a-row type="flex" justify="center" :gutter="[20, 20]">
+        <a-col v-for="item in [1, 2, 3, 4]" :key="item">
+          <a-card style="width: 300px; height: 120px" :body-style="{ padding: '0 24px' }">
+            <a-skeleton size="small" :paragraph="{ rows: 2 }" />
+          </a-card>
+        </a-col>
+      </a-row>
+    </template>
 
-    <a-row v-show="hasTemplateGroup" type="flex" justify="center" :gutter="[20, 20]">
-      <a-col v-for="item in templateGroupSelectData" :key="item.value">
-        <a-card
-          hoverable
-          style="width: 300px; height: 120px"
-          :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
-          @click="selectGroup(item)"
-        >
-          <a-card-meta :title="item.name" :description="item.attributes?.remarks">
-            <template #avatar>
-              <a-avatar :src="item.attributes?.icon" />
-            </template>
-          </a-card-meta>
-        </a-card>
-      </a-col>
-    </a-row>
+    <template v-if="initialized">
+      <a-result
+        v-show="!hasTemplateGroup"
+        status="warning"
+        title="请先创建一个模板组"
+        sub-title="在项目的 /template 文件夹下有预置的模板信息，可以在创建模板组时直接导入模板信息"
+      >
+        <template #extra>
+          <a-button key="console" type="primary" @click="goToTemplateGroupPage"
+            >创建模板组</a-button
+          >
+        </template>
+      </a-result>
+
+      <a-row v-show="hasTemplateGroup" type="flex" justify="center" :gutter="[20, 20]">
+        <a-col v-for="item in templateGroupSelectData" :key="item.value">
+          <a-card
+            hoverable
+            style="width: 300px; height: 120px"
+            :class="item.value === templateGroupKey ? 'template-group-card-checked' : ''"
+            @click="selectGroup(item)"
+          >
+            <a-card-meta :title="item.name" :description="item.attributes?.remarks">
+              <template #avatar>
+                <a-avatar :src="item.attributes?.icon" />
+              </template>
+            </a-card-meta>
+          </a-card>
+        </a-col>
+      </a-row>
+    </template>
   </div>
 </template>
 
@@ -39,6 +53,8 @@
   import { useGeneratorConfigStore } from '@/store'
   import type { GenerateStepInstance } from '@/views/gen/codegen/types'
   import { useRouter } from 'vue-router'
+
+  const initialized = ref(false)
 
   const generatorConfigStore = useGeneratorConfigStore()
 
@@ -57,6 +73,7 @@
   doRequest({
     request: listSelectData(),
     onSuccess: res => {
+      initialized.value = true
       const data = res.data as SelectData[]
       templateGroupSelectData.value = data
       if (data && data.length > 0) {

@@ -22,13 +22,15 @@
 
     <splitpanes class="preview-splitpanes">
       <pane size="25" class="template-entry-tree-wrapper">
-        <a-directory-tree
-          class="template-entry-tree"
-          :tree-data="fileEntryTree"
-          :show-icon="true"
-          style="overflow: initial"
-          @dblclick="ondblclick"
-        />
+        <a-spin :spinning="loading">
+          <a-directory-tree
+            class="template-entry-tree"
+            :tree-data="fileEntryTree"
+            :show-icon="true"
+            style="overflow: initial"
+            @dblclick="ondblclick"
+          />
+        </a-spin>
       </pane>
       <pane
         v-show="selectedEntry && selectedEntry.type === TemplateEntryTypeEnum.TEMPLATE_FILE"
@@ -143,8 +145,12 @@
     })
   }
 
+  // 加载状态
+  const loading = ref(false)
+
   defineExpose<GenerateStepInstance>({
     enter: () => {
+      loading.value = true
       const generatorConfigStore = useGeneratorConfigStore()
       doRequest({
         request: preview(generatorConfigStore.dsName, toRaw(generatorConfigStore.options)),
@@ -152,7 +158,8 @@
           fileEntryTree.value = res.data ? buildTree(res.data) : []
           code.value = '双击文件查看代码信息'
           selectedEntry.value = undefined
-        }
+        },
+        onFinally: () => (loading.value = false)
       })
     }
   })

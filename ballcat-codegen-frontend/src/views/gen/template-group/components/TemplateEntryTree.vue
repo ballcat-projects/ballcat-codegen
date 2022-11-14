@@ -7,17 +7,23 @@
     <div style="padding: 10px; width: fit-content; min-width: 100%">
       <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>
 
-      <a-directory-tree
-        v-model:selectedKeys="selectedKeys"
-        v-model:expandedKeys="expandedKeys"
-        :tree-data="treeData"
-        :show-icon="true"
-        :draggable="true"
-        @drop="handleDrop"
-        @dblclick="handleDblClick"
-        @right-click="selectAndShowMenu"
+      <a-skeleton
+        style="margin: 16px; width: 260px"
+        :loading="treeLoading"
+        :paragraph="{ rows: 8 }"
       >
-      </a-directory-tree>
+        <a-directory-tree
+          v-model:selectedKeys="selectedKeys"
+          v-model:expandedKeys="expandedKeys"
+          :tree-data="treeData"
+          :show-icon="true"
+          :draggable="true"
+          @drop="handleDrop"
+          @dblclick="handleDblClick"
+          @right-click="selectAndShowMenu"
+        >
+        </a-directory-tree>
+      </a-skeleton>
 
       <a-menu v-if="menuVisible" :style="menuStyle">
         <template v-if="selectedEntry">
@@ -132,10 +138,13 @@
     marginBottom: '0'
   }
 
+  const treeLoading = ref(false)
+
   /**
    * 加载 Entry Tree
    */
   function treeLoad(expand = false) {
+    treeLoading.value = true
     doRequest({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       request: listTemplateEntry(templateGroupKey.value!),
@@ -159,7 +168,8 @@
         if (expand) {
           expandedKeys.value = treeData.value.map(item => item.id) as string[]
         }
-      }
+      },
+      onFinally: () => (treeLoading.value = false)
     })
   }
 
