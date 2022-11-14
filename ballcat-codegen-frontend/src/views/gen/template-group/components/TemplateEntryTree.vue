@@ -7,23 +7,18 @@
     <div style="padding: 10px; width: fit-content; min-width: 100%">
       <h1 style="text-align: center; white-space: nowrap">右键即可创建文件或文件夹</h1>
 
-      <a-skeleton
-        style="margin: 16px; width: 260px"
-        :loading="treeLoading"
-        :paragraph="{ rows: 8 }"
-      >
-        <a-directory-tree
-          v-model:selectedKeys="selectedKeys"
-          v-model:expandedKeys="expandedKeys"
-          :tree-data="treeData"
-          :show-icon="true"
-          :draggable="true"
-          @drop="handleDrop"
-          @dblclick="handleDblClick"
-          @right-click="selectAndShowMenu"
-        >
-        </a-directory-tree>
-      </a-skeleton>
+      <a-skeleton v-if="treeLoading" style="margin: 16px; width: 260px" :paragraph="{ rows: 8 }" />
+      <a-directory-tree
+        v-else
+        v-model:selectedKeys="selectedKeys"
+        v-model:expandedKeys="expandedKeys"
+        :tree-data="treeData"
+        :show-icon="true"
+        :draggable="true"
+        @drop="handleDrop"
+        @dblclick="handleDblClick"
+        @right-click="selectAndShowMenu"
+      />
 
       <a-menu v-if="menuVisible" :style="menuStyle">
         <template v-if="selectedEntry">

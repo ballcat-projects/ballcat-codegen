@@ -22,15 +22,15 @@
 
     <splitpanes class="preview-splitpanes">
       <pane size="25" class="template-entry-tree-wrapper">
-        <a-spin :spinning="loading">
-          <a-directory-tree
-            class="template-entry-tree"
-            :tree-data="fileEntryTree"
-            :show-icon="true"
-            style="overflow: initial"
-            @dblclick="ondblclick"
-          />
-        </a-spin>
+        <a-skeleton v-if="loading" style="margin: 16px; width: 260px" :paragraph="{ rows: 8 }" />
+        <a-directory-tree
+          v-else
+          class="template-entry-tree"
+          :tree-data="fileEntryTree"
+          :show-icon="true"
+          style="overflow: initial"
+          @dblclick="ondblclick"
+        />
       </pane>
       <pane
         v-show="selectedEntry && selectedEntry.type === TemplateEntryTypeEnum.TEMPLATE_FILE"
