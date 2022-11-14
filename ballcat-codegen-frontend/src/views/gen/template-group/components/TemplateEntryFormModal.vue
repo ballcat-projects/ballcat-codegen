@@ -54,10 +54,9 @@
   import { useForm } from 'ant-design-vue/es/form'
   import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
   import { pick } from 'lodash-es'
+  import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
   import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
   import { UploadOutlined } from '@ant-design/icons-vue'
-
-  import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
   import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
   import type { UploadFile } from 'ant-design-vue/lib/upload/interface'
   import type { UploadProps } from 'ant-design-vue'
@@ -110,7 +109,12 @@
 
   const rulesRef = reactive({
     filename: [{ required: true, message: '请输入文件名' }],
-    engineType: [{ required: true, message: '请选择模板引擎类型' }]
+    engineType: [
+      {
+        required: modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE,
+        message: '请选择模板引擎类型'
+      }
+    ]
   })
 
   // 提交按钮的 loading 状态控制
