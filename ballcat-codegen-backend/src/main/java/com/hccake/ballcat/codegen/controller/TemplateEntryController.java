@@ -22,24 +22,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -166,35 +160,23 @@ public class TemplateEntryController {
 			throws IOException {
 		ZipInputStream zis = new ZipInputStream(file.getInputStream());
 
-		List<TemplateEntryFileTree> list = new ArrayList<>();
+		Map<String, TemplateEntryFileTree> map = new HashMap<>(32);
+
 		ZipEntry ze;
 		while ((ze = zis.getNextEntry()) != null) {
 			String zipEntryName = ze.getName();
-			String pathStr = Paths.get(zipEntryName).toString();
-			int lastIndexOf = pathStr.lastIndexOf("\\");
-			String filename = pathStr.substring(lastIndexOf + 1);
-			String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : "/";
-
-			TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
-			entryTree.setGroupKey(groupKey);
-			entryTree.setFilename(filename);
-			entryTree.setPath(pathStr);
-			entryTree.setParentPath(parentPathStr);
-			boolean directory = ze.isDirectory();
-			if (directory) {
-				entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
+			Path path = Paths.get(zipEntryName);
+			boolean isDirectory = ze.isDirectory();
+			while (path != null) {
+				String pathStr = path.toString();
+				boolean finalIsDirectory = isDirectory;
+				map.computeIfAbsent(pathStr, key -> createEntry(groupKey, zis, finalIsDirectory, pathStr));
+				path = path.getParent();
+				isDirectory = true;
 			}
-			else {
-				entryTree.setType(TemplateEntryTypeEnum.TEMPLATE_FILE.getType());
-				// TODO 考虑文件上传时如何传递文件模板引擎类型的字段
-				entryTree.setEngineType(TemplateEngineTypeEnum.VELOCITY.getType());
-				entryTree.setFileContent(IoUtil.readBytes(zis, false));
-			}
-			// 生成一个 id
-			entryTree.setId(IdUtil.getSnowflakeNextIdStr());
-			list.add(entryTree);
 		}
 
+		List<TemplateEntryFileTree> list = new ArrayList<>(map.values());
 		List<TemplateEntryFileTree> treeNodeList = TreeUtils.buildTree(list, "/");
 		List<TemplateEntry> templateEntries = new ArrayList<>();
 		TreeUtils.forEachDFS(treeNodeList, null, (treeNode, parentTreeNode) -> {
@@ -206,6 +188,31 @@ public class TemplateEntryController {
 		templateEntryService.saveBatch(templateEntries);
 
 		return R.ok();
+	}
+
+	private static TemplateEntryFileTree createEntry(String groupKey, ZipInputStream zis, boolean isDirectory,
+			String pathStr) {
+		int lastIndexOf = pathStr.lastIndexOf("\\");
+		String filename = pathStr.substring(lastIndexOf + 1);
+		String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : "/";
+
+		TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
+		entryTree.setGroupKey(groupKey);
+		entryTree.setFilename(filename);
+		entryTree.setPath(pathStr);
+		entryTree.setParentPath(parentPathStr);
+		if (isDirectory) {
+			entryTree.setType(TemplateEntryTypeEnum.FOLDER.getType());
+		}
+		else {
+			entryTree.setType(TemplateEntryTypeEnum.TEMPLATE_FILE.getType());
+			// TODO 考虑文件上传时如何传递文件模板引擎类型的字段
+			entryTree.setEngineType(TemplateEngineTypeEnum.VELOCITY.getType());
+			entryTree.setFileContent(IoUtil.readBytes(zis, false));
+		}
+		// 生成一个 id
+		entryTree.setId(IdUtil.getSnowflakeNextIdStr());
+		return entryTree;
 	}
 
 	/**
