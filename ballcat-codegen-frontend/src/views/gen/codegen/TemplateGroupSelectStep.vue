@@ -15,7 +15,7 @@
         v-show="!hasTemplateGroup"
         status="warning"
         title="请先创建一个模板组"
-        sub-title="在项目的 /template 文件夹下有预置的模板信息，可以在创建模板组时直接导入模板信息"
+        sub-title="在项目的 /template 文件夹下有预置的模板 SQL 文件，可以选择需要的模板进行初始化"
       >
         <template #extra>
           <a-button key="console" type="primary" @click="goToTemplateGroupPage"

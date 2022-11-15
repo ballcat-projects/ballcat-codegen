@@ -23,16 +23,13 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 模板组的 sql 不在 flyway 的管理之下，用户自己按需构建模板组。
 **欢迎大家 pr 来共享自己创建的模板组**
 
-目前在根目录下的 `template` 文件夹下，提供了 ballcat-admin 的默认模板，用户可按以下步骤进行模板创建：
+目前在根目录下的 `template` 文件夹下，提供了一些默认模板的 SQL 文件，用户按需选择对应的 SQL 进行初始化：
 
-1. 选择模板管理 -> 新建，创建自己的模板组
-  ![创建模板组](./doc/create-template-group.png)
-   模板组唯一标识建议使用纯英文。  
+### Ballcat Admin 单体项目骨架 (ballcat-admin-boot)
+一键生成基于 Ballcat Admin 的单体后台管理应用
 
-
-2. 导入模板组文件以及模板组属性
-   ![导入模板组](./doc/template-group-import.png)
-    分别导入模板组文件和模板组属性后，即可正常使用
+### Ballcat 业务增删改查模板 (ballcat-bussines-crud)
+快速生成基于 ballcat framework 的增删改查的基础代码，包含前后端
 
 
 ## 如何在不启动前端项目的情况下使用
