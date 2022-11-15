@@ -56,11 +56,9 @@
   </div>
 </template>
 <script setup lang="ts">
-  import 'highlight.js/lib/common'
-  import hljsVuePlugin from '@highlightjs/vue-plugin'
-  import { defineComponent, ref, toRaw } from 'vue'
+  import { ref, toRaw } from 'vue'
+
   import { listToTree } from '@/utils/tree-util'
-  import 'highlight.js/styles/github.css'
   import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
   import type { PreviewFile } from '@/api/gen/template-entry/types'
   import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
@@ -108,9 +106,6 @@
       })
     }
   }
-
-  // 不能删除
-  const highlightjs = defineComponent(hljsVuePlugin.component)
 
   const language = ref<string>('javascript')
   const code = ref<string>('')

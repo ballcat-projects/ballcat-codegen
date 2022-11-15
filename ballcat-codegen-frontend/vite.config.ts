@@ -5,8 +5,10 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import { createStyleImportPlugin, AndDesignVueResolve } from 'vite-plugin-style-import'
 import { antdvStyleDeps } from './src/utils/resolvers'
 import { fileURLToPath, URL } from 'url'
+import { splitVendorChunkPlugin } from 'vite'
 
-const serverAddress = 'http://ballcat-admin:7777'
+const serverAddress = 'http://localhost:7777'
+// const serverAddress = 'http://ballcat-admin:7777'
 // const serverAddress = 'http://codegen.ballcat.cn'
 
 // https://vitejs.dev/config/
@@ -39,7 +41,9 @@ export default defineConfig({
           }
         }
       ]
-    })
+    }),
+    // 分块插件
+    splitVendorChunkPlugin()
   ],
   server: {
     proxy: {
@@ -85,6 +89,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'target/dist',
-    assetsDir: 'static'
+    assetsDir: 'static',
+    cssCodeSplit: false
   }
 })
