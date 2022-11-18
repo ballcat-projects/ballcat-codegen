@@ -82,7 +82,7 @@ class Editor {
                       <b>模板引擎</b>：<span style="color: red; font-weight: 600;">${this.templateEngine}</span>
                   </span>`
     }
-    return innerHTML + '<b>F11</b>：全屏，<b>Ctrl+S</b>：保存'
+    return innerHTML + '<b>F11</b>：全屏，<b>F2</b> | <b>Ctrl+S</b>：保存'
   }
 
   /**

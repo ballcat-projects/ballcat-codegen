@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 10px">
-    <h2 style="color: #e34343; text-align: center">文件编辑器 F11 全屏，CTRL+S 保存更新</h2>
+    <h2 style="color: #e34343; text-align: center">文件编辑器 F11 全屏，F2 或 CTRL+S 保存更新</h2>
     <a-descriptions title="使用说明">
       <a-descriptions-item label="文件名占位" :span="3">
         使用 {} 占位，使用时会替换为实际属性

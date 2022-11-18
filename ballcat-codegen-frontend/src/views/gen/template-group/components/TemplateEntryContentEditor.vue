@@ -117,6 +117,15 @@
           }
         },
         {
+          // 保存快捷键，防止 MOD-s 失效的问题
+          key: 'F2',
+          preventDefault: true,
+          run: () => {
+            save()
+            return true
+          }
+        },
+        {
           // 全屏/退出全屏快捷键，ESC 无法绑定
           key: 'F11',
           preventDefault: true,
