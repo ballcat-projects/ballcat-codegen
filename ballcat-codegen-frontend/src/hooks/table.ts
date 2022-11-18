@@ -47,7 +47,7 @@ export default function <RecordType>(tableOptions: TableOptions<RecordType>) {
       {},
       tableOptions.queryParam,
       {
-        current: pagination.value.current,
+        page: pagination.value.current,
         size: pagination.value.pageSize
       },
       {
