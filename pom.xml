@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>ballcat</artifactId>
 		<groupId>com.hccake</groupId>
-		<version>1.0.1</version>
+		<version>1.0.3</version>
 		<relativePath/>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -38,4 +38,26 @@
 			</snapshots>
 		</repository>
 	</repositories>
+
+	<build>
+		<!--重要 如果不设置resource 会导致application.yaml中的@@找不到pom文件中的配置-->
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.yml</include>
+					<include>**/*.yaml</include>
+				</includes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*.yml</exclude>
+					<exclude>**/*.yaml</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	</build>
 </project>
