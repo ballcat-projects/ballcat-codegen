@@ -100,7 +100,14 @@
 
   const rulesRef = reactive({
     name: [{ required: true, message: '模板组名称不能为空!' }],
-    groupKey: [{ required: true, message: '模板组标识不能为空!' }],
+    groupKey: [
+      { required: true, message: '唯一标识不能为空' },
+      {
+        pattern: /^[a-zA-Z0-9_-]+$/,
+        message: '只能由数字字母以及中划线下划线组成'
+      },
+      { min: 1, max: 50, message: '已超过最大长度 50' }
+    ],
     useTable: [{ required: true, message: '请选择使用是否需要数据表支持!' }]
   })
 

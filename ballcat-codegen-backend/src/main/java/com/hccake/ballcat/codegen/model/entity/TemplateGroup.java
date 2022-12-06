@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 /**
@@ -32,6 +35,9 @@ public class TemplateGroup {
 	/**
 	 * group 标识，唯一
 	 */
+	@NotBlank(message = "模板组标识不能为空")
+	@Pattern(regexp = "^[a-zA-Z0-9_-]*$", message = "模板组标识只能由数字字母以及中划线下划线组成")
+	@Length(min = 1, max = 50, message = "模板组标识最长50位")
 	@Schema(title = "Key")
 	private String groupKey;
 
