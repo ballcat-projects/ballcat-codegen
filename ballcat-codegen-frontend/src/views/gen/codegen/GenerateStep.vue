@@ -77,7 +77,7 @@
   const selectedEntry = ref<PreviewFile>()
 
   // vueuse copy
-  const { copy, copied } = useClipboard()
+  const { copy, copied } = useClipboard({ legacy: true })
 
   /** 代码复制 */
   const handleCopy = () => {
@@ -187,6 +187,7 @@
     .ant-modal-header {
       padding: 8px 24px !important;
     }
+
     .ant-modal-close-x {
       height: 40px;
       line-height: 40px;

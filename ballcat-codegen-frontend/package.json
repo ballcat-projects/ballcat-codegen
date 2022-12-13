@@ -20,7 +20,7 @@
     "@codemirror/theme-one-dark": "^6.0.0",
     "@codemirror/view": "^6.2.2",
     "@highlightjs/vue-plugin": "^2.1.2",
-    "@vueuse/core": "^9.1.1",
+    "@vueuse/core": "^9.6.0",
     "ant-design-vue": "^3.2.12",
     "axios": "^0.27.2",
     "codemirror": "^6.0.1",
