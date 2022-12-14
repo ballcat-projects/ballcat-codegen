@@ -1,25 +1,27 @@
-import axios from 'axios'
+import Axios from 'axios'
 import type { AxiosResponse } from 'axios'
 import notification from 'ant-design-vue/es/notification'
 import type { BAxiosError } from '@/utils/axios/types'
 import qs from 'qs'
 
 // 创建 axios 实例
-const axiosInstance = axios.create({
+const axiosInstance = Axios.create({
   baseURL: import.meta.env.BASE_URL + 'api', // api base_url
   timeout: 6000, // 请求超时时间
-  paramsSerializer: function (params: any) {
-    return qs.stringify(params, {
-      // 数组的格式化方式为重复参数，例如 { a: ['1', '2']} => a=1&a=2
-      arrayFormat: 'repeat',
-      filter: (prefix: string, value: any) => {
-        // 空字符串不进行提交
-        if (typeof value == 'string' && value.length === 0) {
-          return
+  paramsSerializer: {
+    serialize: params => {
+      return qs.stringify(params, {
+        // 数组的格式化方式为重复参数，例如 { a: ['1', '2']} => a=1&a=2
+        arrayFormat: 'repeat',
+        filter: (prefix: string, value: any) => {
+          // 空字符串不进行提交
+          if (typeof value == 'string' && value.length === 0) {
+            return
+          }
+          return value
         }
-        return value
-      }
-    })
+      })
+    }
   }
 })
 
