@@ -6,8 +6,9 @@
     "lib": ["esnext", "ES2016", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-    }
+      "@/*": ["./src/*"]
+    },
+    "allowJs": true
   },
   "references": [
     {
