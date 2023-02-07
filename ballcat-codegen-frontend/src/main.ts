@@ -13,7 +13,7 @@ const pinia = createPinia()
 app.use(pinia)
 
 // 代码高亮
-import 'highlight.js/es/common'
+import 'highlight.js/lib/common'
 import 'highlight.js/styles/github.css'
 import hljsVuePlugin from '@highlightjs/vue-plugin'
 app.use(hljsVuePlugin)
