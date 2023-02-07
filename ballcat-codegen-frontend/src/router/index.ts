@@ -16,7 +16,7 @@ const menuRouters: Array<BallcatRouteRecordRaw> = [
     component: () => import('@/views/gen/template-group/index.vue')
   },
   {
-    path: '/datasouce',
+    path: '/datasource',
     name: 'DataSource',
     meta: { title: '数据源管理' },
     component: () => import('@/views/gen/datasource-config/index.vue')
