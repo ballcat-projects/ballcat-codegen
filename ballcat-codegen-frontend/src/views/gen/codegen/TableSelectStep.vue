@@ -14,12 +14,18 @@
       <a-col :flex="5">
         <div class="database-title">数据源</div>
         <div style="overflow: auto">
-          <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
-            <a-menu-item key="master" value="master">master</a-menu-item>
-            <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
-              {{ item.name || item.value }}
-            </a-menu-item>
-          </a-menu>
+          <template v-if="dataSourceSelectData && dataSourceSelectData.length > 0">
+            <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
+              <a-menu-item v-for="item in dataSourceSelectData" :key="item.value">
+                {{ item.name || item.value }}
+              </a-menu-item>
+            </a-menu>
+          </template>
+          <template v-else>
+            <a-empty :image="false" :description="false" style="padding-top: 50px">
+              <a-button @click="openDatasourcePage"> 数据源管理 </a-button>
+            </a-empty>
+          </template>
         </div>
       </a-col>
       <a-col :flex="20">
@@ -100,6 +106,7 @@
   import { SearchOutlined, SmileTwoTone } from '@ant-design/icons-vue'
   import type { GenerateStepInstance } from './types'
   import { useGeneratorConfigStore } from '@/store'
+  import { useRouter } from 'vue-router'
 
   const generatorConfigStore = useGeneratorConfigStore()
 
@@ -142,9 +149,9 @@
     }
   ])
 
-  const selectedDsNames = ref<string[]>(['master'])
+  const selectedDsNames = ref<string[]>([''])
 
-  const dsName = ref<string>('master')
+  const dsName = ref<string>('')
 
   watch(
     () => selectedDsNames,
@@ -174,15 +181,25 @@
     clearFilters({ confirm: true })
   }
 
+  const router = useRouter()
+
+  /* 打开数据源管理页 */
+  function openDatasourcePage() {
+    const { href } = router.resolve('/datasource')
+    window.open(href, '_blank')
+  }
+
   defineExpose<GenerateStepInstance>({
     enter: () => {
       doRequest({
         request: listDatasourceConfigSelectData(),
         onSuccess: res => {
           dataSourceSelectData.value = res.data as SelectData[]
+          if (dataSourceSelectData.value && dataSourceSelectData.value.length > 0) {
+            selectedDsNames.value = [dataSourceSelectData.value[0].value]
+          }
         }
       })
-      tableState.loadData()
     },
     validate: () => {
       if (!generatorConfigStore.isUseTable) {
