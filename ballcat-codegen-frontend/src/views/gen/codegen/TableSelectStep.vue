@@ -12,7 +12,14 @@
       style="min-height: calc(100vh - 600px); align-items: stretch"
     >
       <a-col :flex="5">
-        <div class="database-title">数据源</div>
+        <div class="database-title">
+          <a-row type="flex">
+            <a-col :flex="9">数据源</a-col>
+            <a-col :flex="1">
+              <ReloadOutlined :spin="datasourceLoading" @click="loadDataSources" />
+            </a-col>
+          </a-row>
+        </div>
         <div style="overflow: auto">
           <template v-if="dataSourceSelectData && dataSourceSelectData.length > 0">
             <a-menu v-model:selectedKeys="selectedDsNames" mode="inline" :style="menuStyle">
@@ -103,7 +110,7 @@
   import useTable from '@/hooks/table'
   import { doRequest } from '@/utils/axios/request'
   import type { SelectData } from '@/api/types'
-  import { SearchOutlined, SmileTwoTone } from '@ant-design/icons-vue'
+  import { SearchOutlined, SmileTwoTone, ReloadOutlined } from '@ant-design/icons-vue'
   import type { GenerateStepInstance } from './types'
   import { useGeneratorConfigStore } from '@/store'
   import { useRouter } from 'vue-router'
@@ -189,18 +196,26 @@
     window.open(href, '_blank')
   }
 
-  defineExpose<GenerateStepInstance>({
-    enter: () => {
-      doRequest({
-        request: listDatasourceConfigSelectData(),
-        onSuccess: res => {
-          dataSourceSelectData.value = res.data as SelectData[]
-          if (dataSourceSelectData.value && dataSourceSelectData.value.length > 0) {
-            selectedDsNames.value = [dataSourceSelectData.value[0].value]
-          }
+  // 数据源加载中
+  const datasourceLoading = ref(false)
+
+  /* 加载数据源信息 */
+  function loadDataSources() {
+    datasourceLoading.value = true
+    doRequest({
+      request: listDatasourceConfigSelectData(),
+      onSuccess: res => {
+        dataSourceSelectData.value = res.data as SelectData[]
+        if (dataSourceSelectData.value && dataSourceSelectData.value.length > 0) {
+          selectedDsNames.value = [dataSourceSelectData.value[0].value]
         }
-      })
-    },
+      },
+      onFinally: () => (datasourceLoading.value = false)
+    })
+  }
+
+  defineExpose<GenerateStepInstance>({
+    enter: loadDataSources,
     validate: () => {
       if (!generatorConfigStore.isUseTable) {
         return Promise.resolve()
