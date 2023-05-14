@@ -45,7 +45,7 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 
 ##### Docker打包
 
-采用 dockerfile-maven-plugin 插件生成 docker 镜像
+采用 dockerfile-maven-plugin 插件生成 docker 镜像，所在路径 ballcat-codegen-backend/pom.xml
 
 ```
 <plugin>
@@ -70,19 +70,19 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 </plugin>
 ```
 
-执行 `mvn clean package` 打包命令时会根据后端项目根目录下的 Dockerfile 自动构建 docker 镜像。
+执行 `mvn clean package` 打包命令时会根据 ballcat-codegen-backend 根目录下的 Dockerfile 自动构建 docker 镜像。
 
 
 
 ##### docker-compose部署
 
-修改后端项目根目录下的 docker-compose.yml，配置你的数据库信息
+打开 ballcat-codegen-backend 根目录下的 docker-compose.yml文件，修改环境变量配置你的数据库连接信息
 
 ```
 version: "3.9"
 
 services:
-  datatrace:
+  codegen:
     image: ballcat-codegen:latest
     container_name: ballcat-codegen
     restart: always
