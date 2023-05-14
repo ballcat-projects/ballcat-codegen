@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  datatrace:
+  codegen:
     image: ballcat-codegen:latest
     container_name: ballcat-codegen
     restart: always
