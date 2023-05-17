@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="false">
 	<!-- spring 配置文件 -->
-	<springProperty name="log.path" source="logging.file.path" defaultValue="logs/${project.artifactId}"/>
+	<springProperty name="log.path" source="logging.file.path" defaultValue="./workspace/logs"/>
 	<!-- 活动文件的大小 -->
 	<property name="max.file.size" value="500MB"/>
 	<!-- 保留的归档文件的最大数量 -->

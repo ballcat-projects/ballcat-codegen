@@ -21,6 +21,7 @@ declare module '@vue/runtime-core' {
     ADescriptionsItem: typeof import('ant-design-vue/es')['DescriptionsItem']
     ADirectoryTree: typeof import('ant-design-vue/es')['DirectoryTree']
     ADivider: typeof import('ant-design-vue/es')['Divider']
+    AEmpty: typeof import('ant-design-vue/es')['Empty']
     AForm: typeof import('ant-design-vue/es')['Form']
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
     AInput: typeof import('ant-design-vue/es')['Input']
