@@ -1,18 +1,11 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "components.d.ts", "auto-imports.d.ts"],
-  "exclude": ["node_modules/**"],
-  "compilerOptions": {
-    "lib": ["esnext", "ES2016", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "allowJs": true
-  },
+  "files": [],
   "references": [
     {
-      "path": "./tsconfig.vite-config.json"
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
     }
   ]
 }

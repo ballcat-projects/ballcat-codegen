@@ -1,8 +1,9 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.node.json",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "include": ["vite.config.*", "./src/utils/resolvers.ts"],
   "compilerOptions": {
     "composite": true,
+    "module": "ESNext",
     "types": ["node"]
   }
 }
