@@ -31,7 +31,7 @@ export default defineConfig({
       resolvers: [
         AntDesignVueResolver({
           resolveIcons: true,
-          importStyle: 'less'
+          importStyle: false
         })
       ]
     }),
@@ -46,22 +46,9 @@ export default defineConfig({
       }
     }
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        modifyVars: {
-          'root-entry-name': 'default',
-          'primary-color': '#9f6ae0'
-        }
-      }
-    }
-  },
   optimizeDeps: {
     include: [
-      ...antdvStyleDeps,
       'ant-design-vue',
-      'ant-design-vue/es',
       '@ant-design/icons-vue',
       'axios',
       'vue',

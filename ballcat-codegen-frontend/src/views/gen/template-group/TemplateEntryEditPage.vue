@@ -3,6 +3,7 @@
     ref="entryEditor"
     size="small"
     :bordered="false"
+    :head-style="{ minHeight: '48px' }"
     :body-style="{
       padding: 0,
       height: isFullscreen ? 'calc(100vh - 49px)' : 'calc(100vh - 156px)'

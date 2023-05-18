@@ -55,7 +55,6 @@ const jumpToDoc = () => {
 </script>
 
 <style scoped lang="less">
-@import (reference) 'ant-design-vue/es/style/themes/index.less';
 @ant-prefix: ~'ballcat';
 @top-nav-header-prefix-cls: ~'@{ant-prefix}-top-nav-header';
 @pro-header-hover-bg: rgba(0, 0, 0, 0.025);
@@ -72,7 +71,7 @@ const jumpToDoc = () => {
   }
 
   &.light {
-    background-color: @component-background;
+    background-color: #fff;
     .@{top-nav-header-prefix-cls}-logo {
       h1 {
         color: #9f6ae0;
@@ -114,7 +113,7 @@ const jumpToDoc = () => {
     h1 {
       display: inline-block;
       margin: 0 0 0 8px;
-      color: @btn-primary-color;
+      color: #fff;
       font-size: 18px;
       vertical-align: top;
     }
@@ -127,32 +126,32 @@ const jumpToDoc = () => {
       border: none;
     }
   }
-}
 
-.right {
-  display: flex;
-  float: right;
-  height: 48px;
-  margin-left: auto;
-  overflow: hidden;
-  .action {
-    color: #9f6ae0;
+  &-right-content {
     display: flex;
-    align-items: center;
+    float: right;
     height: 48px;
-    padding: 0 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-    > span {
-      vertical-align: middle;
-      font-weight: 600;
-      padding-left: 5px;
-    }
-    &:hover {
-      background: @pro-header-hover-bg;
-    }
-    &:global(.opened) {
-      background: @pro-header-hover-bg;
+    margin-left: auto;
+    overflow: hidden;
+    .action {
+      color: #9f6ae0;
+      display: flex;
+      align-items: center;
+      height: 48px;
+      padding: 0 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      > span {
+        vertical-align: middle;
+        font-weight: 600;
+        padding-left: 5px;
+      }
+      &:hover {
+        background: @pro-header-hover-bg;
+      }
+      &:global(.opened) {
+        background: @pro-header-hover-bg;
+      }
     }
   }
 }

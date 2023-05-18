@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+import 'reset-css'
+
 const app = createApp(App)
 
 // 路由
