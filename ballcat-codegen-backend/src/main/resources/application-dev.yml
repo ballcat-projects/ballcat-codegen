@@ -4,3 +4,8 @@ spring:
     username: root
     password: '123456'
 
+# 生产环境时不应在配置文件中配置
+# 请启动项目时使用 --jasypt.encryptor.password=xxxx 进行传参
+jasypt:
+  encryptor:
+    password: "123456"

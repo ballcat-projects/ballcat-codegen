@@ -35,12 +35,6 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-
-## 生产环境时不应在配置文件中配置
-jasypt:
-  encryptor:
-    password: "123456"
-
 ballcat:
   openapi:
     info:
