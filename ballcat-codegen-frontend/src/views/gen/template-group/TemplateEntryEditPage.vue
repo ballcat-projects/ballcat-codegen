@@ -70,7 +70,7 @@
   /** 返回上级 */
   function handleGoBack() {
     if (editorRef.value?.checkSaveState()) {
-      exit()
+      isFullscreen.value && exit()
       emits('go-back')
       return
     }

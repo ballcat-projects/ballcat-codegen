@@ -3,9 +3,9 @@
  * @param headers
  * @returns {string}
  */
-import type { AxiosResponse, AxiosResponseHeaders } from 'axios'
+import type { AxiosResponse, AxiosResponseHeaders, RawAxiosResponseHeaders } from 'axios'
 
-function resolveFilename(headers: AxiosResponseHeaders): string {
+function resolveFilename(headers: RawAxiosResponseHeaders | AxiosResponseHeaders): string {
   const match = headers['content-disposition'].match(/filename=(.*)/)
   if (match && match.length > 0) {
     return decodeURI(match[1])

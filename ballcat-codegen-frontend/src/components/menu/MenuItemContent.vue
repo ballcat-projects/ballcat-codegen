@@ -1,7 +1,7 @@
 <template>
-  <a-menu-item :key="menuInfo.path" @click="$router.push({ path: menuInfo.path })">
-    <template v-if="icon" #icon>
-      <Icon :type="icon" />
+  <a-menu-item :key="menuInfo.path" @click="jump(menuInfo.path)">
+    <template v-if="iconType" #icon>
+      <Icon :type="iconType" />
     </template>
     {{ title }}
   </a-menu-item>
@@ -10,20 +10,21 @@
 <script setup lang="ts">
   import type { BallcatRouteRecordRaw } from '@/router/types'
   import { computed } from 'vue'
-  import type { ComputedRef } from 'vue'
+  import { useRouter } from 'vue-router'
   import Icon from '@/components/Icon/index.vue'
 
   const props = defineProps<{
     menuInfo: BallcatRouteRecordRaw
   }>()
 
-  const icon: ComputedRef<string> = computed(() => {
-    return props.menuInfo.meta?.icon || ''
-  })
+  const iconType = computed(() => props.menuInfo.meta?.icon || '')
 
-  const title: ComputedRef<string> = computed(() => {
-    return props.menuInfo.meta?.title || ''
-  })
+  const title = computed(() => props.menuInfo.meta?.title || '')
+
+  const router = useRouter()
+  function jump(path: string) {
+    router.push({ path })
+  }
 </script>
 
 <style scoped></style>

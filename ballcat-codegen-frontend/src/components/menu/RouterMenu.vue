@@ -7,7 +7,7 @@
   >
     <template v-for="item in menuData" :key="item.path">
       <template v-if="!item.children">
-        <MenuItemContent :menu-info="item" />
+        <menu-item-content :menu-info="item" />
       </template>
       <template v-else>
         <sub-menu :key="item.path" :menu-info="item" />
@@ -22,6 +22,7 @@
   import SubMenu from './SubMenu.vue'
   import { menuRouters } from '@/router'
   import type { BallcatRouteRecordRaw } from '@/router/types'
+  import MenuItemContent from '@/components/menu/MenuItemContent.vue'
 
   defineProps<{
     mode?: 'inline' | 'vertical' | 'horizontal'

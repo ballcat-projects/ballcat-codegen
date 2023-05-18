@@ -74,7 +74,7 @@
   <template-entry-edit-page
     v-show="!tableShow"
     ref="templateEntryEditPageRef"
-    @handle-property="handleProperty(editedTemplateGroup)"
+    @handle-property="handleProperty(editedTemplateGroup!)"
     @go-back="tableShow = true"
   />
 
