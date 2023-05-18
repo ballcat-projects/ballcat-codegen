@@ -49,101 +49,101 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
-  import TemplateConfigStep from './TemplateConfigStep.vue'
-  import type { GenerateStepInstance } from '@/views/gen/codegen/types'
-  import TableSelectStep from '@/views/gen/codegen/TableSelectStep.vue'
-  import GenerateStep from '@/views/gen/codegen/GenerateStep.vue'
-  import { useGeneratorConfigStore } from '@/store'
-  import TemplateGroupSelectStep from '@/views/gen/codegen/TemplateGroupSelectStep.vue'
-  import { message } from 'ant-design-vue'
-  import { generate } from '@/api/gen/generate'
-  import { remoteFileDownload } from '@/utils/file-util'
+import { computed, ref } from 'vue'
+import TemplateConfigStep from './TemplateConfigStep.vue'
+import type { GenerateStepInstance } from '@/views/gen/codegen/types'
+import TableSelectStep from '@/views/gen/codegen/TableSelectStep.vue'
+import GenerateStep from '@/views/gen/codegen/GenerateStep.vue'
+import { useGeneratorConfigStore } from '@/store'
+import TemplateGroupSelectStep from '@/views/gen/codegen/TemplateGroupSelectStep.vue'
+import { message } from 'ant-design-vue'
+import { generate } from '@/api/gen/generate'
+import { remoteFileDownload } from '@/utils/file-util'
 
-  // 进页面的时候先重置下，代码生成的配置
-  useGeneratorConfigStore().$reset()
+// 进页面的时候先重置下，代码生成的配置
+useGeneratorConfigStore().$reset()
 
-  const templateGroupSelectStepRef = ref<GenerateStepInstance>()
-  const templateConfigStepRef = ref<GenerateStepInstance>()
-  const tableSelectStepRef = ref<GenerateStepInstance>()
-  const generateStepRef = ref<GenerateStepInstance>()
+const templateGroupSelectStepRef = ref<GenerateStepInstance>()
+const templateConfigStepRef = ref<GenerateStepInstance>()
+const tableSelectStepRef = ref<GenerateStepInstance>()
+const generateStepRef = ref<GenerateStepInstance>()
 
-  interface StepInfo {
-    title: string
-    componentRef: GenerateStepInstance | undefined
+interface StepInfo {
+  title: string
+  componentRef: GenerateStepInstance | undefined
+}
+
+const stepInfos = computed<StepInfo[]>(() => [
+  {
+    title: '模板选择',
+    componentRef: templateGroupSelectStepRef.value
+  },
+  {
+    title: '模板配置',
+    componentRef: templateConfigStepRef.value
+  },
+  {
+    title: '数据源选择',
+    componentRef: tableSelectStepRef.value
+  },
+  {
+    title: '代码生成',
+    componentRef: generateStepRef.value
   }
+])
 
-  const stepInfos = computed<StepInfo[]>(() => [
-    {
-      title: '模板选择',
-      componentRef: templateGroupSelectStepRef.value
-    },
-    {
-      title: '模板配置',
-      componentRef: templateConfigStepRef.value
-    },
-    {
-      title: '数据源选择',
-      componentRef: tableSelectStepRef.value
-    },
-    {
-      title: '代码生成',
-      componentRef: generateStepRef.value
-    }
-  ])
+const currentStepNumber = ref<number>(0)
 
-  const currentStepNumber = ref<number>(0)
-
-  const next = () => {
-    const stepInfo = stepInfos.value[currentStepNumber.value]
-    if (stepInfo.componentRef?.validate) {
-      stepInfo.componentRef
-        ?.validate()
-        .then(() => {
-          enterNext(stepInfo)
-        })
-        .catch(e => {
-          message.error(e.message || '请将当前页面选项填写完整')
-        })
-    } else {
-      enterNext(stepInfo)
-    }
-  }
-  const prev = () => {
-    currentStepNumber.value--
-  }
-
-  function enterNext(stepInfo: StepInfo) {
-    stepInfo.componentRef?.next?.()
-    const nextStepNumber = currentStepNumber.value + 1
-    const nextStepInfo = stepInfos.value[nextStepNumber]
-    nextStepInfo.componentRef?.enter?.()
-    currentStepNumber.value++
-  }
-
-  function download() {
-    const generatorConfigStore = useGeneratorConfigStore()
-    generate(generatorConfigStore.dsName, generatorConfigStore.options)
-      .then(response => {
-        remoteFileDownload(response, 'BallCat-CodeGen.zip')
+const next = () => {
+  const stepInfo = stepInfos.value[currentStepNumber.value]
+  if (stepInfo.componentRef?.validate) {
+    stepInfo.componentRef
+      ?.validate()
+      .then(() => {
+        enterNext(stepInfo)
       })
-      .catch(() => {
-        message.error('代码生成异常')
+      .catch(e => {
+        message.error(e.message || '请将当前页面选项填写完整')
       })
+  } else {
+    enterNext(stepInfo)
   }
+}
+const prev = () => {
+  currentStepNumber.value--
+}
+
+function enterNext(stepInfo: StepInfo) {
+  stepInfo.componentRef?.next?.()
+  const nextStepNumber = currentStepNumber.value + 1
+  const nextStepInfo = stepInfos.value[nextStepNumber]
+  nextStepInfo.componentRef?.enter?.()
+  currentStepNumber.value++
+}
+
+function download() {
+  const generatorConfigStore = useGeneratorConfigStore()
+  generate(generatorConfigStore.dsName, generatorConfigStore.options)
+    .then(response => {
+      remoteFileDownload(response, 'BallCat-CodeGen.zip')
+    })
+    .catch(() => {
+      message.error('代码生成异常')
+    })
+}
 </script>
 
 <style scoped lang="less">
-  .card-class {
-    display: flex;
-    flex-direction: column;
-  }
-  .steps-title {
-    width: 60%;
-    margin: auto;
-    margin-bottom: 24px;
-  }
-  .steps-action {
-    margin-top: 24px;
-  }
+.card-class {
+  display: flex;
+  flex-direction: column;
+}
+.steps-title {
+  width: 60%;
+  margin: auto;
+  margin-bottom: 24px;
+}
+.steps-action {
+  margin-top: 24px;
+}
 </style>

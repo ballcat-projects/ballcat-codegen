@@ -40,97 +40,97 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref } from 'vue'
-  import useTable from '@/hooks/table'
-  import { doRequest } from '@/utils/axios/request'
-  import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
-  import DataSourceConfigEditModal from '@/views/gen/datasource-config/DataSourceConfigEditModal.vue'
-  import AddButton from '@/components/button/AddButton.vue'
+import { reactive, ref } from 'vue'
+import useTable from '@/hooks/table'
+import { doRequest } from '@/utils/axios/request'
+import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
+import DataSourceConfigEditModal from '@/views/gen/datasource-config/DataSourceConfigEditModal.vue'
+import AddButton from '@/components/button/AddButton.vue'
 
-  import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
-  import type { DataSourceConfigEditModalInstance } from './types'
+import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
+import type { DataSourceConfigEditModalInstance } from './types'
 
-  // 编辑弹窗
-  const editModal = ref<DataSourceConfigEditModalInstance>()
+// 编辑弹窗
+const editModal = ref<DataSourceConfigEditModalInstance>()
 
-  // 表格列设置
-  const columns = [
-    {
-      title: '#',
-      dataIndex: 'id',
-      width: '50px'
-    },
-    {
-      title: '标题',
-      dataIndex: 'title',
-      ellipsis: true,
-      width: '100px'
-    },
-    {
-      title: 'dsKey',
-      dataIndex: 'dsKey',
-      ellipsis: true,
-      width: '100px'
-    },
-    {
-      title: '用户名',
-      dataIndex: 'username',
-      width: '80px'
-    },
-    {
-      title: '密码',
-      dataIndex: 'password',
-      ellipsis: true,
-      width: '200px'
-    },
-    {
-      title: '连接地址',
-      dataIndex: 'url',
-      ellipsis: true
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: '150px',
-      sorter: true
-    },
-    {
-      title: '操作',
-      dataIndex: 'action',
-      width: 120,
-      scopedSlots: { customRender: 'action-slot' }
+// 表格列设置
+const columns = [
+  {
+    title: '#',
+    dataIndex: 'id',
+    width: '50px'
+  },
+  {
+    title: '标题',
+    dataIndex: 'title',
+    ellipsis: true,
+    width: '100px'
+  },
+  {
+    title: 'dsKey',
+    dataIndex: 'dsKey',
+    ellipsis: true,
+    width: '100px'
+  },
+  {
+    title: '用户名',
+    dataIndex: 'username',
+    width: '80px'
+  },
+  {
+    title: '密码',
+    dataIndex: 'password',
+    ellipsis: true,
+    width: '200px'
+  },
+  {
+    title: '连接地址',
+    dataIndex: 'url',
+    ellipsis: true
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    width: '150px',
+    sorter: true
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 120,
+    scopedSlots: { customRender: 'action-slot' }
+  }
+]
+
+// 查询参数
+const queryParam = reactive<DataSourcePageParam>({})
+// 数据表格
+const tableState = useTable<DataSourceConfig>({
+  pageRequest: queryDatasourceConfigPage,
+  queryParam: queryParam
+})
+const { dataSource, pagination, loading } = tableState
+// 立刻加载数据
+tableState.loadData()
+
+/* 新建数据源配置 */
+const handleAdd = () => {
+  editModal.value?.add()
+}
+
+/* 编辑数据源配置 */
+const handleEdit = (record: DataSourceConfig) => {
+  editModal.value?.update(record)
+}
+
+/* 删除数据源配置 */
+const handleDel = (record: DataSourceConfig) => {
+  doRequest<void>({
+    request: removeDatasourceConfig(record.id),
+    successMessage: '删除成功！',
+    onSuccess() {
+      tableState.loadData()
     }
-  ]
-
-  // 查询参数
-  const queryParam = reactive<DataSourcePageParam>({})
-  // 数据表格
-  let tableState = useTable<DataSourceConfig>({
-    pageRequest: queryDatasourceConfigPage,
-    queryParam: queryParam
   })
-  const { dataSource, pagination, loading } = tableState
-  // 立刻加载数据
-  tableState.loadData()
-
-  /* 新建数据源配置 */
-  const handleAdd = () => {
-    editModal.value?.add()
-  }
-
-  /* 编辑数据源配置 */
-  const handleEdit = (record: DataSourceConfig) => {
-    editModal.value?.update(record)
-  }
-
-  /* 删除数据源配置 */
-  const handleDel = (record: DataSourceConfig) => {
-    doRequest<void>({
-      request: removeDatasourceConfig(record.id),
-      successMessage: '删除成功！',
-      onSuccess() {
-        tableState.loadData()
-      }
-    })
-  }
+}
 </script>

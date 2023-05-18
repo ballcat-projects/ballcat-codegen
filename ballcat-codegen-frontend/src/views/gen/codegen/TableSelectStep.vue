@@ -100,147 +100,147 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, reactive, ref, watch } from 'vue'
-  import type { CSSProperties } from 'vue'
-  import { queryTableInfoPage } from '@/api/gen/generate'
-  import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
-  import type { ColumnProps } from 'ant-design-vue/es/table'
-  import type { TableInfo } from '@/api/gen/generate/types'
-  import type { TableInfoPageParam } from '@/api/gen/generate/types'
-  import useTable from '@/hooks/table'
-  import { doRequest } from '@/utils/axios/request'
-  import type { SelectData } from '@/api/types'
-  import { SearchOutlined, SmileTwoTone, ReloadOutlined } from '@ant-design/icons-vue'
-  import type { GenerateStepInstance } from './types'
-  import { useGeneratorConfigStore } from '@/store'
-  import { useRouter } from 'vue-router'
+import { onMounted, reactive, ref, watch } from 'vue'
+import type { CSSProperties } from 'vue'
+import { queryTableInfoPage } from '@/api/gen/generate'
+import { listDatasourceConfigSelectData } from '@/api/gen/datasource-config'
+import type { ColumnProps } from 'ant-design-vue/es/table'
+import type { TableInfo } from '@/api/gen/generate/types'
+import type { TableInfoPageParam } from '@/api/gen/generate/types'
+import useTable from '@/hooks/table'
+import { doRequest } from '@/utils/axios/request'
+import type { SelectData } from '@/api/types'
+import { SearchOutlined, SmileTwoTone, ReloadOutlined } from '@ant-design/icons-vue'
+import type { GenerateStepInstance } from './types'
+import { useGeneratorConfigStore } from '@/store'
+import { useRouter } from 'vue-router'
 
-  const generatorConfigStore = useGeneratorConfigStore()
+const generatorConfigStore = useGeneratorConfigStore()
 
-  // 处理数据源菜单的高度问题，保持和表格同高
-  const menuStyle: CSSProperties = reactive({
-    paddingRight: '1px',
-    height: '1px',
-    borderRadius: '10px'
+// 处理数据源菜单的高度问题，保持和表格同高
+const menuStyle: CSSProperties = reactive({
+  paddingRight: '1px',
+  height: '1px',
+  borderRadius: '10px'
+})
+const tableColRef = ref()
+onMounted(() => {
+  // 利用 ResizeObserver，监听 dom size 修改
+  const resizeObserver = new ResizeObserver(mutations => {
+    const tableColHeight = Math.max(548, mutations[0].contentRect.height)
+    menuStyle.height = tableColHeight + 'px'
   })
-  const tableColRef = ref()
-  onMounted(() => {
-    // 利用 ResizeObserver，监听 dom size 修改
-    const resizeObserver = new ResizeObserver(mutations => {
-      let tableColHeight = Math.max(548, mutations[0].contentRect.height)
-      menuStyle.height = tableColHeight + 'px'
-    })
-    resizeObserver.observe(tableColRef.value)
-  })
+  resizeObserver.observe(tableColRef.value)
+})
 
-  // 表格列配置
-  const columns = ref<ColumnProps[]>([
-    {
-      title: '表名',
-      dataIndex: 'tableName',
-      customFilterDropdown: true
-    },
-    {
-      title: 'Engine',
-      dataIndex: 'engine'
-    },
-    {
-      title: '表备注',
-      dataIndex: 'tableComment'
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: 150,
-      sorter: true
-    }
-  ])
-
-  const selectedDsNames = ref<string[]>([''])
-
-  const dsName = ref<string>('')
-
-  watch(
-    () => selectedDsNames,
-    () => {
-      dsName.value = selectedDsNames.value[0]
-      tableState.loadData()
-    },
-    { deep: true }
-  )
-
-  let tableState = useTable<TableInfo>({
-    pageRequest: (pageParams: TableInfoPageParam) => {
-      return queryTableInfoPage(dsName.value, pageParams)
-    }
-  })
-  const { dataSource, pagination, loading } = tableState
-
-  const dataSourceSelectData = ref<SelectData[]>([])
-
-  // @ts-ignore
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm()
+// 表格列配置
+const columns = ref<ColumnProps[]>([
+  {
+    title: '表名',
+    dataIndex: 'tableName',
+    customFilterDropdown: true
+  },
+  {
+    title: 'Engine',
+    dataIndex: 'engine'
+  },
+  {
+    title: '表备注',
+    dataIndex: 'tableComment'
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    width: 150,
+    sorter: true
   }
+])
 
-  // @ts-ignore
-  const handleReset = clearFilters => {
-    clearFilters({ confirm: true })
+const selectedDsNames = ref<string[]>([''])
+
+const dsName = ref<string>('')
+
+watch(
+  () => selectedDsNames,
+  () => {
+    dsName.value = selectedDsNames.value[0]
+    tableState.loadData()
+  },
+  { deep: true }
+)
+
+const tableState = useTable<TableInfo>({
+  pageRequest: (pageParams: TableInfoPageParam) => {
+    return queryTableInfoPage(dsName.value, pageParams)
   }
+})
+const { dataSource, pagination, loading } = tableState
 
-  const router = useRouter()
+const dataSourceSelectData = ref<SelectData[]>([])
 
-  /* 打开数据源管理页 */
-  function openDatasourcePage() {
-    const { href } = router.resolve('/datasource')
-    window.open(href, '_blank')
-  }
+// @ts-ignore
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm()
+}
 
-  // 数据源加载中
-  const datasourceLoading = ref(false)
+// @ts-ignore
+const handleReset = clearFilters => {
+  clearFilters({ confirm: true })
+}
 
-  /* 加载数据源信息 */
-  function loadDataSources() {
-    datasourceLoading.value = true
-    doRequest({
-      request: listDatasourceConfigSelectData(),
-      onSuccess: res => {
-        dataSourceSelectData.value = res.data as SelectData[]
-        if (dataSourceSelectData.value && dataSourceSelectData.value.length > 0) {
-          selectedDsNames.value = [dataSourceSelectData.value[0].value]
-        }
-      },
-      onFinally: () => (datasourceLoading.value = false)
-    })
-  }
+const router = useRouter()
 
-  defineExpose<GenerateStepInstance>({
-    enter: loadDataSources,
-    validate: () => {
-      if (!generatorConfigStore.isUseTable) {
-        return Promise.resolve()
+/* 打开数据源管理页 */
+function openDatasourcePage() {
+  const { href } = router.resolve('/datasource')
+  window.open(href, '_blank')
+}
+
+// 数据源加载中
+const datasourceLoading = ref(false)
+
+/* 加载数据源信息 */
+function loadDataSources() {
+  datasourceLoading.value = true
+  doRequest({
+    request: listDatasourceConfigSelectData(),
+    onSuccess: res => {
+      dataSourceSelectData.value = res.data as SelectData[]
+      if (dataSourceSelectData.value && dataSourceSelectData.value.length > 0) {
+        selectedDsNames.value = [dataSourceSelectData.value[0].value]
       }
-      if (tableState.selectedRowKeys.value && tableState.selectedRowKeys.value.length > 0) {
-        return Promise.resolve()
-      }
-      return Promise.reject({ message: '请至少选择一张数据表' })
     },
-    next: () => {
-      generatorConfigStore.dsName = dsName.value
-      generatorConfigStore.options.tableNames = tableState.selectedRowKeys.value as string[]
-    }
+    onFinally: () => (datasourceLoading.value = false)
   })
+}
+
+defineExpose<GenerateStepInstance>({
+  enter: loadDataSources,
+  validate: () => {
+    if (!generatorConfigStore.isUseTable) {
+      return Promise.resolve()
+    }
+    if (tableState.selectedRowKeys.value && tableState.selectedRowKeys.value.length > 0) {
+      return Promise.resolve()
+    }
+    return Promise.reject({ message: '请至少选择一张数据表' })
+  },
+  next: () => {
+    generatorConfigStore.dsName = dsName.value
+    generatorConfigStore.options.tableNames = tableState.selectedRowKeys.value as string[]
+  }
+})
 </script>
 
 <style scoped lang="less">
-  .database-title {
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 31px;
-    padding: 8px 0 8px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    border-right: 1px solid #f0f0f0;
-    width: 100%;
-  }
+.database-title {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 31px;
+  padding: 8px 0 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  width: 100%;
+}
 </style>

@@ -35,104 +35,104 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import useTable from '@/hooks/table'
-  import { queryTemplatePropertyPage, removeTemplateProperty } from '@/api/gen/template-property'
-  import { doRequest } from '@/utils/axios/request'
-  import type { TemplateGroup } from '@/api/gen/template-group/types'
-  import type { TemplateProperty } from '@/api/gen/template-property/types'
-  import type { PageParam } from '@/api/types'
+import { ref } from 'vue'
+import useTable from '@/hooks/table'
+import { queryTemplatePropertyPage, removeTemplateProperty } from '@/api/gen/template-property'
+import { doRequest } from '@/utils/axios/request'
+import type { TemplateGroup } from '@/api/gen/template-group/types'
+import type { TemplateProperty } from '@/api/gen/template-property/types'
+import type { PageParam } from '@/api/types'
 
-  const emits = defineEmits<{
-    // 提交完成事件
-    (e: 'create'): void
-    (e: 'update', record: TemplateProperty): void
-  }>()
+const emits = defineEmits<{
+  // 提交完成事件
+  (e: 'create'): void
+  (e: 'update', record: TemplateProperty): void
+}>()
 
-  const columns = [
-    {
-      title: '标题',
-      dataIndex: 'title'
-    },
-    {
-      title: '属性键',
-      dataIndex: 'propKey'
-    },
-    {
-      title: '默认值',
-      dataIndex: 'defaultValue'
-    },
-    {
-      title: '组件类型',
-      dataIndex: 'componentType',
-      width: 80
-    },
-    {
-      title: '必填',
-      dataIndex: 'required',
-      width: 60
-    },
-    {
-      title: '排序',
-      dataIndex: 'orderValue',
-      width: 60
-    },
-    {
-      title: '备注信息',
-      dataIndex: 'remarks',
-      width: 180
-    },
-    {
-      title: '操作',
-      dataIndex: 'action',
-      width: 100
-    }
-  ]
-
-  // 所属模板组标识
-  const templateGroupKey = ref<string>()
-  // 数据表格
-  let tableState = useTable<TemplateProperty>({
-    pageRequest: (query: PageParam) => {
-      const params = Object.assign({ groupKey: templateGroupKey.value, sort: 'orderValue' }, query)
-      return queryTemplatePropertyPage(params)
-    }
-  })
-  const { dataSource, pagination, loading } = tableState
-
-  function handleCreate() {
-    emits('create')
+const columns = [
+  {
+    title: '标题',
+    dataIndex: 'title'
+  },
+  {
+    title: '属性键',
+    dataIndex: 'propKey'
+  },
+  {
+    title: '默认值',
+    dataIndex: 'defaultValue'
+  },
+  {
+    title: '组件类型',
+    dataIndex: 'componentType',
+    width: 80
+  },
+  {
+    title: '必填',
+    dataIndex: 'required',
+    width: 60
+  },
+  {
+    title: '排序',
+    dataIndex: 'orderValue',
+    width: 60
+  },
+  {
+    title: '备注信息',
+    dataIndex: 'remarks',
+    width: 180
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    width: 100
   }
+]
 
-  function handleUpdate(record: TemplateProperty) {
-    emits('update', record)
+// 所属模板组标识
+const templateGroupKey = ref<string>()
+// 数据表格
+const tableState = useTable<TemplateProperty>({
+  pageRequest: (query: PageParam) => {
+    const params = Object.assign({ groupKey: templateGroupKey.value, sort: 'orderValue' }, query)
+    return queryTemplatePropertyPage(params)
   }
+})
+const { dataSource, pagination, loading } = tableState
 
-  function handleRemove(id: number) {
-    doRequest({
-      request: removeTemplateProperty(id),
-      successMessage: '删除成功',
-      onSuccess() {
-        tableState.reloadTable(false)
-      }
-    })
-  }
+function handleCreate() {
+  emits('create')
+}
 
-  defineExpose({
-    load(templateGroup: TemplateGroup) {
-      templateGroupKey.value = templateGroup.groupKey
-      tableState.loadData()
-    },
-    reloadTable() {
-      tableState.loadData()
+function handleUpdate(record: TemplateProperty) {
+  emits('update', record)
+}
+
+function handleRemove(id: number) {
+  doRequest({
+    request: removeTemplateProperty(id),
+    successMessage: '删除成功',
+    onSuccess() {
+      tableState.reloadTable(false)
     }
   })
+}
+
+defineExpose({
+  load(templateGroup: TemplateGroup) {
+    templateGroupKey.value = templateGroup.groupKey
+    tableState.loadData()
+  },
+  reloadTable() {
+    tableState.loadData()
+  }
+})
 </script>
 
 <script lang="ts">
-  export default {
-    name: 'TemplatePropertyEditPage'
-  }
+export default {
+  name: 'TemplatePropertyEditPage'
+}
 </script>
 
 <style scoped></style>

@@ -45,113 +45,113 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, reactive, ref } from 'vue'
-  import { addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
-  import { copyProperties } from '@/utils/bean-util'
-  import { usePopup } from '@/hooks/popup'
-  // 类型导入
-  import type { DataSourceConfig } from '@/api/gen/datasource-config/types'
-  import type { DataSourceConfigEditModalInstance } from './types'
-  import { useForm } from 'ant-design-vue/es/form'
-  import { doRequest } from '@/utils/axios/request'
+import { computed, reactive, ref } from 'vue'
+import { addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
+import { copyProperties } from '@/utils/bean-util'
+import { usePopup } from '@/hooks/popup'
+// 类型导入
+import type { DataSourceConfig } from '@/api/gen/datasource-config/types'
+import type { DataSourceConfigEditModalInstance } from './types'
+import { useForm } from 'ant-design-vue/es/form'
+import { doRequest } from '@/utils/axios/request'
 
-  // 定义事件
-  let emits = defineEmits<{
-    // 提交完成事件
-    (e: 'done'): void
-  }>()
+// 定义事件
+const emits = defineEmits<{
+  // 提交完成事件
+  (e: 'done'): void
+}>()
 
-  const title = ref('')
+const title = ref('')
 
-  // 是否是更新
-  const isUpdate = ref(false)
+// 是否是更新
+const isUpdate = ref(false)
 
-  // 弹窗显示隐藏
-  const { visible, handleOpen, handleClose } = usePopup()
+// 弹窗显示隐藏
+const { visible, handleOpen, handleClose } = usePopup()
 
-  // 表单的布局设置
-  const labelCol = {
-    xs: { span: 12 },
-    sm: { span: 24 },
-    lg: { span: 5 }
+// 表单的布局设置
+const labelCol = {
+  xs: { span: 12 },
+  sm: { span: 24 },
+  lg: { span: 5 }
+}
+const wrapperCol = {
+  xs: { span: 12 },
+  sm: { span: 24 },
+  lg: { span: 18 }
+}
+
+// 表单绑定数据
+const modelRef = reactive<DataSourceConfig & { pass?: string }>({
+  id: undefined,
+  pass: '',
+  title: '',
+  dsKey: '',
+  username: '',
+  password: '',
+  url: ''
+})
+
+// 表单校验规则
+const rulesRef = computed(() => {
+  return {
+    title: [{ required: true, message: '请输入数据源标题！' }],
+    dsKey: [{ required: true, message: '请输入数据源dsKey!' }, { validator: validRule }],
+    username: [{ required: true, message: '请输入用户名!' }],
+    pass: isUpdate.value ? [] : [{ required: true, message: '请输入密码!' }],
+    url: [{ required: true, message: '请输入连接地址!' }]
   }
-  const wrapperCol = {
-    xs: { span: 12 },
-    sm: { span: 24 },
-    lg: { span: 18 }
-  }
+})
 
-  // 表单绑定数据
-  const modelRef = reactive<DataSourceConfig & { pass?: string }>({
-    id: undefined,
-    pass: '',
-    title: '',
-    dsKey: '',
-    username: '',
-    password: '',
-    url: ''
-  })
-
-  // 表单校验规则
-  const rulesRef = computed(() => {
-    return {
-      title: [{ required: true, message: '请输入数据源标题！' }],
-      dsKey: [{ required: true, message: '请输入数据源dsKey!' }, { validator: validRule }],
-      username: [{ required: true, message: '请输入用户名!' }],
-      pass: isUpdate.value ? [] : [{ required: true, message: '请输入密码!' }],
-      url: [{ required: true, message: '请输入连接地址!' }]
+const validRule = (rule: any, value: string) => {
+  if (value) {
+    if (/[^\a-\z\A-\Z0-9\_-]/g.test(value)) {
+      return Promise.reject('只能输入字母、字母、下划线和中划线')
     }
-  })
-
-  const validRule = (rule: any, value: string) => {
-    if (value) {
-      if (/[^\a-\z\A-\Z0-9\_-]/g.test(value)) {
-        return Promise.reject('只能输入字母、字母、下划线和中划线')
-      }
-    }
-    return Promise.resolve()
   }
+  return Promise.resolve()
+}
 
-  // 提交按钮的 loading 状态控制
-  const submitLoading = ref<boolean>(false)
+// 提交按钮的 loading 状态控制
+const submitLoading = ref<boolean>(false)
 
-  const { validate, validateInfos, resetFields } = useForm(modelRef, rulesRef)
+const { validate, validateInfos, resetFields } = useForm(modelRef, rulesRef)
 
-  /* 表单提交 */
-  function handleSubmit() {
-    validate().then(() => {
-      const reqFunction = isUpdate.value ? updateDatasourceConfig : addDatasourceConfig
-      delete modelRef.password
-      if (!isUpdate.value) {
-        delete modelRef.id
+/* 表单提交 */
+function handleSubmit() {
+  validate().then(() => {
+    const reqFunction = isUpdate.value ? updateDatasourceConfig : addDatasourceConfig
+    delete modelRef.password
+    if (!isUpdate.value) {
+      delete modelRef.id
+    }
+    doRequest({
+      request: reqFunction(modelRef),
+      successMessage: '保存成功！',
+      onSuccess() {
+        emits('done')
+        handleClose()
       }
-      doRequest({
-        request: reqFunction(modelRef),
-        successMessage: '保存成功！',
-        onSuccess() {
-          emits('done')
-          handleClose()
-        }
-      })
     })
-  }
-
-  const add = () => {
-    isUpdate.value = false
-    title.value = '新建数据源'
-    resetFields()
-    handleOpen()
-  }
-  const update = (record: DataSourceConfig) => {
-    isUpdate.value = true
-    title.value = '修改数据源'
-    resetFields()
-    handleOpen()
-    copyProperties(modelRef, record)
-  }
-
-  defineExpose<DataSourceConfigEditModalInstance>({
-    add,
-    update
   })
+}
+
+const add = () => {
+  isUpdate.value = false
+  title.value = '新建数据源'
+  resetFields()
+  handleOpen()
+}
+const update = (record: DataSourceConfig) => {
+  isUpdate.value = true
+  title.value = '修改数据源'
+  resetFields()
+  handleOpen()
+  copyProperties(modelRef, record)
+}
+
+defineExpose<DataSourceConfigEditModalInstance>({
+  add,
+  update
+})
 </script>

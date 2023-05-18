@@ -17,49 +17,49 @@
 </template>
 
 <script setup lang="ts">
-  import { useRoute } from 'vue-router'
-  import { ref, watchEffect } from 'vue'
-  import SubMenu from './SubMenu.vue'
-  import { menuRouters } from '@/router'
-  import type { BallcatRouteRecordRaw } from '@/router/types'
-  import MenuItemContent from '@/components/menu/MenuItemContent.vue'
+import { useRoute } from 'vue-router'
+import { ref, watchEffect } from 'vue'
+import SubMenu from './SubMenu.vue'
+import { menuRouters } from '@/router'
+import type { BallcatRouteRecordRaw } from '@/router/types'
+import MenuItemContent from '@/components/menu/MenuItemContent.vue'
 
-  defineProps<{
-    mode?: 'inline' | 'vertical' | 'horizontal'
-    theme?: 'dark' | 'light'
-  }>()
+defineProps<{
+  mode?: 'inline' | 'vertical' | 'horizontal'
+  theme?: 'dark' | 'light'
+}>()
 
-  const openKeysMap = new Map()
+const openKeysMap = new Map()
 
-  const getMenuData = function (
-    routes: Array<BallcatRouteRecordRaw> = [],
-    parentKeys: Array<string> = []
-  ) {
-    const menuData: Array<BallcatRouteRecordRaw> = []
-    routes.forEach(item => {
-      if (item.meta && !item.meta.hiddenInMenu) {
-        const newItem = { ...item }
-        delete newItem.children
-        openKeysMap.set(item.path, parentKeys)
-        if (item.children && !item.meta.hiddenInMenu) {
-          newItem.children = getMenuData(item.children, [...parentKeys, item.path])
-        }
-        menuData.push(newItem)
+const getMenuData = function (
+  routes: Array<BallcatRouteRecordRaw> = [],
+  parentKeys: Array<string> = []
+) {
+  const menuData: Array<BallcatRouteRecordRaw> = []
+  routes.forEach(item => {
+    if (item.meta && !item.meta.hiddenInMenu) {
+      const newItem = { ...item }
+      delete newItem.children
+      openKeysMap.set(item.path, parentKeys)
+      if (item.children && !item.meta.hiddenInMenu) {
+        newItem.children = getMenuData(item.children, [...parentKeys, item.path])
       }
-    })
-    return menuData
-  }
-
-  const menuData = getMenuData(menuRouters)
-
-  const route = useRoute()
-
-  const selectedKeys = ref<string[]>()
-
-  const openKeys = ref<string[]>(['/gen'])
-
-  watchEffect(() => {
-    const routePath: string = route.path
-    selectedKeys.value = [routePath]
+      menuData.push(newItem)
+    }
   })
+  return menuData
+}
+
+const menuData = getMenuData(menuRouters)
+
+const route = useRoute()
+
+const selectedKeys = ref<string[]>()
+
+const openKeys = ref<string[]>(['/gen'])
+
+watchEffect(() => {
+  const routePath: string = route.path
+  selectedKeys.value = [routePath]
+})
 </script>

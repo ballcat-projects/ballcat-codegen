@@ -95,104 +95,104 @@
 </template>
 
 <script setup lang="ts">
-  import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
-  import { computed, reactive, ref, toRaw } from 'vue'
-  import type { FormInstance } from 'ant-design-vue'
-  import type { TemplateProperty } from '@/api/gen/template-property/types'
-  import { ComponentType } from '@/api/gen/template-property/types'
-  import { copyProperties } from '@/utils/bean-util'
-  import { addTemplateProperty, updateTemplateProperty } from '@/api/gen/template-property'
-  import { doRequest } from '@/utils/axios/request'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { computed, reactive, ref, toRaw } from 'vue'
+import type { FormInstance } from 'ant-design-vue'
+import type { TemplateProperty } from '@/api/gen/template-property/types'
+import { ComponentType } from '@/api/gen/template-property/types'
+import { copyProperties } from '@/utils/bean-util'
+import { addTemplateProperty, updateTemplateProperty } from '@/api/gen/template-property'
+import { doRequest } from '@/utils/axios/request'
 
-  const emits = defineEmits<{
-    (e: 'back-page', reloadTable: boolean): void
-  }>()
+const emits = defineEmits<{
+  (e: 'back-page', reloadTable: boolean): void
+}>()
 
-  interface Option {
-    name: string
-    value: string
+interface Option {
+  name: string
+  value: string
+}
+
+const loading = ref(false)
+
+const formRef = ref<FormInstance>()
+
+const formAction = ref('CREATE')
+const isCreate = computed(() => formAction.value === 'CREATE')
+const isUpdate = computed(() => formAction.value === 'UPDATE')
+
+const modelRef = reactive<TemplateProperty>({
+  id: undefined,
+  groupKey: '',
+  title: '',
+  propKey: '',
+  defaultValue: '',
+  required: 0,
+  componentOptions: [],
+  componentType: ComponentType.INPUT,
+  orderValue: 0,
+  remarks: ''
+})
+
+const removeOption = (item: Option) => {
+  const index = modelRef.componentOptions.indexOf(item)
+  if (index !== -1) {
+    modelRef.componentOptions.splice(index, 1)
   }
+}
 
-  const loading = ref(false)
-
-  const formRef = ref<FormInstance>()
-
-  const formAction = ref('CREATE')
-  const isCreate = computed(() => formAction.value === 'CREATE')
-  const isUpdate = computed(() => formAction.value === 'UPDATE')
-
-  const modelRef = reactive<TemplateProperty>({
-    id: undefined,
-    groupKey: '',
-    title: '',
-    propKey: '',
-    defaultValue: '',
-    required: 0,
-    componentOptions: [],
-    componentType: ComponentType.INPUT,
-    orderValue: 0,
-    remarks: ''
+const addOption = () => {
+  modelRef.componentOptions.push({
+    name: '',
+    value: ''
   })
+}
 
-  const removeOption = (item: Option) => {
-    let index = modelRef.componentOptions.indexOf(item)
-    if (index !== -1) {
-      modelRef.componentOptions.splice(index, 1)
-    }
-  }
+function resetForm() {
+  formRef.value?.resetFields()
+  modelRef.componentOptions = []
+}
 
-  const addOption = () => {
-    modelRef.componentOptions.push({
-      name: '',
-      value: ''
-    })
-  }
-
-  function resetForm() {
-    formRef.value?.resetFields()
-    modelRef.componentOptions = []
-  }
-
-  function submitForm() {
-    loading.value = true
-    const request = isCreate.value
-      ? addTemplateProperty(toRaw(modelRef))
-      : updateTemplateProperty(toRaw(modelRef))
-    doRequest({
-      request: request,
-      successMessage: isCreate.value ? '新建成功！' : '修改成功！',
-      onSuccess: () => backToPage(true),
-      onFinally: () => (loading.value = false)
-    })
-  }
-
-  function handleCancel() {
-    backToPage(false)
-  }
-
-  function backToPage(reloadTable: boolean) {
-    emits('back-page', reloadTable)
-  }
-
-  defineExpose({
-    create(groupKey: string) {
-      formAction.value = 'CREATE'
-      resetForm()
-      modelRef.id = undefined
-      modelRef.groupKey = groupKey
-    },
-    update: (record: TemplateProperty) => {
-      formAction.value = 'UPDATE'
-      resetForm()
-      copyProperties(modelRef, record)
-    }
+function submitForm() {
+  loading.value = true
+  const request = isCreate.value
+    ? addTemplateProperty(toRaw(modelRef))
+    : updateTemplateProperty(toRaw(modelRef))
+  doRequest({
+    request: request,
+    successMessage: isCreate.value ? '新建成功！' : '修改成功！',
+    onSuccess: () => backToPage(true),
+    onFinally: () => (loading.value = false)
   })
+}
+
+function handleCancel() {
+  backToPage(false)
+}
+
+function backToPage(reloadTable: boolean) {
+  emits('back-page', reloadTable)
+}
+
+defineExpose({
+  create(groupKey: string) {
+    formAction.value = 'CREATE'
+    resetForm()
+    modelRef.id = undefined
+    modelRef.groupKey = groupKey
+  },
+  update: (record: TemplateProperty) => {
+    formAction.value = 'UPDATE'
+    resetForm()
+    copyProperties(modelRef, record)
+  }
+})
 </script>
 
 <script lang="ts">
-  export default {
-    name: 'TemplatePropertyEditPage'
-  }
+export default {
+  name: 'TemplatePropertyEditPage'
+}
 </script>
 
 <style scoped></style>

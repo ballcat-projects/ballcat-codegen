@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-  import { PlusOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined } from '@ant-design/icons-vue'
 </script>

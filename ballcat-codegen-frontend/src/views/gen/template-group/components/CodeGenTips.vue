@@ -55,24 +55,24 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { listTemplateProperty } from '@/api/gen/template-property'
-  import { doRequest } from '@/utils/axios/request'
-  // 类型导入
-  import type { TemplateProperty } from '@/api/gen/template-property/types'
+import { ref } from 'vue'
+import { listTemplateProperty } from '@/api/gen/template-property'
+import { doRequest } from '@/utils/axios/request'
+// 类型导入
+import type { TemplateProperty } from '@/api/gen/template-property/types'
 
-  // 自定义模板
-  const properties = ref<TemplateProperty[]>([])
+// 自定义模板
+const properties = ref<TemplateProperty[]>([])
 
-  // 当模板组 id 改变时，刷新对应的模板信息
-  defineExpose({
-    load(templateGroupKey: string) {
-      doRequest({
-        request: listTemplateProperty(templateGroupKey),
-        onSuccess(res) {
-          properties.value = res.data as TemplateProperty[]
-        }
-      })
-    }
-  })
+// 当模板组 id 改变时，刷新对应的模板信息
+defineExpose({
+  load(templateGroupKey: string) {
+    doRequest({
+      request: listTemplateProperty(templateGroupKey),
+      onSuccess(res) {
+        properties.value = res.data as TemplateProperty[]
+      }
+    })
+  }
+})
 </script>

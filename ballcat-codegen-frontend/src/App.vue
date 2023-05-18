@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-  import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
 </script>
 
 <style lang="less">
-  @import 'styles/index.less';
+@import 'styles/index.less';
 </style>

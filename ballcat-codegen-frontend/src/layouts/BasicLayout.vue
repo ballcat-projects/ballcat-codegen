@@ -18,19 +18,19 @@
   </a-layout>
 </template>
 <script setup lang="ts">
-  import BasicHeader from '@/layouts/BasicHeader.vue'
-  import BasicFooter from '@/layouts/BasicFooter.vue'
+import BasicHeader from '@/layouts/BasicHeader.vue'
+import BasicFooter from '@/layouts/BasicFooter.vue'
 </script>
 <style lang="less">
-  #components-layout-side {
-    min-height: 100vh;
-    height: 100%;
+#components-layout-side {
+  min-height: 100vh;
+  height: 100%;
 
-    .ballcat-layout-content {
-      &.wide {
-        max-width: 80%;
-        margin: 0 auto;
-      }
+  .ballcat-layout-content {
+    &.wide {
+      max-width: 80%;
+      margin: 0 auto;
     }
   }
+}
 </style>

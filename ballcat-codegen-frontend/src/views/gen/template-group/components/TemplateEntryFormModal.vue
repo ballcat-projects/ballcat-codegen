@@ -48,129 +48,129 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive, ref, toRaw } from 'vue'
-  import { usePopup } from '@/hooks/popup'
-  import { doRequest } from '@/utils/axios/request'
-  import { useForm } from 'ant-design-vue/es/form'
-  import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
-  import { pick } from 'lodash-es'
-  import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
-  import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
-  import { UploadOutlined } from '@ant-design/icons-vue'
-  import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
-  import type { UploadFile } from 'ant-design-vue/lib/upload/interface'
-  import type { UploadProps } from 'ant-design-vue'
+import { reactive, ref, toRaw } from 'vue'
+import { usePopup } from '@/hooks/popup'
+import { doRequest } from '@/utils/axios/request'
+import { useForm } from 'ant-design-vue/es/form'
+import { addTemplateEntry, updateTemplateEntry } from '@/api/gen/template-entry'
+import { pick } from 'lodash-es'
+import type { TemplateEntry, TemplateEntryDTO } from '@/api/gen/template-entry/types'
+import { TemplateEntryTypeEnum } from '@/api/gen/template-entry/types'
+import { UploadOutlined } from '@ant-design/icons-vue'
+import type { TemplateEntryFormModalInstance } from '@/views/gen/template-group/components/types'
+import type { UploadFile } from 'ant-design-vue/lib/upload/interface'
+import type { UploadProps } from 'ant-design-vue'
 
-  const emits = defineEmits<{
-    (e: 'done'): void
-  }>()
+const emits = defineEmits<{
+  (e: 'done'): void
+}>()
 
-  const labelCol = {
-    sm: { span: 24 },
-    md: { span: 4 }
+const labelCol = {
+  sm: { span: 24 },
+  md: { span: 4 }
+}
+const wrapperCol = {
+  sm: { span: 24 },
+  md: { span: 19 }
+}
+
+// 表单类型是否是新建
+const isCreate = ref<boolean>(false)
+
+// 弹窗标题
+const title = ref<string>('')
+
+// 当前新建目录项的父文件名
+const parentFilename = ref<string>('')
+
+//  弹窗相关
+const { visible, handleOpen, handleClose } = usePopup()
+
+// 上传文件列表
+const fileList = ref<UploadProps['fileList']>([])
+function selectFile(file: UploadFile) {
+  if (!modelRef.filename) {
+    modelRef.filename = file.name
   }
-  const wrapperCol = {
-    sm: { span: 24 },
-    md: { span: 19 }
-  }
+  fileList.value = [file]
+  return false
+}
 
-  // 表单类型是否是新建
-  const isCreate = ref<boolean>(false)
+const modelRef = reactive<TemplateEntryDTO>({
+  id: undefined,
+  groupKey: undefined,
+  parentId: undefined,
+  type: TemplateEntryTypeEnum.FOLDER,
+  templateContent: '',
+  filename: '',
+  engineType: 1,
+  remarks: ''
+})
 
-  // 弹窗标题
-  const title = ref<string>('')
-
-  // 当前新建目录项的父文件名
-  const parentFilename = ref<string>('')
-
-  //  弹窗相关
-  const { visible, handleOpen, handleClose } = usePopup()
-
-  // 上传文件列表
-  const fileList = ref<UploadProps['fileList']>([])
-  function selectFile(file: UploadFile) {
-    if (!modelRef.filename) {
-      modelRef.filename = file.name
+const rulesRef = reactive({
+  filename: [{ required: true, message: '请输入文件名' }],
+  engineType: [
+    {
+      required: modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE,
+      message: '请选择模板引擎类型'
     }
-    fileList.value = [file]
-    return false
-  }
+  ]
+})
 
-  const modelRef = reactive<TemplateEntryDTO>({
-    id: undefined,
-    groupKey: undefined,
-    parentId: undefined,
-    type: TemplateEntryTypeEnum.FOLDER,
-    templateContent: '',
-    filename: '',
-    engineType: 1,
-    remarks: ''
-  })
+// 提交按钮的 loading 状态控制
+const submitLoading = ref<boolean>(false)
 
-  const rulesRef = reactive({
-    filename: [{ required: true, message: '请输入文件名' }],
-    engineType: [
-      {
-        required: modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE,
-        message: '请选择模板引擎类型'
+const { validate, resetFields, validateInfos } = useForm(modelRef, rulesRef)
+
+function handleSubmit() {
+  validate().then(() => {
+    // 如果是文件夹，则删除 engineType 属性
+    if (modelRef.type === TemplateEntryTypeEnum.FOLDER) {
+      delete modelRef.engineType
+    }
+    doRequest({
+      request: isCreate.value
+        ? addTemplateEntry(modelRef, fileList.value?.[0])
+        : updateTemplateEntry(modelRef, fileList.value?.[0]),
+      successMessage: '保存成功！',
+      onSuccess() {
+        emits('done')
+        handleClose()
       }
-    ]
-  })
-
-  // 提交按钮的 loading 状态控制
-  const submitLoading = ref<boolean>(false)
-
-  const { validate, resetFields, validateInfos } = useForm(modelRef, rulesRef)
-
-  function handleSubmit() {
-    validate().then(() => {
-      // 如果是文件夹，则删除 engineType 属性
-      if (modelRef.type === TemplateEntryTypeEnum.FOLDER) {
-        delete modelRef.engineType
-      }
-      doRequest({
-        request: isCreate.value
-          ? addTemplateEntry(modelRef, fileList.value?.[0])
-          : updateTemplateEntry(modelRef, fileList.value?.[0]),
-        successMessage: '保存成功！',
-        onSuccess() {
-          emits('done')
-          handleClose()
-        }
-      })
     })
-  }
-
-  function mapTypeName(entryType: TemplateEntryTypeEnum) {
-    switch (entryType) {
-      case TemplateEntryTypeEnum.FOLDER:
-        return '文件夹'
-      case TemplateEntryTypeEnum.TEMPLATE_FILE:
-        return '模板文件'
-      case TemplateEntryTypeEnum.BINARY_FILE:
-        return '二进制文件'
-    }
-  }
-
-  defineExpose<TemplateEntryFormModalInstance>({
-    add(currentParentFileName: string, record: TemplateEntry) {
-      isCreate.value = true
-      title.value = '新建' + mapTypeName(record.type)
-      resetFields()
-      fileList.value = []
-      Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
-      parentFilename.value = currentParentFileName
-      handleOpen()
-    },
-    update(record: TemplateEntry) {
-      isCreate.value = false
-      title.value = '编辑' + mapTypeName(record.type)
-      resetFields()
-      fileList.value = []
-      Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
-      handleOpen()
-    }
   })
+}
+
+function mapTypeName(entryType: TemplateEntryTypeEnum) {
+  switch (entryType) {
+    case TemplateEntryTypeEnum.FOLDER:
+      return '文件夹'
+    case TemplateEntryTypeEnum.TEMPLATE_FILE:
+      return '模板文件'
+    case TemplateEntryTypeEnum.BINARY_FILE:
+      return '二进制文件'
+  }
+}
+
+defineExpose<TemplateEntryFormModalInstance>({
+  add(currentParentFileName: string, record: TemplateEntry) {
+    isCreate.value = true
+    title.value = '新建' + mapTypeName(record.type)
+    resetFields()
+    fileList.value = []
+    Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
+    parentFilename.value = currentParentFileName
+    handleOpen()
+  },
+  update(record: TemplateEntry) {
+    isCreate.value = false
+    title.value = '编辑' + mapTypeName(record.type)
+    resetFields()
+    fileList.value = []
+    Object.assign(modelRef, pick(record, Object.keys(toRaw(modelRef))))
+    handleOpen()
+  }
+})
 </script>
 
 <style scoped></style>

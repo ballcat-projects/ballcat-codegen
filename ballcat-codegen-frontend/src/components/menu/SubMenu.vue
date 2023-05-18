@@ -13,12 +13,12 @@
 </template>
 
 <script setup lang="ts">
-  import type { BallcatRouteRecordRaw } from '@/router/types'
-  import MenuItemContent from '@/components/menu/MenuItemContent.vue'
+import type { BallcatRouteRecordRaw } from '@/router/types'
+import MenuItemContent from '@/components/menu/MenuItemContent.vue'
 
-  defineProps<{
-    menuInfo: BallcatRouteRecordRaw
-  }>()
+defineProps<{
+  menuInfo: BallcatRouteRecordRaw
+}>()
 </script>
 
 <style scoped></style>

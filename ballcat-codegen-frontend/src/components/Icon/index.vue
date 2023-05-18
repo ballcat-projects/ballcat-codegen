@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-  import * as AntdIcons from '@ant-design/icons-vue/es/icons'
-  defineProps<{
-    type: string
-  }>()
+import * as AntdIcons from '@ant-design/icons-vue/es/icons'
+defineProps<{
+  type: string
+}>()
 </script>
