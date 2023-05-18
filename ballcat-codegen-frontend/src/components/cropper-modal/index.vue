@@ -1,7 +1,7 @@
 <template>
   <a-modal
+    v-model:open="visible"
     title="图片上传"
-    :visible="visible"
     :mask-closable="false"
     :confirm-loading="confirmLoading"
     :width="720"

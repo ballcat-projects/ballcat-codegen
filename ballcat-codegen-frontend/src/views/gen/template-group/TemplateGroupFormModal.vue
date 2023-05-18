@@ -1,7 +1,7 @@
 <template>
   <a-modal
+    v-model:open="visible"
     :title="title"
-    :visible="visible"
     :mask-closable="false"
     :body-style="{ paddingBottom: '8px' }"
     :confirm-loading="submitLoading"

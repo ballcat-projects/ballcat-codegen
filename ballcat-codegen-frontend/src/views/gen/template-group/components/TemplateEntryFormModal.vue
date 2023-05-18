@@ -1,7 +1,7 @@
 <template>
   <a-modal
+    v-model:open="visible"
     :title="title"
-    :visible="visible"
     :confirm-loading="submitLoading"
     @ok="handleSubmit"
     @cancel="handleClose"

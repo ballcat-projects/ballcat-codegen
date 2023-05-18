@@ -30,7 +30,7 @@
           </template>
           <template v-else>
             <a-empty :image="false" :description="false" style="padding-top: 50px">
-              <a-button @click="openDatasourcePage"> 数据源管理 </a-button>
+              <a-button @click="openDatasourcePage"> 新建数据源 </a-button>
             </a-empty>
           </template>
         </div>

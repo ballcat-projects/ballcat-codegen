@@ -1,7 +1,7 @@
 <template>
   <a-modal
+    v-model:open="visible"
     :title="title"
-    :visible="visible"
     :mask-closable="false"
     :footer="null"
     :body-style="{ padding: '12px 18px' }"

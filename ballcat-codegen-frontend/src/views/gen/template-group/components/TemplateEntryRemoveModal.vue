@@ -1,7 +1,7 @@
 <template>
   <a-modal
+    v-model:open="visible"
     title="节点删除"
-    :visible="visible"
     :confirm-loading="submitLoading"
     @ok="handleSubmit"
     @cancel="handleClose"

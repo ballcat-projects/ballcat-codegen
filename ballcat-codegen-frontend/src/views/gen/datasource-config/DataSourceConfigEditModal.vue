@@ -1,11 +1,11 @@
 <template>
   <a-modal
+    v-model:open="visible"
     :title="title"
-    :visible="visible"
     :mask-closable="false"
     :body-style="{ paddingBottom: '8px' }"
     :confirm-loading="submitLoading"
-    :width="500"
+    :width="520"
     @ok="handleSubmit"
     @cancel="handleClose"
   >
@@ -18,12 +18,16 @@
         <a-input v-model:value="modelRef.title" placeholder="数据源标题" />
       </a-form-item>
 
-      <a-form-item label="dsKey" v-bind="validateInfos.dsKey">
+      <a-form-item
+        label="dsKey"
+        v-bind="validateInfos.dsKey"
+        extra="用户自定义的唯一标识，切换数据源时使用，例如：db1"
+      >
         <a-input v-model:value="modelRef.dsKey" placeholder="数据源dsKey" />
       </a-form-item>
 
       <a-form-item label="用户名" v-bind="validateInfos.username">
-        <a-input v-model:value="modelRef.username" placeholder="用户名" />
+        <a-input v-model:value="modelRef.username" placeholder="数据库用户名" />
       </a-form-item>
 
       <a-form-item v-if="isUpdate" label="原密码">
@@ -34,11 +38,11 @@
         <template v-if="isUpdate" #extra>
           <p style="color: red; margin-bottom: 0">注意：如果需要修改密码则填写此处，不修改请置空</p>
         </template>
-        <a-input v-model:value="modelRef.pass" placeholder="密码" />
+        <a-input v-model:value="modelRef.pass" placeholder="数据库密码" />
       </a-form-item>
 
       <a-form-item label="连接地址" v-bind="validateInfos.url">
-        <a-textarea v-model:value="modelRef.url" placeholder="连接地址" :rows="4" />
+        <a-textarea v-model:value="modelRef.url" placeholder="jdbc url" :rows="4" />
       </a-form-item>
     </a-form>
   </a-modal>

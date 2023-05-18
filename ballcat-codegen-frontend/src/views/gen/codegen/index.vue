@@ -5,9 +5,7 @@
     class="card-class"
   >
     <div class="steps-title">
-      <a-steps :current="currentStepNumber">
-        <a-step v-for="item in stepInfos" :key="item.title" :title="item.title" />
-      </a-steps>
+      <a-steps :current="currentStepNumber" :items="stepInfos" />
     </div>
 
     <div style="flex: 1; padding: 24px 48px 0">
