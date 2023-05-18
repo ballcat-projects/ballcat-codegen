@@ -110,6 +110,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>ballcat-codegen</finalName>
 		<resources>
 			<resource>
 				<filtering>true</filtering>
@@ -193,6 +194,27 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<!--   dockerfile-maven-plugin      -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<!-- 如果package时不想用docker打包,就注释掉这个goal -->
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>ballcat-codegen</repository>
+					<tag>latest</tag>
+					<buildArgs>
+						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

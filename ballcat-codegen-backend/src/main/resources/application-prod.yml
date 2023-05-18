@@ -3,9 +3,3 @@ spring:
     url: jdbc:mysql://${DB_HOST:ballcat-mysql}:${DB_PORT:3306}/${DB_NAME:ballcat_codegen}?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:123456}
-
-# 生产环境时不应在配置文件中配置
-# 请启动项目时使用 --jasypt.encryptor.password=xxxx 进行传参
-jasypt:
-  encryptor:
-    password: "123456"

@@ -22,6 +22,12 @@
 	<properties>
 		<revision>1.4.1</revision>
 		<maven.deploy.skip>true</maven.deploy.skip>
+		<!-- maven 配置 -->
+		<java.version>1.8</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<!-- oss 快照私服 -->

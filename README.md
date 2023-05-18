@@ -43,3 +43,63 @@ com/hccake/ballcat/codegen/GeneratorApplication.java
 
 
 
+##### Docker打包
+
+采用 dockerfile-maven-plugin 插件生成 docker 镜像，所在路径 ballcat-codegen-backend/pom.xml
+
+```
+<plugin>
+  <groupId>com.spotify</groupId>
+  <artifactId>dockerfile-maven-plugin</artifactId>
+  <executions>
+    <execution>
+      <id>default</id>
+      <goals>
+        <!-- 如果package时不想用docker打包,就注释掉这个goal -->
+        <goal>build</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <repository>ballcat-codegen</repository>
+    <tag>latest</tag>
+    <buildArgs>
+      <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+    </buildArgs>
+  </configuration>
+</plugin>
+```
+
+执行 `mvn clean package` 打包命令时会根据 ballcat-codegen-backend 根目录下的 Dockerfile 自动构建 docker 镜像。
+
+
+
+##### docker-compose部署
+
+打开 ballcat-codegen-backend 根目录下的 docker-compose.yml文件，修改环境变量配置你的数据库连接信息
+
+```
+version: "3.9"
+
+services:
+  codegen:
+    image: ballcat-codegen:latest
+    container_name: ballcat-codegen
+    restart: always
+    ports:
+      - "7777:7777"
+    volumes:
+      - "./logs:/workspace/logs"
+    environment:
+      - TZ=Asia/Shanghai
+      - LANG=en_US.UTF-8
+      - JAVA_OPTS=-Xmx256m -Xms256m -Xmn256m -Xss1m
+      - DB_HOST=192.168.1.66
+      - DB_PORT=3306
+      - DB_NAME=ballcat_codegen
+      - DB_USER=root
+      - DB_PASSWORD=root
+
+```
+
+终端切换到 docker-compose.yml 所在目录，执行 `docker-compose up -d` 一键部署。
