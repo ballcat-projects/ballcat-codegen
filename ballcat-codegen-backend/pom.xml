@@ -20,6 +20,8 @@
 		<velocity.version>1.7</velocity.version>
 		<freemarker.version>2.3.31</freemarker.version>
 		<flyway.version>7.15.0</flyway.version>
+		<dynamic-datasource.version>3.6.1</dynamic-datasource.version>
+		<jasypt.version>3.0.5</jasypt.version>
 	</properties>
 
 	<dependencies>
@@ -38,9 +40,11 @@
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 		</dependency>
 
+		<!-- jasypt 加密 -->
 		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>
 			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>${jasypt.version}</version>
 		</dependency>
 
 		<!-- openapi 扩展处理 -->
@@ -58,6 +62,7 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+			<version>${dynamic-datasource.version}</version>
 		</dependency>
 
 
