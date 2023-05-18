@@ -5,7 +5,7 @@ build/*.js
 target
 public
 src/assets
-.eslintrc.js
+.eslintrc.cjs
 
 *.woff
 *.ttf
