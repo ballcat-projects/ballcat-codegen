@@ -5,7 +5,6 @@
     :mask-closable="false"
     :confirm-loading="confirmLoading"
     :width="720"
-    :body-style="{ padding: '16px 24px' }"
     :footer="null"
     @cancel="handleClose"
   >

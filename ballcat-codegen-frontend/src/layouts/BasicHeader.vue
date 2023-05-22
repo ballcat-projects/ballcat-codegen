@@ -92,6 +92,11 @@ const jumpToDoc = () => {
     }
   }
 
+  &-left {
+    display: flex;
+    min-width: 192px;
+  }
+
   .anticon {
     color: #9f6ae0;
   }
@@ -116,6 +121,7 @@ const jumpToDoc = () => {
       color: #fff;
       font-size: 18px;
       vertical-align: top;
+      font-weight: 500;
     }
   }
 
