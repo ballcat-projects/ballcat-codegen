@@ -33,7 +33,7 @@ public interface TemplateGroupMapper extends ExtendMapper<TemplateGroup> {
 	default PageResult<TemplateGroupPageVO> queryPage(PageParam pageParam, TemplateGroupQO qo) {
 		IPage<TemplateGroup> page = this.prodPage(pageParam);
 		LambdaQueryWrapperX<TemplateGroup> wrapperX = WrappersX.lambdaQueryX(TemplateGroup.class)
-				.likeIfPresent(TemplateGroup::getName, qo.getName());
+			.likeIfPresent(TemplateGroup::getName, qo.getName());
 		this.selectPage(page, wrapperX);
 		IPage<TemplateGroupPageVO> voPage = page.convert(TemplateModelConverter.INSTANCE::groupPoToPageVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());

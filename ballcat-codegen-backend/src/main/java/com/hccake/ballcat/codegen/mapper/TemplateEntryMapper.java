@@ -33,8 +33,9 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 * @return 是否存在
 	 */
 	default boolean existSameName(String entryId, String name) {
-		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getParentId, entryId)
-				.eq(TemplateEntry::getFilename, name));
+		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery()
+			.eq(TemplateEntry::getParentId, entryId)
+			.eq(TemplateEntry::getFilename, name));
 		return count != null && count > 0;
 	}
 
@@ -56,8 +57,9 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 */
 	default void updateParentId(String groupKey, String oldParentId, String newParentId) {
 		LambdaUpdateWrapper<TemplateEntry> wrapper = Wrappers.<TemplateEntry>lambdaUpdate()
-				.set(TemplateEntry::getParentId, newParentId).eq(TemplateEntry::getGroupKey, groupKey)
-				.eq(TemplateEntry::getParentId, oldParentId);
+			.set(TemplateEntry::getParentId, newParentId)
+			.eq(TemplateEntry::getGroupKey, groupKey)
+			.eq(TemplateEntry::getParentId, oldParentId);
 		this.update(null, wrapper);
 	}
 
@@ -75,8 +77,9 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 * @return boolean
 	 */
 	default boolean existSubEntry(String entryId) {
-		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery().eq(TemplateEntry::getParentId, entryId)
-				.eq(TemplateEntry::getDeleted, GlobalConstants.NOT_DELETED_FLAG));
+		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery()
+			.eq(TemplateEntry::getParentId, entryId)
+			.eq(TemplateEntry::getDeleted, GlobalConstants.NOT_DELETED_FLAG));
 		return count != null && count > 0;
 	}
 

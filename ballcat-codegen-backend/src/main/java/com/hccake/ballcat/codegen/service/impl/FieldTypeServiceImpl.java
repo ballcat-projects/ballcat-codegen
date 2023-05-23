@@ -39,8 +39,8 @@ public class FieldTypeServiceImpl extends ExtendServiceImpl<FieldTypeMapper, Fie
 	@Override
 	public List<FieldType> selectDbTypeList(DbType dbType, String templateGroupKey) {
 		LambdaQueryWrapperX<FieldType> wrapper = WrappersX.lambdaQueryX(FieldType.class)
-				.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType))
-				.eqIfPresent(FieldType::getGroupKey, templateGroupKey);
+			.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType))
+			.eqIfPresent(FieldType::getGroupKey, templateGroupKey);
 		return fieldTypeMapper.selectList(wrapper);
 	}
 
@@ -48,7 +48,7 @@ public class FieldTypeServiceImpl extends ExtendServiceImpl<FieldTypeMapper, Fie
 	public List<FieldType> selectDbTypeList(DbType dbType) {
 		// TODO 默认值设置
 		LambdaQueryWrapperX<FieldType> wrapper = WrappersX.lambdaQueryX(FieldType.class)
-				.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType));
+			.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType));
 		return fieldTypeMapper.selectList(wrapper);
 	}
 

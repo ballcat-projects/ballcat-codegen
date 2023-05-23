@@ -32,8 +32,8 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	default PageResult<TemplatePropertyPageVO> queryPage(PageParam pageParam, TemplatePropertyQO qo) {
 		IPage<TemplateProperty> page = this.prodPage(pageParam);
 		LambdaQueryWrapperX<TemplateProperty> wrapperX = WrappersX.lambdaQueryX(TemplateProperty.class)
-				.eqIfPresent(TemplateProperty::getId, qo.getId())
-				.eqIfPresent(TemplateProperty::getGroupKey, qo.getGroupKey());
+			.eqIfPresent(TemplateProperty::getId, qo.getId())
+			.eqIfPresent(TemplateProperty::getGroupKey, qo.getGroupKey());
 		this.selectPage(page, wrapperX);
 		IPage<TemplatePropertyPageVO> voPage = page.convert(TemplatePropertyConverter.INSTANCE::poToPageVo);
 		return new PageResult<>(voPage.getRecords(), voPage.getTotal());
@@ -46,7 +46,8 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	 */
 	default List<TemplateProperty> listByTemplateGroupKey(String templateGroupKey) {
 		return this.selectList(Wrappers.<TemplateProperty>lambdaQuery()
-				.eq(TemplateProperty::getGroupKey, templateGroupKey).orderByAsc(TemplateProperty::getOrderValue));
+			.eq(TemplateProperty::getGroupKey, templateGroupKey)
+			.orderByAsc(TemplateProperty::getOrderValue));
 
 	}
 

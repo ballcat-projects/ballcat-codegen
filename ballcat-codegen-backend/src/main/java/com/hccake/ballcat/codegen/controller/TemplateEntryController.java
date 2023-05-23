@@ -61,8 +61,9 @@ public class TemplateEntryController {
 	@GetMapping("/list/{groupKey}")
 	public R<List<TemplateEntryVO>> getTemplateDirectoryEntryPage(@PathVariable String groupKey) {
 		List<TemplateEntry> entries = templateEntryService.listByGroupKey(groupKey);
-		List<TemplateEntryVO> vos = entries.stream().map(TemplateModelConverter.INSTANCE::entryPoToVo)
-				.collect(Collectors.toList());
+		List<TemplateEntryVO> vos = entries.stream()
+			.map(TemplateModelConverter.INSTANCE::entryPoToVo)
+			.collect(Collectors.toList());
 		return R.ok(vos);
 	}
 

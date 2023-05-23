@@ -87,7 +87,8 @@ public class GenerateController {
 			return R.ok();
 		}
 		List<GeneratePreviewFileVO> list = fileEntries.stream()
-				.map(TemplateModelConverter.INSTANCE::fileEntryToPreviewVo).collect(Collectors.toList());
+			.map(TemplateModelConverter.INSTANCE::fileEntryToPreviewVo)
+			.collect(Collectors.toList());
 		return R.ok(list);
 	}
 

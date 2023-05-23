@@ -34,7 +34,7 @@ public class DsRequestProcessor extends DsProcessor {
 	@Override
 	public String doDetermineDatasource(MethodInvocation invocation, String key) {
 		HttpServletRequest request = ((ServletRequestAttributes) Objects
-				.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+			.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 		return request.getParameter(key.substring(9));
 	}
 

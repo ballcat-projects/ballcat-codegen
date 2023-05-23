@@ -239,8 +239,10 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			}
 		}
 
-		TemplateFile templateFile = new TemplateFile().setId(current.getId()).setFilename(current.getFilename())
-				.setParentFilePath(path).setType(current.getType());
+		TemplateFile templateFile = new TemplateFile().setId(current.getId())
+			.setFilename(current.getFilename())
+			.setParentFilePath(path)
+			.setType(current.getType());
 		// 目录项类型为文件则记录（文件必然是叶子节点）
 		if (TemplateEntryTypeEnum.TEMPLATE_FILE.equals(current.getType())) {
 			// 查找对应的模板文件详情信息

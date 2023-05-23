@@ -62,7 +62,8 @@ public class TemplatePropertyController {
 	public R<List<TemplatePropertyPageVO>> getTemplatePropertyList(@PathVariable("groupKey") String groupKey) {
 		List<TemplateProperty> templateProperties = templatePropertyService.listByGroupKey(groupKey);
 		List<TemplatePropertyPageVO> vos = templateProperties.stream()
-				.map(TemplatePropertyConverter.INSTANCE::poToPageVo).collect(Collectors.toList());
+			.map(TemplatePropertyConverter.INSTANCE::poToPageVo)
+			.collect(Collectors.toList());
 		return R.ok(vos);
 	}
 
@@ -150,8 +151,9 @@ public class TemplatePropertyController {
 			return R.ok();
 		}
 
-		List<TemplateProperty> list = dtoList.stream().map(x -> TemplatePropertyConverter.INSTANCE.dtoToPo(groupKey, x))
-				.collect(Collectors.toList());
+		List<TemplateProperty> list = dtoList.stream()
+			.map(x -> TemplatePropertyConverter.INSTANCE.dtoToPo(groupKey, x))
+			.collect(Collectors.toList());
 
 		try {
 			templatePropertyService.saveBatch(list);
@@ -182,8 +184,9 @@ public class TemplatePropertyController {
 		}
 
 		// 剔除无用属性
-		List<TemplatePropertyDTO> list = templateProperties.stream().map(TemplatePropertyConverter.INSTANCE::poToDto)
-				.collect(Collectors.toList());
+		List<TemplatePropertyDTO> list = templateProperties.stream()
+			.map(TemplatePropertyConverter.INSTANCE::poToDto)
+			.collect(Collectors.toList());
 		// 美化 json
 		String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);
 		// 输出内容
