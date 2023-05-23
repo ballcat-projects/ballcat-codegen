@@ -36,3 +36,5 @@ build/
 /ballcat-job/logs/ballcat-job/
 .flattened-pom.xml
 gener-logs/
+
+/workspace/logs/
