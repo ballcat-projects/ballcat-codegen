@@ -160,7 +160,7 @@
 						</goals>
 						<configuration>
 							<target>
-								<delete dir="src/main/resources/public" includeemptydirs="true" />
+								<delete dir="src/main/resources/public" includeemptydirs="true"/>
 							</target>
 						</configuration>
 					</execution>
@@ -195,27 +195,38 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--   dockerfile-maven-plugin      -->
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default</id>
-						<goals>
-							<!-- 如果package时不想用docker打包,就注释掉这个goal -->
-							<goal>build</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<repository>ballcat-codegen</repository>
-					<tag>latest</tag>
-					<buildArgs>
-						<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
+	<!-- 打包 docker，指定开启 docker profile -->
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<!--   dockerfile-maven-plugin      -->
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>dockerfile-maven-plugin</artifactId>
+						<version>1.4.13</version>
+						<executions>
+							<execution>
+								<id>default</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<repository>ballcat-codegen</repository>
+							<tag>latest</tag>
+							<buildArgs>
+								<JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+							</buildArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
