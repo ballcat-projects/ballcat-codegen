@@ -7,9 +7,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
 /**
- * @author Hccake
- * @version 1.0
- * @date 2019/9/12 16:21
+ * @author Hccake 2019/9/12 16:21
  */
 @Slf4j
 @SpringBootApplication
