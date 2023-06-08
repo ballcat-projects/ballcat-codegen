@@ -28,9 +28,6 @@ public class DbTypeConverterManager {
 	 */
 	public List<FieldType> getDbTypeList(DbType dbType, String templateGroupKey) {
 		List<FieldType> fieldTypeList = fieldTypeService.selectDbTypeList(dbType, templateGroupKey);
-		if (!ObjectUtils.isEmpty(fieldTypeList)) {
-			return fieldTypeList;
-		}
 		if (ObjectUtils.isEmpty(fieldTypeList)) {
 			fieldTypeList = fieldTypeService.selectDbTypeList(dbType);
 		}
@@ -44,7 +41,7 @@ public class DbTypeConverterManager {
 	 */
 	public DbColumnType getTypeConverter(List<FieldType> typeList, String dataType) {
 		for (FieldType type : typeList) {
-			if (type.getColumnKey().equals(dataType)) {
+			if (type.getColumnKey().equalsIgnoreCase(dataType)) {
 				return DbColumnTypeConverter.INSTANCE.toModel(type);
 			}
 		}
