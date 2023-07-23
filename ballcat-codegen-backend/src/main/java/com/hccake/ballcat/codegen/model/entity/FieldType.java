@@ -1,10 +1,6 @@
 package com.hccake.ballcat.codegen.model.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +36,7 @@ public class FieldType {
 	private String dbType;
 
 	@Schema(title = "packageName", description = "属性包路径+类名")
+	@TableField(value = "package_name", updateStrategy = FieldStrategy.IGNORED)
 	private String packageName;
 
 	@Schema(title = "deleted", description = "逻辑删除字段（1删除0正常）")

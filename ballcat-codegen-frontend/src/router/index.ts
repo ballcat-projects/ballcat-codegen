@@ -16,6 +16,12 @@ const menuRouters: Array<BallcatRouteRecordRaw> = [
     component: () => import('@/views/gen/template-group/index.vue')
   },
   {
+    path: '/field/type',
+    name: 'FieldType',
+    meta: { title: '数据类型管理' },
+    component: () => import('@/views/gen/field-type/index.vue')
+  },
+  {
     path: '/datasource',
     name: 'DataSource',
     meta: { title: '数据源管理' },
