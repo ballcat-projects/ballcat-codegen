@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -178,7 +179,7 @@ public class TemplateEntryController {
 		}
 
 		List<TemplateEntryFileTree> list = new ArrayList<>(map.values());
-		List<TemplateEntryFileTree> treeNodeList = TreeUtils.buildTree(list, "/");
+		List<TemplateEntryFileTree> treeNodeList = TreeUtils.buildTree(list, File.separator);
 		List<TemplateEntry> templateEntries = new ArrayList<>();
 		TreeUtils.forEachDFS(treeNodeList, null, (treeNode, parentTreeNode) -> {
 			TemplateEntry templateEntry = TemplateModelConverter.INSTANCE.entryFileTreeToPo(treeNode);
@@ -193,9 +194,9 @@ public class TemplateEntryController {
 
 	private static TemplateEntryFileTree createEntry(String groupKey, ZipInputStream zis, boolean isDirectory,
 			String pathStr) {
-		int lastIndexOf = pathStr.lastIndexOf("\\");
+		int lastIndexOf = pathStr.lastIndexOf(File.separator);
 		String filename = pathStr.substring(lastIndexOf + 1);
-		String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : "/";
+		String parentPathStr = lastIndexOf > 0 ? pathStr.substring(0, lastIndexOf) : File.separator;
 
 		TemplateEntryFileTree entryTree = new TemplateEntryFileTree();
 		entryTree.setGroupKey(groupKey);
