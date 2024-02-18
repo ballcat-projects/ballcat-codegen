@@ -14,7 +14,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
+		<frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
 	</properties>
 
 	<build>
@@ -27,41 +27,42 @@
 					<!-- optional: where to download node from. Defaults to https://nodejs.org/dist/ -->
 					<nodeDownloadRoot>https://registry.npmmirror.com/-/binary/node/</nodeDownloadRoot>
 					<!-- optional: where to download npm from. Defaults to https://registry.npmjs.org/npm/-/ -->
-					<npmDownloadRoot>https://registry.npmmirror.com/-/binary/npm/</npmDownloadRoot>
+					<pnpmDownloadRoot>https://registry.npmmirror.com/-/binary/pnpm/</pnpmDownloadRoot>
 				</configuration>
 				<executions>
 					<!-- Install our node and npm version to run npm/node scripts-->
 					<execution>
-						<id>install node and npm</id>
+						<id>install node and pnpm</id>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>install-node-and-pnpm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v16.17.0</nodeVersion>
+							<nodeVersion>v18.12.0</nodeVersion>
+							<pnpmVersion>8.15.3</pnpmVersion>
 						</configuration>
 					</execution>
 					<!-- Install all project dependencies -->
 					<execution>
-						<id>npm install</id>
+						<id>pnpm install</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>pnpm</goal>
 						</goals>
 						<!-- optional: default phase is "generate-resources" -->
 						<phase>generate-resources</phase>
-						<!-- Optional configuration which provides for running any npm command -->
+						<!-- Optional configuration which provides for running any pnpm command -->
 						<configuration>
 							<arguments>install</arguments>
-							<npmRegistryURL>http://registry.npmmirror.com/</npmRegistryURL>
+							<pnpmRegistryURL>https://registry.npmmirror.com/</pnpmRegistryURL>
 						</configuration>
 					</execution>
 					<!-- Build and minify static files -->
 					<execution>
 						<id>vite build</id>
 						<goals>
-							<goal>npx</goal>
+							<goal>pnpm</goal>
 						</goals>
 						<configuration>
-							<arguments>vite build</arguments>
+							<arguments>dlx vite build</arguments>
 						</configuration>
 					</execution>
 				</executions>
