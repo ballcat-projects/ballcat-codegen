@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@ballcat/vue-cropper": "^1.0.6",
     "@codemirror/commands": "^6.3.3",
     "@codemirror/lang-html": "^6.4.8",
@@ -24,6 +25,7 @@
     "ant-design-vue": "^4.1.2",
     "axios": "^1.6.7",
     "codemirror": "^6.0.1",
+    "cropperjs": "^1.6.1",
     "highlight.js": "^11.9.0",
     "lodash-es": "^4.17.21",
     "pinia": "^2.1.7",
