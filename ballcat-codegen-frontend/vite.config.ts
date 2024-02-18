@@ -38,6 +38,7 @@ export default defineConfig({
     splitVendorChunkPlugin()
   ],
   server: {
+    port: 3000,
     proxy: {
       '/api': {
         target: serverAddress,
