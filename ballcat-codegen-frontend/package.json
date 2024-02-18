@@ -2,11 +2,16 @@
   "name": "ballcat-codegen-ui",
   "private": true,
   "version": "1.4.0",
+  "packageManager": "pnpm@8.15.3",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
