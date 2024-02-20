@@ -27,7 +27,7 @@
 					<!-- optional: where to download node from. Defaults to https://nodejs.org/dist/ -->
 					<nodeDownloadRoot>https://registry.npmmirror.com/-/binary/node/</nodeDownloadRoot>
 					<!-- optional: where to download npm from. Defaults to https://registry.npmjs.org/npm/-/ -->
-					<pnpmDownloadRoot>https://registry.npmmirror.com/-/binary/pnpm/</pnpmDownloadRoot>
+					<pnpmDownloadRoot>https://registry.npmmirror.com/pnpm/-/</pnpmDownloadRoot>
 				</configuration>
 				<executions>
 					<!-- Install our node and npm version to run npm/node scripts-->
