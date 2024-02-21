@@ -1,7 +1,7 @@
 <template>
   <a-form layout="vertical">
     <a-row :gutter="24" justify="center">
-      <a-col :sm="24" :md="6">
+      <a-col :sm="24" :md="8">
         <a-form-item>
           <a-spin :spinning="treeLoading">
             <div :style="{ borderBottom: '1px solid #E9E9E9', marginBottom: '5px' }">
@@ -22,7 +22,7 @@
           </a-spin>
         </a-form-item>
       </a-col>
-      <a-col :sm="24" :md="10">
+      <a-col :sm="24" :md="12">
         <a-form-item v-if="generatorConfigStore.isUseTable" label="表前缀截取">
           <a-input
             v-model:value="modelRef.tablePrefix"
