@@ -1,6 +1,8 @@
 package com.hccake.ballcat.codegen.database;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
 import com.hccake.ballcat.codegen.converter.DbColumnTypeConverter;
 import com.hccake.ballcat.codegen.model.entity.DbColumnType;
 import com.hccake.ballcat.codegen.model.entity.FieldType;
@@ -10,7 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author hccake
@@ -28,10 +35,21 @@ public class DbTypeConverterManager {
 	 */
 	public List<FieldType> getDbTypeList(DbType dbType, String templateGroupKey) {
 		List<FieldType> fieldTypeList = fieldTypeService.selectDbTypeList(dbType, templateGroupKey);
-		if (ObjectUtils.isEmpty(fieldTypeList)) {
-			fieldTypeList = fieldTypeService.selectDbTypeList(dbType);
+		Map<String, FieldType> fieldTypeMap = new HashMap<>(fieldTypeList.size());
+		for (FieldType fieldType : fieldTypeList) {
+			String columnKey = fieldType.getColumnKey();
+			FieldType fieldTypeMapValue = fieldTypeMap.get(columnKey);
+			if (Objects.isNull(fieldTypeMapValue)) {
+				fieldTypeMap.put(columnKey, fieldType);
+			}
+			else {
+				String groupKey = fieldTypeMapValue.getGroupKey();
+				if (!Objects.equals(TemplateEntryConstants.TREE_ROOT_ID, groupKey)) {
+					fieldTypeMap.put(columnKey, fieldType);
+				}
+			}
 		}
-		return fieldTypeList;
+		return new ArrayList<>(fieldTypeMap.values());
 	}
 
 	/**

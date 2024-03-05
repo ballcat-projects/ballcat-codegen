@@ -1,6 +1,7 @@
 package com.hccake.ballcat.codegen.service.impl;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
 import com.hccake.ballcat.codegen.mapper.FieldTypeMapper;
 import com.hccake.ballcat.codegen.model.entity.FieldType;
 import com.hccake.ballcat.codegen.model.qo.FieldTypeQO;
@@ -40,7 +41,7 @@ public class FieldTypeServiceImpl extends ExtendServiceImpl<FieldTypeMapper, Fie
 	public List<FieldType> selectDbTypeList(DbType dbType, String templateGroupKey) {
 		LambdaQueryWrapperX<FieldType> wrapper = WrappersX.lambdaQueryX(FieldType.class)
 			.eqIfPresent(FieldType::getDbType, DbTypeUtils.getDbType(dbType))
-			.eqIfPresent(FieldType::getGroupKey, templateGroupKey);
+			.in(FieldType::getGroupKey, TemplateEntryConstants.TREE_ROOT_ID, templateGroupKey);
 		return fieldTypeMapper.selectList(wrapper);
 	}
 
