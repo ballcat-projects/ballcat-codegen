@@ -27,18 +27,11 @@ public interface FieldTypeService extends ExtendService<FieldType> {
 	PageResult<FieldTypeVO> queryPage(PageParam pageParam, FieldTypeQO qo);
 
 	/**
-	 * 查询数据库对应数据类型
+	 * 查询数据库对应数据类型, 没有配置的数据类型配置会使用默认配置
 	 * @param dbType 数据库类型
 	 * @param templateGroupKey 模板组标识
 	 * @return 字段集合
 	 */
-	List<FieldType> selectDbTypeList(DbType dbType, String templateGroupKey);
-
-	/**
-	 * 查找默认数据类型
-	 * @param dbType 数据库类型
-	 * @return 字段集合
-	 */
-	List<FieldType> selectDbTypeList(DbType dbType);
+	List<FieldType> selectFieldTypesWithDefault(DbType dbType, String templateGroupKey);
 
 }

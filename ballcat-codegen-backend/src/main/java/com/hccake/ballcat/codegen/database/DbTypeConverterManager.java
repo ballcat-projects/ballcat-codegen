@@ -1,6 +1,5 @@
 package com.hccake.ballcat.codegen.database;
 
-import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.hccake.ballcat.codegen.constant.TemplateEntryConstants;
 import com.hccake.ballcat.codegen.converter.DbColumnTypeConverter;
@@ -10,14 +9,12 @@ import com.hccake.ballcat.codegen.service.FieldTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author hccake
@@ -34,19 +31,15 @@ public class DbTypeConverterManager {
 	 * @return 字段集合
 	 */
 	public List<FieldType> getDbTypeList(DbType dbType, String templateGroupKey) {
-		List<FieldType> fieldTypeList = fieldTypeService.selectDbTypeList(dbType, templateGroupKey);
+		List<FieldType> fieldTypeList = fieldTypeService.selectFieldTypesWithDefault(dbType, templateGroupKey);
 		Map<String, FieldType> fieldTypeMap = new HashMap<>(fieldTypeList.size());
 		for (FieldType fieldType : fieldTypeList) {
 			String columnKey = fieldType.getColumnKey();
-			FieldType fieldTypeMapValue = fieldTypeMap.get(columnKey);
-			if (Objects.isNull(fieldTypeMapValue)) {
+			String groupKey = fieldType.getGroupKey();
+			// 如果不存在直接填充，或者存在但是指定模板组的配置，就进行覆盖
+			if (!fieldTypeMap.containsKey(columnKey)
+					|| !Objects.equals(TemplateEntryConstants.TREE_ROOT_ID, groupKey)) {
 				fieldTypeMap.put(columnKey, fieldType);
-			}
-			else {
-				String groupKey = fieldTypeMapValue.getGroupKey();
-				if (!Objects.equals(TemplateEntryConstants.TREE_ROOT_ID, groupKey)) {
-					fieldTypeMap.put(columnKey, fieldType);
-				}
 			}
 		}
 		return new ArrayList<>(fieldTypeMap.values());
