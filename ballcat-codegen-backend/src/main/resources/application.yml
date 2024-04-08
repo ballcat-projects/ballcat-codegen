@@ -57,4 +57,8 @@ springdoc:
     display-request-duration: true
     disable-swagger-default-url: true
 
-
+# 生产环境时不应在配置文件中显示配置，防止暴露配置信息
+# 请使用环境变量，或启动项目时使用 --jasypt.encryptor.password=xxxx 进行传参
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
