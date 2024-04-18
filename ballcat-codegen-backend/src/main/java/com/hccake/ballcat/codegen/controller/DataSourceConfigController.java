@@ -12,6 +12,7 @@ import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 数据源
@@ -47,7 +46,6 @@ public class DataSourceConfigController {
 	 */
 	@Operation(summary = "分页查询")
 	@GetMapping("/page")
-	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:read')" )
 	public R<PageResult<DataSourceConfigPageVO>> getDataSourceConfigPage(@Validated PageParam pageParam,
 			DataSourceConfigQO dataSourceConfigQO) {
 		return R.ok(dataSourceConfigService.queryPage(pageParam, dataSourceConfigQO));
@@ -60,7 +58,6 @@ public class DataSourceConfigController {
 	 */
 	@Operation(summary = "通过id查询")
 	@GetMapping("/{id}")
-	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:read')" )
 	public R<DataSourceConfig> getById(@PathVariable("id") Integer id) {
 		return R.ok(dataSourceConfigService.getById(id));
 	}
@@ -71,9 +68,7 @@ public class DataSourceConfigController {
 	 * @return R
 	 */
 	@Operation(summary = "新增数据源")
-	// @CreateOperationLogging(msg = "新增数据源" )
 	@PostMapping
-	// @PreAuthorize("@per.hasPermission('gen:datasourcecofig:add')" )
 	public R<Void> save(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
 		return dataSourceConfigService.save(dataSourceConfigDTO) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "新增数据源失败");
@@ -85,9 +80,7 @@ public class DataSourceConfigController {
 	 * @return R
 	 */
 	@Operation(summary = "修改数据源")
-	// @UpdateOperationLogging(msg = "修改数据源" )
 	@PutMapping
-	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:edit')" )
 	public R<Void> updateById(@RequestBody DataSourceConfigDTO dataSourceConfigDTO) {
 		return dataSourceConfigService.update(dataSourceConfigDTO) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改数据源失败");
@@ -99,9 +92,7 @@ public class DataSourceConfigController {
 	 * @return R
 	 */
 	@Operation(summary = "通过id删除数据源")
-	// @DeleteOperationLogging(msg = "通过id删除数据源" )
 	@DeleteMapping("/{id}")
-	// @PreAuthorize("@per.hasPermission('gen:datasourceconfig:del')" )
 	public R<Void> removeById(@PathVariable Integer id) {
 		return dataSourceConfigService.removeById(id) ? R.ok()
 				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "通过id删除数据源失败");

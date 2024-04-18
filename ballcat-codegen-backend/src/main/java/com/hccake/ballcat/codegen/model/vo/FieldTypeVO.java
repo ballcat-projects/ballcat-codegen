@@ -1,11 +1,10 @@
 package com.hccake.ballcat.codegen.model.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 /**
  * software：IntelliJ IDEA 2022.2 class name: FieldTypeVO description：DB和后端数据类型 view object
@@ -29,6 +28,9 @@ public class FieldTypeVO {
 
 	@Schema(title = "columnKey", description = "DB属性类型")
 	private String columnKey;
+
+	@Schema(title = "columnValue", description = "对应属性类型")
+	private String columnValue;
 
 	@Schema(title = "dbType", description = "数据库类型（1:MySQL，2:Oracle，3:PostGreSql，4:SqlServer）")
 	private String dbType;

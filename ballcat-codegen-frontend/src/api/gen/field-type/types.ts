@@ -1,4 +1,4 @@
-import type { PageParam } from '@/api/types'
+import type {PageParam} from '@/api/types'
 
 /**
  * 数据类型查询对象
@@ -24,6 +24,8 @@ export interface FieldType {
   defaultValue?: string
   // DB属性类型
   columnKey?: string
+    // Java对应数据类型
+    columnValue?: string
   // 数据库类型
   dbType?: string
   // 属性包路径+类名

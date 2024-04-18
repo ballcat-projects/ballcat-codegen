@@ -79,6 +79,10 @@ const columns = [
     dataIndex: 'columnKey'
   },
   {
+    title: '对应属性类型',
+    dataIndex: 'columnValue'
+  },
+  {
     title: '数据库类型',
     dataIndex: 'dbType',
     customRender: ({ text }) =>

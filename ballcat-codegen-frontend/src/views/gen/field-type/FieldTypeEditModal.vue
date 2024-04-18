@@ -28,6 +28,10 @@
         <a-input v-model:value="modelRef.groupKey" placeholder="模板组标识" />
       </a-form-item>
 
+      <a-form-item label="代码属性值" v-bind="validateInfos.columnValue">
+        <a-input v-model:value="modelRef.columnValue" placeholder="DB对应代码属性值"/>
+      </a-form-item>
+
       <a-form-item label="DB属性类型" v-bind="validateInfos.columnKey">
         <a-input v-model:value="modelRef.columnKey" placeholder="DB属性类型" />
       </a-form-item>
@@ -83,16 +87,18 @@ const modelRef = reactive<FieldType>({
   groupKey: '',
   columnKey: '',
   dbType: '',
+  columnValue: '',
   packageName: ''
 })
 
 // 表单校验规则
 const rulesRef = computed(() => {
   return {
-    groupKey: [{ required: true, message: '请输入模板组标识！' }],
-    columnKey: [{ required: true, message: '请输入DB属性类型!' }],
-    dbType: [{ required: true, message: '请选择数据库类型!' }],
-    packageName: [{ validator: validRule }]
+    groupKey: [{required: true, message: '请输入模板组标识！'}],
+    columnKey: [{required: true, message: '请输入DB属性类型!'}],
+    dbType: [{required: true, message: '请选择数据库类型!'}],
+    columnValue: [{required: true, message: '请输入Java对应类型!'}],
+    packageName: [{validator: validRule}]
   }
 })
 
