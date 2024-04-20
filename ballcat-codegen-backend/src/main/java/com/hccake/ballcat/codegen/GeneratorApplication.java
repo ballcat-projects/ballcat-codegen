@@ -13,12 +13,11 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 public class GeneratorApplication {
 
-	public static void main(String[] args) throws ClassNotFoundException {
+	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(GeneratorApplication.class, args);
 		Environment bean = context.getBean(Environment.class);
 		String property = bean.getProperty("server.port");
 		log.info("http://localhost:{}", property + bean.getProperty("server.servlet.context-path"));
 		log.info("http://localhost:{}", property + "/swagger-ui.html");
 	}
-
 }

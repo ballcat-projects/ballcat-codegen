@@ -38,8 +38,9 @@ public interface TemplateEntryService extends ExtendService<TemplateEntry> {
 	 * 重名校验，同文件夹下不允许重名
 	 * @param entryId 目录项ID
 	 * @param name 文件名
+	 * @param groupKey 模板组标识
 	 */
-	void duplicateNameCheck(String entryId, String name);
+	void duplicateNameCheck(String entryId, String name, String groupKey);
 
 	/**
 	 * 判断目录项是否存在
