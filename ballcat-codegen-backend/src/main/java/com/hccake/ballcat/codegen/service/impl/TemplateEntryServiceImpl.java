@@ -299,7 +299,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 		Assert.notNull(oldEntry, "This is a nonexistent directory entry!");
 		// 如果更新了文件名，则进行重名校验
 		if (!filename.equals(oldEntry.getFilename())) {
-			this.duplicateNameCheck(oldEntry.getParentId(), filename);
+			this.duplicateNameCheck(oldEntry.getParentId(), filename, oldEntry.getGroupKey());
 		}
 		// 如果修改类型为模板文件或者二进制文件，则现在不能有子文件存在
 		if (!TemplateEntryTypeEnum.FOLDER.getType().equals(entryDTO.getType())) {

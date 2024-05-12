@@ -20,4 +20,5 @@ public class GeneratorApplication {
 		log.info("http://localhost:{}", property + bean.getProperty("server.servlet.context-path"));
 		log.info("http://localhost:{}", property + "/swagger-ui.html");
 	}
+
 }

@@ -32,7 +32,7 @@ public interface TemplateEntryMapper extends ExtendMapper<TemplateEntry> {
 	 * @param groupKey 模板组标识
 	 * @return 是否存在
 	 */
-	default boolean existSameName(String entryId, String name,String groupKey) {
+	default boolean existSameName(String entryId, String name, String groupKey) {
 		Long count = this.selectCount(Wrappers.<TemplateEntry>lambdaQuery()
 			.eq(TemplateEntry::getParentId, entryId)
 			.eq(TemplateEntry::getGroupKey, groupKey)
