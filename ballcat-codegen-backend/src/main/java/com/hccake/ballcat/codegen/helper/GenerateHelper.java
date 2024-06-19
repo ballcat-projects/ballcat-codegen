@@ -1,5 +1,9 @@
 package com.hccake.ballcat.codegen.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -20,16 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 代码生成器 工具类
  *
- * @author hccake
- * @date 2018-07-30
+ * @author hccake 2018-07-30
  */
 @Slf4j
 @Component
@@ -43,15 +41,19 @@ public class GenerateHelper {
 	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, String templateGroupKey,
 			Map<String, String> customProperties) {
 		Map<String, Object> context;
+
+		GenerateProperties generateProperties;
 		if (tableDetails != null) {
 			// 根据表信息和字段信息获取对应的配置属性
-			GenerateProperties generateProperties = getGenerateProperties(tableDetails, tablePrefix, templateGroupKey);
-			// 转换generateProperties为map，模板数据
-			context = BeanUtil.beanToMap(generateProperties);
+			generateProperties = genGeneratePropertiesFormTable(tableDetails, tablePrefix, templateGroupKey);
 		}
 		else {
-			context = new HashMap<>(customProperties.size());
+			generateProperties = new GenerateProperties();
+			generateProperties.setCurrentTime(DateUtil.now());
 		}
+
+		// 转换generateProperties为map，模板数据
+		context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
 		context.putAll(customProperties);
 		return context;
@@ -63,7 +65,7 @@ public class GenerateHelper {
 	 * @param tablePrefix 表前缀
 	 * @return GenerateProperties
 	 */
-	private GenerateProperties getGenerateProperties(TableDetails tableDetails, String tablePrefix,
+	private GenerateProperties genGeneratePropertiesFormTable(TableDetails tableDetails, String tablePrefix,
 			String templateGroupKey) {
 		// 表信息
 		GenerateProperties generateProperties = new GenerateProperties();
