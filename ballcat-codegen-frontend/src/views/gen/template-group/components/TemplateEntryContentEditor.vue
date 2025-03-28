@@ -327,15 +327,29 @@ defineExpose<TemplateContentEditorInstance>({
 }
 
 :deep(.cm-content) {
-  min-height: 467px !important;
+  min-height: 100% !important;
+  height: 100% !important;
 }
 
 :deep(.cm-gutter) {
-  min-height: 467px !important;
+  min-height: 100% !important;
+  height: 100% !important;
 }
 
 :deep(.cm-scroller) {
-  overflow: unset;
+  overflow: auto !important;
+  height: 100% !important;
+}
+
+:deep(.cm-editor) {
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.cm-editor .cm-scroller) {
+  flex: 1;
+  overflow: auto !important;
 }
 
 .editor-fullscreen {
