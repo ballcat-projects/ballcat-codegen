@@ -63,28 +63,18 @@ import type { TemplateEntry } from '@/api/gen/template-entry/types'
 import type { TemplateContentEditorInstance } from '@/views/gen/template-group/components/types'
 import { remoteFileDownload } from '@/utils/file-util'
 
-const props = defineProps<{
-  templateGroupKey?: string
-}>()
-
 const emits = defineEmits<{
   (e: 're-upload'): void
 }>()
 
 const codeGenTipsRef = ref()
 
+const currentTemplateGroupKey = ref<String>()
+
 // 模板信息存储 map
 const templateEntryMap = reactive(new Map<string, TemplateEntry>())
 // 内容暂存区
 const contentStage = reactive(new Map<string, string>())
-// 切换模板组时清空以上两项
-watch(
-  () => props.templateGroupKey,
-  () => {
-    templateEntryMap.clear()
-    contentStage.clear()
-  }
-)
 
 // 文件保存中
 const fileSaving = ref<boolean>(false)
@@ -198,7 +188,7 @@ function handleRemove(targetKey: string) {
     activeKey.value = '0'
   } else if (closeCurrent) {
     // 当关闭标签为第一个的时候，默认打开现在的第一个标签
-    activeKey.value = preKey ? preKey : templateEntryMap.keys().next().value
+    activeKey.value = preKey || templateEntryMap.keys().next().value || '0'
   }
 }
 
@@ -245,6 +235,12 @@ const handleBinaryDownload = () => {
 defineExpose<TemplateContentEditorInstance>({
   load(templateGroupKey: string) {
     codeGenTipsRef.value?.load(templateGroupKey)
+    // 切换模板组时，清空模板项和内容
+    if (currentTemplateGroupKey.value !== templateGroupKey) {
+      currentTemplateGroupKey.value = templateGroupKey
+      templateEntryMap.clear()
+      contentStage.clear()
+    }
   },
   checkSaveState(): boolean {
     // 检查是否有未保存的文件
@@ -272,10 +268,12 @@ defineExpose<TemplateContentEditorInstance>({
 <style scoped lang="less">
 .spin-box {
   height: 100%;
+
   :deep(.ant-spin-container) {
     height: 100%;
   }
 }
+
 .badge-status-unsaved {
   position: relative;
   background-color: #919191;
@@ -287,6 +285,7 @@ defineExpose<TemplateContentEditorInstance>({
   border-radius: 50%;
   margin-right: 5px;
 }
+
 .badge-status-unsaved:after {
   position: absolute;
   top: 0;
@@ -308,16 +307,20 @@ defineExpose<TemplateContentEditorInstance>({
     border-radius: 0 !important;
     margin-left: 0 !important;
   }
+
   :deep(.ant-tabs-tab-remove) {
     margin-left: 0 !important;
   }
+
   :deep(.ant-tabs-nav-container) {
     height: 32px !important;
   }
+
   :deep(.ant-tabs-tab-active) {
     height: 32px !important;
     line-height: 30px !important;
   }
+
   :deep(.ant-tabs-ink-bar) {
     visibility: visible;
   }
@@ -326,9 +329,11 @@ defineExpose<TemplateContentEditorInstance>({
 :deep(.cm-content) {
   min-height: 467px !important;
 }
+
 :deep(.cm-gutter) {
   min-height: 467px !important;
 }
+
 :deep(.cm-scroller) {
   overflow: unset;
 }
