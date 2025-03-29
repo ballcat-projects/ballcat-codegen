@@ -154,7 +154,7 @@ function handlePaneChange(newActiveKey: string) {
   activeKey.value = newActiveKey
 }
 
-function handlePaneEdit(targetKey: string, action: string) {
+function handlePaneEdit(targetKey: string, action: 'remove' | 'add') {
   if (action === 'remove') {
     if (templateEntryMap.get(targetKey)?.templateContent === contentStage.get(targetKey)) {
       handleRemove(targetKey)
@@ -306,6 +306,7 @@ defineExpose<TemplateContentEditorInstance>({
     padding: 0 6px 0 12px !important;
     border-radius: 0 !important;
     margin-left: 0 !important;
+    transition: none !important;
   }
 
   :deep(.ant-tabs-tab-remove) {
@@ -323,6 +324,7 @@ defineExpose<TemplateContentEditorInstance>({
 
   :deep(.ant-tabs-ink-bar) {
     visibility: visible;
+    transition: none !important;
   }
 }
 
