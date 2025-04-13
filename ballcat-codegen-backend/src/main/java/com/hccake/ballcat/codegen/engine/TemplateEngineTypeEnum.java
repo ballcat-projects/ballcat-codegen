@@ -1,11 +1,11 @@
 package com.hccake.ballcat.codegen.engine;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 模板引擎类型
@@ -17,10 +17,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public enum TemplateEngineTypeEnum {
 
-	// velocity 模板引擎
+	/**
+	 * 普通文本。
+	 */
+	PLAIN_TEXT(0),
+
+	/**
+	 * velocity 模板引擎。
+	 */
 	VELOCITY(1),
 
-	// Freemaker 模板引擎
+	/**
+	 * Freemarker 模板引擎。
+	 */
 	FREEMARKER(2);
 
 	private final Integer type;

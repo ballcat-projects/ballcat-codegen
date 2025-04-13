@@ -14,11 +14,14 @@ export enum TemplateEntryTypeEnum {
  * 模板引擎类型
  */
 export class TemplateEngines {
+  static readonly 0: string = 'Plan Text'
   static readonly 1: string = 'Velocity'
   static readonly 2: string = 'Freemarker'
 
   static getEngineName(engineType?: number) {
     switch (engineType) {
+      case 0:
+        return 'Plan Text'
       case 1:
         return 'Velocity'
       case 2:

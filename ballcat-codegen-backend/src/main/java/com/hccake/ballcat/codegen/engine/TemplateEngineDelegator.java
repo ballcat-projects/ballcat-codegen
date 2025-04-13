@@ -1,10 +1,10 @@
 package com.hccake.ballcat.codegen.engine;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
-import com.hccake.ballcat.codegen.exception.TemplateRenderException;
-
 import java.util.Map;
+
+import cn.hutool.core.lang.Assert;
+import com.hccake.ballcat.codegen.exception.TemplateRenderException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 模板引擎的委托者
@@ -27,8 +27,8 @@ public class TemplateEngineDelegator {
 	 */
 	public String render(TemplateEngineTypeEnum engineType, String templateContent, Map<String, Object> context)
 			throws TemplateRenderException {
-		if (StrUtil.isEmpty(templateContent)) {
-			return StrUtil.EMPTY;
+		if (StringUtils.isEmpty(templateContent)) {
+			return "";
 		}
 		TemplateEngine templateEngine = templateEngineMap.get(engineType);
 		Assert.notNull(templateEngine, "未找到对应的模板引擎：{}", engineType);

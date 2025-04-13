@@ -9,7 +9,8 @@
         多级文件夹可以合并为一个目录项, 使用 / 或者. 作为分隔符，例如 com.test
       </a-descriptions-item>
       <a-descriptions-item label="模板引擎" :span="3">
-        目前只支持 Velocity，具体语法请参看其官网
+        目前支持 Velocity 、Freemarker 具体语法请参看其官网。
+        也可以选择 Plain Text，标识纯文本，不会做模板解析。
       </a-descriptions-item>
     </a-descriptions>
     <a-descriptions title="系统提供属性">

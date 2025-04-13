@@ -24,6 +24,7 @@
       <template v-if="modelRef.type === TemplateEntryTypeEnum.TEMPLATE_FILE">
         <a-form-item label="模板引擎" v-bind="validateInfos.engineType">
           <a-radio-group v-model:value="modelRef.engineType">
+            <a-radio :value="0">Plain Text</a-radio>
             <a-radio :value="1">Velocity</a-radio>
             <a-radio :value="2">Freemarker</a-radio>
           </a-radio-group>
@@ -172,5 +173,3 @@ defineExpose<TemplateEntryFormModalInstance>({
   }
 })
 </script>
-
-<style scoped></style>
