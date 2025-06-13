@@ -118,6 +118,7 @@ public class GenerateHelper {
 
 			// 列的数据类型，转换成Java类型
 			DbColumnType columnType = dbTypeConverterManager.getTypeConverter(typeList, columnProperties.getDataType());
+			Assert.notNull(columnType, "未找到对应的数据类型配置，请添加对应配置：{}", columnProperties.getDataType());
 			String columnJavaType = columnType.getType();
 			columnProperties.setAttrType(columnJavaType);
 
