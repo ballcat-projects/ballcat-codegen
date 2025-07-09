@@ -1,7 +1,6 @@
 package com.hccake.ballcat.codegen.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
@@ -14,9 +13,11 @@ import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.GeneratorOptionDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
+import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.service.GeneratorService;
 import com.hccake.ballcat.codegen.service.TableInfoQuery;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
+import com.hccake.ballcat.codegen.service.TemplatePropertyService;
 import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.SystemResultCode;
@@ -47,6 +48,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 	private final TemplateEntryService templateEntryService;
 
 	private final TemplateEngineDelegator templateEngineDelegator;
+
+	private final TemplatePropertyService templatePropertyService;
 
 	private final GenerateHelper generateHelper;
 
@@ -97,18 +100,21 @@ public class GeneratorServiceImpl implements GeneratorService {
 		// 获取模板文件信息
 		List<TemplateEntry> templateEntryList = templateEntryService.listByIds(generateOptionDTO.getTemplateEntryIds());
 		List<TemplateFile> templateFiles = templateEntryService.convertToTemplateFile(templateEntryList);
+		List<TemplateProperty> computedProperties = this.templatePropertyService
+			.listComputedProperties(generateOptionDTO.getTemplateGroupKey());
 
-		return getStringFileEntryMap(generateOptionDTO, templateFiles);
+		return getStringFileEntryMap(generateOptionDTO, templateFiles, computedProperties);
 	}
 
 	/**
 	 * 获得生成后的 代码地址：代码文件 的 map
 	 * @param generateOptionDTO 生成参数
 	 * @param templateFiles 模板文件
+	 * @param computedProperties 计算属性列表
 	 * @return Map<String, FileEntry>
 	 */
 	private Map<String, FileEntry> getStringFileEntryMap(GeneratorOptionDTO generateOptionDTO,
-			List<TemplateFile> templateFiles) {
+			List<TemplateFile> templateFiles, List<TemplateProperty> computedProperties) {
 
 		String[] tableNames = generateOptionDTO.getTableNames();
 		Map<String, String> genProperties = generateOptionDTO.getGenProperties();
@@ -116,7 +122,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
 		// 没有表数据则直接进行代码生成
 		if (tableNames == null || tableNames.length == 0) {
-			return generatorCode(genProperties, templateGroupKey, templateFiles);
+			return generatorCode(genProperties, templateGroupKey, templateFiles, computedProperties);
 		}
 
 		// 有表数据，则根据表数据进行循环生成
@@ -126,15 +132,15 @@ public class GeneratorServiceImpl implements GeneratorService {
 			TableDetails tableDetails = tableInfoQuery.queryTableDetails(tableName);
 			// 生成代码
 			Map<String, FileEntry> fileEntryMap = generatorCode(tableDetails, generateOptionDTO.getTablePrefix(),
-					genProperties, templateGroupKey, templateFiles);
+					genProperties, templateGroupKey, templateFiles, computedProperties);
 			map.putAll(fileEntryMap);
 		}
 		return map;
 	}
 
 	private Map<String, FileEntry> generatorCode(Map<String, String> genProperties, String templateGroupKey,
-			List<TemplateFile> templateFiles) {
-		return generatorCode(null, null, genProperties, templateGroupKey, templateFiles);
+			List<TemplateFile> templateFiles, List<TemplateProperty> computedProperties) {
+		return generatorCode(null, null, genProperties, templateGroupKey, templateFiles, computedProperties);
 	}
 
 	/**
@@ -142,12 +148,14 @@ public class GeneratorServiceImpl implements GeneratorService {
 	 * @return Map<String, FileEntry>
 	 */
 	public Map<String, FileEntry> generatorCode(TableDetails tableDetails, String tablePrefix,
-			Map<String, String> customProperties, String groupKey, List<TemplateFile> templateFiles) {
+			Map<String, String> customProperties, String groupKey, List<TemplateFile> templateFiles,
+			List<TemplateProperty> computedProperties) {
 
 		Map<String, FileEntry> map = new HashMap<>(templateFiles.size());
 
 		// 模板渲染
-		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, groupKey, customProperties);
+		Map<String, Object> context = generateHelper.getContext(tableDetails, tablePrefix, groupKey, customProperties,
+				computedProperties);
 
 		for (TemplateFile templateFile : templateFiles) {
 			FileEntry fileEntry = new FileEntry();

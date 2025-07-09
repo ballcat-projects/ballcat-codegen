@@ -74,4 +74,14 @@ public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePrope
 		baseMapper.removeByGroupKey(groupKey);
 	}
 
+	/**
+	 * 获取所有计算属性。
+	 * @param groupKey 模板组标识
+	 * @return 计算属性列表
+	 */
+	@Override
+	public List<TemplateProperty> listComputedProperties(String groupKey) {
+		return baseMapper.listComputedProperties(groupKey);
+	}
+
 }

@@ -1,7 +1,10 @@
 package com.hccake.ballcat.codegen.mapper;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.hccake.ballcat.codegen.constant.TemplatePropertyTypeEnum;
 import com.hccake.ballcat.codegen.converter.TemplatePropertyConverter;
 import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.qo.TemplatePropertyQO;
@@ -12,8 +15,6 @@ import com.hccake.extend.mybatis.plus.conditions.query.LambdaQueryWrapperX;
 import com.hccake.extend.mybatis.plus.mapper.ExtendMapper;
 import com.hccake.extend.mybatis.plus.toolkit.WrappersX;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 /**
  * 模板属性配置
@@ -57,6 +58,18 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	 */
 	default void removeByGroupKey(String templateGroupKey) {
 		this.delete(Wrappers.lambdaQuery(TemplateProperty.class).eq(TemplateProperty::getGroupKey, templateGroupKey));
+	}
+
+	/**
+	 * 查询出指定模板足下的所有计算属性。
+	 * @param groupKey 模板组
+	 * @return 计算属性列表
+	 */
+	default List<TemplateProperty> listComputedProperties(String groupKey) {
+		return this.selectList(Wrappers.<TemplateProperty>lambdaQuery()
+			.eq(TemplateProperty::getGroupKey, groupKey)
+			.eq(TemplateProperty::getPropType, TemplatePropertyTypeEnum.COMPUTED_SPEL.getValue())
+			.orderByAsc(TemplateProperty::getOrderValue));
 	}
 
 }

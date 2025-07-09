@@ -13,7 +13,7 @@ import java.util.List;
  * 模板属性配置
  *
  * @author hccake
- * @date 2020-06-22 15:46:39
+ * @since 2020-06-22 15:46:39
  */
 public interface TemplatePropertyService extends ExtendService<TemplateProperty> {
 
@@ -44,5 +44,12 @@ public interface TemplatePropertyService extends ExtendService<TemplateProperty>
 	 * @param groupKey 模板组标识
 	 */
 	void removeByGroupKey(String groupKey);
+
+	/**
+	 * 获取所有计算属性。
+	 * @param groupKey 模板组标识
+	 * @return 计算属性列表
+	 */
+	List<TemplateProperty> listComputedProperties(String groupKey);
 
 }

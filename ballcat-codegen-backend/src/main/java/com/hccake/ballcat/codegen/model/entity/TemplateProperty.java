@@ -1,5 +1,8 @@
 package com.hccake.ballcat.codegen.model.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -7,11 +10,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.hccake.ballcat.codegen.constant.TemplatePropertyTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 模板属性配置
@@ -22,8 +23,6 @@ import java.util.List;
 @TableName(value = "gen_template_property", autoResultMap = true)
 @Schema(title = "模板属性配置")
 public class TemplateProperty {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ID
@@ -51,6 +50,20 @@ public class TemplateProperty {
 	private String propKey;
 
 	/**
+	 * 属性类型。
+	 *
+	 * @see TemplatePropertyTypeEnum
+	 */
+	@Schema(title = "属性类型")
+	private Integer propType;
+
+	/**
+	 * 计算表达式。
+	 */
+	@Schema(title = "计算表达式")
+	private String computedExpression;
+
+	/**
 	 * 默认值(可为空值)
 	 */
 	@TableField(updateStrategy = FieldStrategy.IGNORED)
@@ -59,6 +72,7 @@ public class TemplateProperty {
 
 	/**
 	 * 前端显示的组件类型
+	 *
 	 * @see com.hccake.ballcat.codegen.constant.ComponentTypeEnum
 	 */
 	@Schema(title = "组件类型")

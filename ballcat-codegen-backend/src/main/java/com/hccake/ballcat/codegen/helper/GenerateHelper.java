@@ -15,13 +15,17 @@ import com.hccake.ballcat.codegen.model.bo.GenerateProperties;
 import com.hccake.ballcat.codegen.model.bo.TableDetails;
 import com.hccake.ballcat.codegen.model.entity.DbColumnType;
 import com.hccake.ballcat.codegen.model.entity.FieldType;
+import com.hccake.ballcat.codegen.model.entity.TemplateProperty;
 import com.hccake.ballcat.codegen.model.entity.TypeScriptType;
 import com.hccake.ballcat.codegen.service.TypeScriptTypeService;
 import com.hccake.ballcat.codegen.typescript.TypeScriptTypeConverter;
 import com.hccake.ballcat.codegen.util.GenerateUtils;
+import com.hccake.ballcat.common.util.SpelUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,7 +43,7 @@ public class GenerateHelper {
 	private final TypeScriptTypeService typeScriptTypeService;
 
 	public Map<String, Object> getContext(TableDetails tableDetails, String tablePrefix, String templateGroupKey,
-			Map<String, String> customProperties) {
+			Map<String, String> customProperties, List<TemplateProperty> computedProperties) {
 		Map<String, Object> context;
 
 		GenerateProperties generateProperties;
@@ -56,6 +60,19 @@ public class GenerateHelper {
 		context = BeanUtil.beanToMap(generateProperties);
 		// 追加用户自定义属性
 		context.putAll(customProperties);
+
+		// 填充计算属性
+		if (computedProperties != null) {
+			StandardEvaluationContext spelContext = new StandardEvaluationContext();
+			context.forEach(spelContext::setVariable);
+
+			for (TemplateProperty computedProperty : computedProperties) {
+				Expression expression = SpelUtils.PARSER.parseExpression(computedProperty.getComputedExpression());
+				Object value = expression.getValue(spelContext);
+				context.put(computedProperty.getPropKey(), value);
+			}
+		}
+
 		return context;
 	}
 
