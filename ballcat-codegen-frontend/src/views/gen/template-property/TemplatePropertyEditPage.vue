@@ -20,55 +20,70 @@
       <a-form-item label="属性键" name="propKey">
         <a-input v-model:value="modelRef.propKey" placeholder="请输入" />
       </a-form-item>
-      <a-form-item label="默认值" name="defaultValue">
-        <a-input v-model:value="modelRef.defaultValue" placeholder="请输入" />
-      </a-form-item>
-      <a-form-item label="属性控件" name="componentType">
-        <a-radio-group v-model:value="modelRef.componentType">
-          <a-radio :value="ComponentType.INPUT">Input</a-radio>
-          <a-radio :value="ComponentType.INPUT_NUMBER">Input Number</a-radio>
-          <a-radio :value="ComponentType.SELECT">Select</a-radio>
-          <a-radio :value="ComponentType.RADIO">Radio</a-radio>
+      <a-form-item label="属性类型" name="propType">
+        <a-radio-group v-model:value="modelRef.propType">
+          <a-radio-button :value="1">配置属性</a-radio-button>
+          <a-radio-button :value="2">计算属性</a-radio-button>
         </a-radio-group>
       </a-form-item>
-      <a-form-item
-        v-if="
+
+      <template v-if="modelRef.propType == PropType.CONFIG">
+        <a-form-item label="默认值" name="defaultValue">
+          <a-input v-model:value="modelRef.defaultValue" placeholder="请输入" />
+        </a-form-item>
+        <a-form-item label="属性控件" name="componentType">
+          <a-radio-group v-model:value="modelRef.componentType">
+            <a-radio :value="ComponentType.INPUT">Input</a-radio>
+            <a-radio :value="ComponentType.INPUT_NUMBER">Input Number</a-radio>
+            <a-radio :value="ComponentType.SELECT">Select</a-radio>
+            <a-radio :value="ComponentType.RADIO">Radio</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item
+          v-if="
           modelRef.componentType === ComponentType.SELECT ||
           modelRef.componentType === ComponentType.RADIO
         "
-        label="选项配置"
-      >
-        <a-space
-          v-for="(option, index) in modelRef.componentOptions"
-          :key="option.value"
-          style="display: flex; margin-bottom: 8px"
-          align="baseline"
+          label="选项配置"
         >
-          <a-form-item
-            :name="['componentOptions', index, 'name']"
-            :rules="{
+          <a-space
+            v-for="(option, index) in modelRef.componentOptions"
+            :key="option.value"
+            style="display: flex; margin-bottom: 8px"
+            align="baseline"
+          >
+            <a-form-item
+              :name="['componentOptions', index, 'name']"
+              :rules="{
               required: true,
               message: '请输入选项的名称'
             }"
-          >
-            <a-input v-model:value="option.name" placeholder="Name" />
-          </a-form-item>
-          <a-form-item
-            :name="['componentOptions', index, 'value']"
-            :rules="{
+            >
+              <a-input v-model:value="option.name" placeholder="Name" />
+            </a-form-item>
+            <a-form-item
+              :name="['componentOptions', index, 'value']"
+              :rules="{
               required: true,
               message: '请输入选项的值'
             }"
-          >
-            <a-input v-model:value="option.value" placeholder="Value" />
-          </a-form-item>
-          <MinusCircleOutlined @click="removeOption(option)" />
-        </a-space>
-        <a-button type="dashed" block @click="addOption">
-          <PlusOutlined />
-          添加选项
-        </a-button>
-      </a-form-item>
+            >
+              <a-input v-model:value="option.value" placeholder="Value" />
+            </a-form-item>
+            <MinusCircleOutlined @click="removeOption(option)" />
+          </a-space>
+          <a-button type="dashed" block @click="addOption">
+            <PlusOutlined />
+            添加选项
+          </a-button>
+        </a-form-item>
+      </template>
+      <template v-else-if="modelRef.propType == PropType.COMPUTED">
+        <a-form-item label="表达式" name="expression">
+          <a-input v-model:value="modelRef.expression" placeholder="请输入" />
+        </a-form-item>
+      </template>
+
       <a-form-item label="排序值" name="orderValue">
         <a-input-number v-model:value="modelRef.orderValue" placeholder="请输入" />
       </a-form-item>
@@ -98,7 +113,7 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { computed, reactive, ref, toRaw } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
-import type { TemplateProperty } from '@/api/gen/template-property/types'
+import { PropType, type TemplateProperty } from "@/api/gen/template-property/types";
 import { ComponentType } from '@/api/gen/template-property/types'
 import { copyProperties } from '@/utils/bean-util'
 import { addTemplateProperty, updateTemplateProperty } from '@/api/gen/template-property'
@@ -126,6 +141,8 @@ const modelRef = reactive<TemplateProperty>({
   groupKey: '',
   title: '',
   propKey: '',
+  propType: 1,
+  expression: '',
   defaultValue: '',
   required: 0,
   componentOptions: [],
@@ -135,14 +152,14 @@ const modelRef = reactive<TemplateProperty>({
 })
 
 const removeOption = (item: Option) => {
-  const index = modelRef.componentOptions.indexOf(item)
-  if (index !== -1) {
-    modelRef.componentOptions.splice(index, 1)
+  const index = modelRef.componentOptions?.indexOf(item)
+  if (index && index !== -1) {
+    modelRef.componentOptions?.splice(index, 1)
   }
 }
 
 const addOption = () => {
-  modelRef.componentOptions.push({
+  modelRef.componentOptions?.push({
     name: '',
     value: ''
   })

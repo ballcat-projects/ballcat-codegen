@@ -5,7 +5,7 @@
     :mask-closable="false"
     :footer="null"
     :body-style="{ padding: '12px 18px' }"
-    :width="900"
+    :width="1200"
     @cancel="handleClose"
   >
     <template-property-table-page

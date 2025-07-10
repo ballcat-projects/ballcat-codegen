@@ -2,6 +2,7 @@ package com.hccake.ballcat.codegen.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.hccake.ballcat.codegen.constant.TemplatePropertyTypeEnum;
 import com.hccake.ballcat.codegen.model.entity.ComponentOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -13,13 +14,11 @@ import java.util.List;
  * 模板属性配置
  *
  * @author hccake
- * @date 2020-06-22 15:46:39
+ * @since 2020-06-22 15:46:39
  */
 @Data
 @Schema(title = "模板属性配置")
 public class TemplatePropertyPageVO {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ID
@@ -44,6 +43,20 @@ public class TemplatePropertyPageVO {
 	 */
 	@Schema(title = "属性键")
 	private String propKey;
+
+	/**
+	 * 属性类型。
+	 *
+	 * @see TemplatePropertyTypeEnum
+	 */
+	@Schema(title = "属性类型")
+	private Integer propType;
+
+	/**
+	 * 计算表达式。
+	 */
+	@Schema(title = "计算表达式")
+	private String expression;
 
 	/**
 	 * 默认值

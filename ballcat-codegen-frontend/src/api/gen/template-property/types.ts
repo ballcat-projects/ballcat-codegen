@@ -10,12 +10,16 @@ export interface TemplateProperty {
   title?: string
   // 属性键
   propKey: string
+  // 属性类型：1=配置属性，2=计算属性
+  propType: number
+  // 表达式，计算属性必填
+  expression?: string
   // 默认值(可为空值)
   defaultValue?: string
   // 组件类型
-  componentType: ComponentType
+  componentType?: ComponentType
   // 组件选项
-  componentOptions: ComponentOption[]
+  componentOptions?: ComponentOption[]
   // 是否必填，1：是，0：否
   required?: 1 | 0
   // 排序值
@@ -34,4 +38,12 @@ export enum ComponentType {
   INPUT_NUMBER = 'input-number',
   SELECT = 'select',
   RADIO = 'radio'
+}
+
+/**
+ * 属性类型。
+ */
+export enum PropType {
+  CONFIG =  1, // 配置属性
+  COMPUTED = 2 // 计算属性
 }

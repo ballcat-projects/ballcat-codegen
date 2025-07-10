@@ -22,6 +22,11 @@
           <a-tag v-if="text === 1" color="red">是</a-tag>
           <a-tag v-else>否</a-tag>
         </template>
+        <template v-else-if="column.dataIndex === 'propType'">
+          <a-tag v-if="text === 1" color="orange">配置属性</a-tag>
+          <a-tag v-else-if="text === 2" color="blue">计算属性</a-tag>
+          <a-tag v-else>text</a-tag>
+        </template>
         <template v-else-if="column.dataIndex === 'action'">
           <a @click="handleUpdate(record)">编辑</a>
           <a-divider type="vertical" />
@@ -57,6 +62,15 @@ const columns = [
   {
     title: '属性键',
     dataIndex: 'propKey'
+  },
+  {
+    title: '属性类型',
+    dataIndex: 'propType',
+    width: 80
+  },
+  {
+    title: '表达式',
+    dataIndex: 'expression'
   },
   {
     title: '默认值',
