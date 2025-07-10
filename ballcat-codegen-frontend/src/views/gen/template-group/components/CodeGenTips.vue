@@ -47,10 +47,19 @@
         表前缀，代码生成时截取此前缀后再生成类名
       </a-descriptions-item>
     </a-descriptions>
-    <a-descriptions title="用户自定义属性">
-      <a-descriptions-item v-for="item in properties" :key="item.id" :label="item.propKey">
-        {{ item.remarks ? item.title + '，' + item.remarks : item.title }}
-      </a-descriptions-item>
+    <a-descriptions title="用户配置属性">
+      <template  v-for="item in properties" :key="item.id" >
+        <a-descriptions-item :label="item.propKey" v-if="item.propType === PropType.CONFIG">
+          {{ item.remarks ? item.title + '，' + item.remarks : item.title }}
+        </a-descriptions-item>
+      </template>
+    </a-descriptions>
+    <a-descriptions title="计算属性">
+      <template  v-for="item in properties" :key="item.id" >
+        <a-descriptions-item :label="item.propKey" v-if="item.propType === PropType.COMPUTED">
+          {{ item.remarks ? item.title + '，' + item.remarks : item.title }}
+        </a-descriptions-item>
+      </template>
     </a-descriptions>
   </div>
 </template>
@@ -60,7 +69,7 @@ import { ref } from 'vue'
 import { listTemplateProperty } from '@/api/gen/template-property'
 import { doRequest } from '@/utils/axios/request'
 // 类型导入
-import type { TemplateProperty } from '@/api/gen/template-property/types'
+import { PropType, type TemplateProperty } from "@/api/gen/template-property/types";
 
 // 自定义模板
 const properties = ref<TemplateProperty[]>([])
