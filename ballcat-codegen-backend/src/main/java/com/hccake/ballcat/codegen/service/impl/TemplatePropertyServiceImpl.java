@@ -44,6 +44,11 @@ public class TemplatePropertyServiceImpl extends ExtendServiceImpl<TemplatePrope
 		return baseMapper.listByTemplateGroupKey(groupKey);
 	}
 
+	@Override
+	public List<TemplateProperty> listByGroupKeyAndPropType(String groupKey, Integer propType) {
+		return baseMapper.listByGroupKeyAndPropType(groupKey, propType);
+	}
+
 	/**
 	 * 复制模板属性配置
 	 * @param resourceGroupKey 原模板组标识

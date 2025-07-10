@@ -33,6 +33,14 @@ public interface TemplatePropertyService extends ExtendService<TemplateProperty>
 	List<TemplateProperty> listByGroupKey(String groupKey);
 
 	/**
+	 * 获取模板组的所有指定类型的配置。
+	 * @param groupKey 模板组标识
+	 * @param propType 属性类型
+	 * @return List<TemplatePropertyVO> 配置列表
+	 */
+	List<TemplateProperty> listByGroupKeyAndPropType(String groupKey, Integer propType);
+
+	/**
 	 * 复制模板属性配置
 	 * @param resourceGroupKey 原模板组标识
 	 * @param targetGroupKey 模板模板组标识

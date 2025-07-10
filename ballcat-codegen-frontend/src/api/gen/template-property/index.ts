@@ -1,6 +1,6 @@
 import request from '@/utils/axios'
 import type { R } from '@/utils/axios/types'
-import type { TemplateProperty } from '@/api/gen/template-property/types'
+import { PropType, type TemplateProperty } from "@/api/gen/template-property/types";
 import type { PageParam, PageResult } from '@/api/types'
 
 /**
@@ -36,9 +36,14 @@ export function removeTemplateProperty(templatePropertyId: number) {
 /**
  * 获取模板组对应的配置列表
  * @param templateGroupKey 模板组标识
+ * @param propType 属性类型
  */
-export function listTemplateProperty(templateGroupKey: string) {
-  return request.get<R<TemplateProperty[]>>(`/gen/template/property/list/${templateGroupKey}`)
+export function listTemplateProperty(templateGroupKey: string, propType?: PropType) {
+  return request.get<R<TemplateProperty[]>>(`/gen/template/property/list/${templateGroupKey}`, {
+    params: {
+      propType: propType
+    }
+  })
 }
 
 /**

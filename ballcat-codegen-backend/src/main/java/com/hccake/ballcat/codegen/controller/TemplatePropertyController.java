@@ -59,8 +59,10 @@ public class TemplatePropertyController {
 	 */
 	@Operation(summary = "模板组属性")
 	@GetMapping("/list/{groupKey}")
-	public R<List<TemplatePropertyPageVO>> getTemplatePropertyList(@PathVariable("groupKey") String groupKey) {
-		List<TemplateProperty> templateProperties = templatePropertyService.listByGroupKey(groupKey);
+	public R<List<TemplatePropertyPageVO>> getTemplatePropertyList(@PathVariable("groupKey") String groupKey,
+			@RequestParam(name = "propType", required = false) Integer propType) {
+		List<TemplateProperty> templateProperties = templatePropertyService.listByGroupKeyAndPropType(groupKey,
+				propType);
 		List<TemplatePropertyPageVO> vos = templateProperties.stream()
 			.map(TemplatePropertyConverter.INSTANCE::poToPageVo)
 			.collect(Collectors.toList());
@@ -120,9 +122,9 @@ public class TemplatePropertyController {
 
 		try {
 			boolean updateSuccess = templatePropertyService.updateById(templateProperty);
-			return updateSuccess ? R.ok()
-					: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板属性配置失败");
-		} catch (DuplicateKeyException e) {
+			return updateSuccess ? R.ok() : R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板属性配置失败");
+		}
+		catch (DuplicateKeyException e) {
 			return R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "唯一键重复：" + e.getMessage());
 		}
 

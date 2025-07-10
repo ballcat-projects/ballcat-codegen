@@ -41,15 +41,25 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	}
 
 	/**
-	 * 根据模板组标识获取模板组的所有配置
-	 * @param templateGroupKey 模板组标识
+	 * 根据模板组标识获取模板组的所有配置.
+	 * @param groupKey 模板组标识
 	 * @return List<TemplateProperty> 配置列表
 	 */
-	default List<TemplateProperty> listByTemplateGroupKey(String templateGroupKey) {
-		return this.selectList(Wrappers.<TemplateProperty>lambdaQuery()
-			.eq(TemplateProperty::getGroupKey, templateGroupKey)
-			.orderByAsc(TemplateProperty::getOrderValue));
+	default List<TemplateProperty> listByTemplateGroupKey(String groupKey) {
+		return this.listByGroupKeyAndPropType(groupKey, null);
+	}
 
+	/**
+	 * 根据模板组标识获取模板组的所有配置.
+	 * @param groupKey 模板组标识
+	 * @param propType 属性类型，可选筛选项.
+	 * @return List<TemplateProperty> 配置列表
+	 */
+	default List<TemplateProperty> listByGroupKeyAndPropType(String groupKey, Integer propType) {
+		return this.selectList(WrappersX.<TemplateProperty>lambdaQueryX()
+			.eq(TemplateProperty::getGroupKey, groupKey)
+			.eqIfPresent(TemplateProperty::getPropType, propType)
+			.orderByAsc(TemplateProperty::getOrderValue));
 	}
 
 	/**

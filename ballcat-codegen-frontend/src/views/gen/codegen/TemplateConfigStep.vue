@@ -101,7 +101,7 @@ import type { DataNode } from 'ant-design-vue/es/vc-tree/interface'
 import type { CheckInfo } from 'ant-design-vue/es/vc-tree/props'
 import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import { useGeneratorConfigStore } from '@/store'
-import { ComponentType, type TemplateProperty } from '@/api/gen/template-property/types'
+import { ComponentType, PropType, type TemplateProperty } from "@/api/gen/template-property/types";
 
 // 代码生成配置信息
 const generatorConfigStore = useGeneratorConfigStore()
@@ -152,7 +152,7 @@ const initPage = () => {
     return
   }
   doRequest({
-    request: listTemplateProperty(templateGroupKey),
+    request: listTemplateProperty(templateGroupKey, PropType.CONFIG),
     onSuccess: res => {
       templateProperties.value = res.data
       modelRef.genProperties = {}
