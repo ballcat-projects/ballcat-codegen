@@ -67,7 +67,7 @@ public class GenerateHelper {
 			context.forEach(spelContext::setVariable);
 
 			for (TemplateProperty computedProperty : computedProperties) {
-				Expression expression = SpelUtils.PARSER.parseExpression(computedProperty.getComputedExpression());
+				Expression expression = SpelUtils.PARSER.parseExpression(computedProperty.getExpression());
 				Object value = expression.getValue(spelContext);
 				context.put(computedProperty.getPropKey(), value);
 			}

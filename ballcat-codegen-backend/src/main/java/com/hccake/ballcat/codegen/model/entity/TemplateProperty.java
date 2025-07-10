@@ -61,7 +61,7 @@ public class TemplateProperty {
 	 * 计算表达式。
 	 */
 	@Schema(title = "计算表达式")
-	private String computedExpression;
+	private String expression;
 
 	/**
 	 * 默认值(可为空值)

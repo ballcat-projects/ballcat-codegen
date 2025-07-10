@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 public enum TemplatePropertyTypeEnum {
 
 	/**
-	 * 普通属性
+	 * 配置属性。
 	 **/
-	NORMAL(1, "普通属性"),
+	CONFIG(1, "配置属性"),
 
 	/**
 	 * 计算属性。

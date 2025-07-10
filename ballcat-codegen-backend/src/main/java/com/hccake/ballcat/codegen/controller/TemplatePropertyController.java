@@ -117,8 +117,15 @@ public class TemplatePropertyController {
 	@PutMapping
 	// @PreAuthorize("@per.hasPermission('codegen:templateproperty:edit')" )
 	public R<Void> updateById(@RequestBody TemplateProperty templateProperty) {
-		return templatePropertyService.updateById(templateProperty) ? R.ok()
-				: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板属性配置失败");
+
+		try {
+			boolean updateSuccess = templatePropertyService.updateById(templateProperty);
+			return updateSuccess ? R.ok()
+					: R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "修改模板属性配置失败");
+		} catch (DuplicateKeyException e) {
+			return R.failed(BaseResultCode.UPDATE_DATABASE_ERROR, "唯一键重复：" + e.getMessage());
+		}
+
 	}
 
 	/**
