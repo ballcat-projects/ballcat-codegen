@@ -7,7 +7,7 @@ import qs from 'qs'
 // 创建 axios 实例
 const axiosInstance = Axios.create({
   baseURL: import.meta.env.BASE_URL + 'api', // api base_url
-  timeout: 6000, // 请求超时时间
+  timeout: 60000, // 请求超时时间
   paramsSerializer: {
     serialize: params => {
       return qs.stringify(params, {
