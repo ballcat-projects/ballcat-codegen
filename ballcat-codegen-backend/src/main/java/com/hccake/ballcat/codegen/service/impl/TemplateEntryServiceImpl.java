@@ -8,13 +8,13 @@ import com.hccake.ballcat.codegen.constant.TemplateEntryRemoveModeEnum;
 import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
 import com.hccake.ballcat.codegen.mapper.TemplateEntryMapper;
+import com.hccake.ballcat.codegen.util.FilePathUtils;
 import com.hccake.ballcat.codegen.model.bo.TemplateFile;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryCreateDTO;
 import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryTree;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.util.GenerateUtils;
 import com.hccake.ballcat.common.core.exception.BusinessException;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.util.tree.TreeUtils;
@@ -235,7 +235,7 @@ public class TemplateEntryServiceImpl extends ExtendServiceImpl<TemplateEntryMap
 			// 递归调用子节点，查找叶子节点
 			if (CollUtil.isNotEmpty(children)) {
 				for (TemplateEntryTree child : children) {
-					fillTemplateFiles(child, list, GenerateUtils.concatFilePath(path, current.getFilename()));
+					fillTemplateFiles(child, list, FilePathUtils.concatFilePath(path, current.getFilename()));
 				}
 			}
 		}

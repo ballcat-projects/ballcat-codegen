@@ -1,8 +1,8 @@
 package com.hccake.ballcat.codegen.model.bo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * 默认提供的模板渲染可用的属性
@@ -11,11 +11,6 @@ import java.util.List;
  */
 @Data
 public class GenerateProperties {
-
-	/**
-	 * 生成代码的即时时间
-	 */
-	private String currentTime;
 
 	/**
 	 * 表名

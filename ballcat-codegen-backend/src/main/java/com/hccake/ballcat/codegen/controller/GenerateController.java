@@ -2,6 +2,7 @@ package com.hccake.ballcat.codegen.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import com.hccake.ballcat.codegen.constant.TemplateEntryTypeEnum;
 import com.hccake.ballcat.codegen.converter.TemplateModelConverter;
 import com.hccake.ballcat.codegen.model.bo.FileEntry;
 import com.hccake.ballcat.codegen.model.bo.TableInfo;
@@ -26,9 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 代码生成器
@@ -65,7 +70,12 @@ public class GenerateController {
 	@PostMapping("/generate")
 	public void generateCode(@RequestBody GeneratorOptionDTO generatorOptionDTO, HttpServletResponse response)
 			throws IOException {
-		byte[] data = generatorService.generatorCode(generatorOptionDTO);
+		// 使用统一的生成方法
+		List<FileEntry> fileEntries = generatorService.generateFileEntries(generatorOptionDTO);
+
+		// 打包成ZIP文件
+		byte[] data = packagesToZip(fileEntries);
+
 		response.reset();
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"ballcat.zip\"");
 		response.addHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(data.length));
@@ -82,14 +92,43 @@ public class GenerateController {
 	@Operation(summary = "生成预览代码")
 	@PostMapping("/preview")
 	public R<List<GeneratePreviewFileVO>> previewCode(@RequestBody GeneratorOptionDTO preGenerateOptionDTO) {
-		List<FileEntry> fileEntries = generatorService.previewCode(preGenerateOptionDTO);
+		// 使用统一的生成方法
+		List<FileEntry> fileEntries = generatorService.generateFileEntries(preGenerateOptionDTO);
+
 		if (CollUtil.isEmpty(fileEntries)) {
 			return R.ok();
 		}
+
+		// 转换为 VO，并按文件名排序（忽略大小写）
 		List<GeneratePreviewFileVO> list = fileEntries.stream()
+			.sorted(Comparator.comparing(FileEntry::getFilename, String.CASE_INSENSITIVE_ORDER))
 			.map(TemplateModelConverter.INSTANCE::fileEntryToPreviewVo)
 			.collect(Collectors.toList());
 		return R.ok(list);
+	}
+
+	/**
+	 * 将文件列表打包成ZIP
+	 * @param fileEntries 文件列表
+	 * @return ZIP字节数组
+	 * @throws IOException IO异常
+	 */
+	private byte[] packagesToZip(List<FileEntry> fileEntries) throws IOException {
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				ZipOutputStream zip = new ZipOutputStream(outputStream)) {
+
+			for (FileEntry fileEntry : fileEntries) {
+				// 只处理文件，跳过文件夹
+				if (!TemplateEntryTypeEnum.FOLDER.equals(fileEntry.getType())) {
+					zip.putNextEntry(new ZipEntry(fileEntry.getFilePath()));
+					zip.write(fileEntry.getFileContent());
+					zip.closeEntry();
+				}
+			}
+
+			zip.finish();
+			return outputStream.toByteArray();
+		}
 	}
 
 }

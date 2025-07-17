@@ -14,7 +14,7 @@ import com.hccake.ballcat.codegen.model.dto.TemplateEntryUpdateDTO;
 import com.hccake.ballcat.codegen.model.entity.TemplateEntry;
 import com.hccake.ballcat.codegen.model.vo.TemplateEntryVO;
 import com.hccake.ballcat.codegen.service.TemplateEntryService;
-import com.hccake.ballcat.codegen.util.GenerateUtils;
+import com.hccake.ballcat.codegen.util.FilePathUtils;
 import com.hccake.ballcat.common.model.result.BaseResultCode;
 import com.hccake.ballcat.common.model.result.R;
 import com.hccake.ballcat.common.util.tree.TreeUtils;
@@ -238,7 +238,7 @@ public class TemplateEntryController {
 		ServletOutputStream responseOutputStream = response.getOutputStream();
 		try (ZipOutputStream zip = new ZipOutputStream(responseOutputStream)) {
 			for (TemplateFile templateFile : templateFiles) {
-				String filePath = GenerateUtils.concatFilePath(templateFile.getParentFilePath(),
+				String filePath = FilePathUtils.concatFilePath(templateFile.getParentFilePath(),
 						templateFile.getFilename());
 				TemplateEntryTypeEnum type = templateFile.getType();
 				// 文件夹必须尾缀 “/”
