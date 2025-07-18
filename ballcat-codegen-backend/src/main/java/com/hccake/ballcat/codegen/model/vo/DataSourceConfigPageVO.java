@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 @Schema(title = "数据源分页VO")
 public class DataSourceConfigPageVO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ID
 	 */

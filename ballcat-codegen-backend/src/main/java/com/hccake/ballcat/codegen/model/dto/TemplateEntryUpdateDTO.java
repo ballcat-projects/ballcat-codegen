@@ -13,8 +13,6 @@ import lombok.Data;
 @Schema(title = "模板文件目录项")
 public class TemplateEntryUpdateDTO {
 
-	private static final long serialVersionUID = 1L;
-
 	@Schema(title = "ID")
 	private String id;
 

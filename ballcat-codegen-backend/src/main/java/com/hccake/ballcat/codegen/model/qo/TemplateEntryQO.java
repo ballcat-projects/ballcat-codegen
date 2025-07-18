@@ -15,8 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 @ParameterObject
 public class TemplateEntryQO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 *
 	 */

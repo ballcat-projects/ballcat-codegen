@@ -14,8 +14,6 @@ import lombok.Data;
 @Schema(title = "数据源配置信息")
 public class DataSourceConfigDTO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ID
 	 */

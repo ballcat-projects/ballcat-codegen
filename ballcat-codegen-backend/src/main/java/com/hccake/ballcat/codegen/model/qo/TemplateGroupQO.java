@@ -14,8 +14,6 @@ import org.springdoc.api.annotations.ParameterObject;
 @ParameterObject
 public class TemplateGroupQO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * 模板组名称
 	 */

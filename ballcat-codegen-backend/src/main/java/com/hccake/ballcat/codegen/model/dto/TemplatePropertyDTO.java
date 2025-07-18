@@ -17,8 +17,6 @@ import java.util.List;
 @Schema(title = "模板属性配置")
 public class TemplatePropertyDTO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * 标题
 	 */

@@ -15,8 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 @ParameterObject
 public class DataSourceConfigQO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * 数据源描述
 	 */

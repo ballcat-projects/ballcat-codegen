@@ -21,8 +21,6 @@ import java.time.LocalDateTime;
 @Schema(title = "模板目录项")
 public class TemplateEntry {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ID
 	 */

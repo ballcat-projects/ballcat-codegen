@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 @Schema(title = "模板文件目录项")
 public class TemplateEntryCreateDTO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * 模板组标识
 	 */

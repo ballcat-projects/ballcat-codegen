@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 @Schema(title = "模板组分页VO")
 public class TemplateGroupPageVO {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ID
 	 */

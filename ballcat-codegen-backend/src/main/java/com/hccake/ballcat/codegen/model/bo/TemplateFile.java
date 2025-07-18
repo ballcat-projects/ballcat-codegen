@@ -16,8 +16,6 @@ import lombok.experimental.Accessors;
 @Schema(title = "模板文件")
 public class TemplateFile {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * ID
 	 */
