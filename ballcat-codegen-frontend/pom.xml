@@ -37,7 +37,7 @@
 							<goal>install-node-and-pnpm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v18.12.0</nodeVersion>
+							<nodeVersion>v20.19.4</nodeVersion>
 							<pnpmVersion>8.15.3</pnpmVersion>
 						</configuration>
 					</execution>
