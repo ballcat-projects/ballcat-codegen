@@ -1,0 +1,473 @@
+// 组件级样式定义
+// 使用 BEM 命名规范，避免样式冲突
+
+// 导入具体组件样式
+@import './components/template-property.less';
+
+// ===== Ant Design 组件定制 =====
+
+// 表格组件定制
+.ant-table {
+  &-wrapper {
+    border-radius: @border-radius-lg;
+    box-shadow: @shadow-card;
+  }
+  
+  &-thead > tr > th {
+    background: @bg-color-container;
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    border-bottom: 1px solid @border-color;
+    
+    &:first-child {
+      border-top-left-radius: @border-radius-lg;
+    }
+    
+    &:last-child {
+      border-top-right-radius: @border-radius-lg;
+    }
+  }
+  
+  &-tbody > tr {
+    transition: @animation-fast;
+    
+    &:hover > td {
+      background: @bg-color-hover;
+    }
+  }
+  
+  // 表格操作列样式
+  &-operation-column {
+    .ant-btn-link {
+      padding: 0 @spacing-xs;
+      font-size: @font-size-sm;
+      
+      &:not(:last-child) {
+        margin-right: @spacing-sm;
+      }
+      
+      &.danger {
+        color: @error-color;
+        
+        &:hover {
+          color: @error-color-hover;
+        }
+      }
+    }
+  }
+}
+
+// 卡片组件定制
+.ant-card {
+  border-radius: @border-radius-lg;
+  box-shadow: @shadow-card;
+  border: none;
+  
+  &-head {
+    border-bottom: 1px solid @border-color;
+    background: @bg-color-container;
+    
+    &-title {
+      font-weight: @font-weight-semibold;
+      color: @text-color-primary;
+    }
+  }
+  
+  &-body {
+    padding: @spacing-xl;
+  }
+}
+
+// 按钮组件定制
+.ant-btn {
+  border-radius: @border-radius-base;
+  font-weight: @font-weight-medium;
+  transition: @animation-fast;
+  
+  &-primary {
+    background: @primary-color;
+    border-color: @primary-color;
+    box-shadow: @shadow-button;
+    
+    &:hover {
+      background: @primary-color-hover;
+      border-color: @primary-color-hover;
+      transform: translateY(-1px);
+      box-shadow: @shadow-button-hover;
+    }
+  }
+  
+  &-default {
+    background: @bg-color-container;
+    border-color: @border-color;
+    color: @text-color-primary;
+    
+    &:hover {
+      border-color: @primary-color;
+      color: @primary-color;
+    }
+  }
+  
+  &-link {
+    &.danger {
+      color: @error-color;
+      
+      &:hover {
+        color: @error-color-hover;
+      }
+    }
+  }
+}
+
+// 表单组件定制
+.ant-form {
+  &-item {
+    margin-bottom: @spacing-lg;
+    
+    &-label > label {
+      font-weight: @font-weight-medium;
+      color: @text-color-primary;
+    }
+  }
+}
+
+.ant-input {
+  border-radius: @border-radius-base;
+  border-color: @border-color;
+  
+  &:focus,
+  &-focused {
+    border-color: @primary-color;
+    box-shadow: 0 0 0 2px fade(@primary-color, 20%);
+  }
+}
+
+// Popover 组件定制
+.ant-popover {
+  &-content {
+    border-radius: @border-radius-lg;
+    box-shadow: @shadow-popup;
+  }
+  
+  &-inner {
+    border-radius: @border-radius-lg;
+    padding: @spacing-md;
+  }
+  
+  &-title {
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    border-bottom: 1px solid @border-color;
+    padding-bottom: @spacing-xs;
+    margin-bottom: @spacing-sm;
+  }
+}
+
+// ===== 业务组件样式 =====
+
+// 页面容器
+.page-container {
+  padding: @spacing-xl;
+  background: @bg-color-page;
+  min-height: 100vh;
+  
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: @spacing-xl;
+    
+    &-title {
+      font-size: @font-size-xl;
+      font-weight: @font-weight-bold;
+      color: @text-color-primary;
+      margin: 0;
+    }
+    
+    &-actions {
+      display: flex;
+      gap: @spacing-sm;
+    }
+  }
+  
+  &__content {
+    background: @bg-color-container;
+    border-radius: @border-radius-lg;
+    box-shadow: @shadow-card;
+    padding: @spacing-xl;
+  }
+}
+
+// 工具栏
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: @spacing-xl;
+  padding: @spacing-md @spacing-lg;
+  background: @bg-color-container;
+  border-radius: @border-radius-base;
+  border: 1px solid @border-color;
+  
+  &__left {
+    display: flex;
+    gap: @spacing-sm;
+  }
+  
+  &__right {
+    display: flex;
+    gap: @spacing-sm;
+  }
+}
+
+// 状态标签
+.status-tag {
+  &--active {
+    background: fade(@success-color, 10%);
+    color: @success-color;
+    border: 1px solid fade(@success-color, 30%);
+  }
+  
+  &--inactive {
+    background: fade(@text-color-disabled, 10%);
+    color: @text-color-disabled;
+    border: 1px solid fade(@text-color-disabled, 30%);
+  }
+  
+  &--error {
+    background: fade(@error-color, 10%);
+    color: @error-color;
+    border: 1px solid fade(@error-color, 30%);
+  }
+}
+
+// 响应式辅助类
+@media (max-width: @screen-md) {
+  .page-container {
+    padding: @spacing-md;
+    
+    &__header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: @spacing-md;
+      
+      &-actions {
+        justify-content: flex-start;
+      }
+    }
+  }
+  
+  .toolbar {
+    flex-direction: column;
+    gap: @spacing-md;
+    
+    &__left,
+    &__right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+  
+  .ant-table {
+    &-operation-column {
+      .ant-btn-link {
+        display: block;
+        margin-bottom: @spacing-xs;
+        
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+// 数据展示优化样式
+// 这个文件应该被导入到全局样式中
+
+// 数据卡片
+.data-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #d9d9d9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  .data-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    
+    .data-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+    }
+    
+    .data-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+  
+  .data-card-content {
+    .data-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .data-label {
+        color: #8c8c8c;
+        font-size: 13px;
+        min-width: 80px;
+      }
+      
+      .data-value {
+        color: #262626;
+        font-size: 13px;
+        text-align: right;
+        
+        &.code {
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          background: #f5f5f5;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+// 空状态
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8c8c8c;
+  
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+  
+  .empty-text {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .empty-description {
+    font-size: 12px;
+    color: #bfbfbf;
+  }
+}
+
+// 标签系统
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  
+  .custom-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    
+    &.tag-primary {
+      background: #e6f7ff;
+      color: #1890ff;
+      border-color: #91d5ff;
+    }
+    
+    &.tag-success {
+      background: #f6ffed;
+      color: #52c41a;
+      border-color: #b7eb8f;
+    }
+    
+    &.tag-warning {
+      background: #fffbe6;
+      color: #faad14;
+      border-color: #ffe58f;
+    }
+    
+    &.tag-purple {
+      background: #f9f0ff;
+      color: #722ed1;
+      border-color: #d3adf7;
+    }
+  }
+}
+
+// 进度指示器
+.progress-steps {
+  display: flex;
+  align-items: center;
+  
+  .step {
+    display: flex;
+    align-items: center;
+    
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f5f5f5;
+      color: #8c8c8c;
+      
+      &.active {
+        background: #1890ff;
+        color: #fff;
+      }
+      
+      &.completed {
+        background: #52c41a;
+        color: #fff;
+      }
+    }
+    
+    .step-title {
+      margin-left: 8px;
+      font-size: 13px;
+      color: #595959;
+      
+      &.active {
+        color: #1890ff;
+        font-weight: 500;
+      }
+    }
+    
+    .step-connector {
+      width: 40px;
+      height: 1px;
+      background: #f0f0f0;
+      margin: 0 16px;
+      
+      &.completed {
+        background: #52c41a;
+      }
+    }
+  }
+}

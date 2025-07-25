@@ -71,5 +71,13 @@ export default defineConfig({
     outDir: 'target/dist',
     assetsDir: 'static',
     cssCodeSplit: false
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        additionalData: `@import "@/styles/tokens.less";`,
+        javascriptEnabled: true
+      }
+    }
   }
 })

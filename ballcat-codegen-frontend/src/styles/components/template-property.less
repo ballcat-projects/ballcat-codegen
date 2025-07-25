@@ -1,0 +1,386 @@
+// TemplatePropertyTablePage 专用样式
+// 基于设计系统的组件样式定义
+
+.template-property-page {
+  padding: @spacing-xl;
+  background: @bg-color-page;
+  min-height: 100vh;
+
+  // 页面容器
+  &__container {
+    background: @bg-color-container;
+    border-radius: @border-radius-lg;
+    box-shadow: @shadow-card;
+    overflow: hidden;
+  }
+
+  // 工具栏区域
+  &__toolbar {
+    padding: @spacing-lg @spacing-xl;
+    border-bottom: 1px solid @border-color;
+    background: @bg-color-container;
+  }
+
+  // 表格区域
+  &__table {
+    .ant-table {
+      &-thead > tr > th {
+        background: @bg-color-hover;
+        font-weight: @font-weight-semibold;
+        font-size: @font-size-sm;
+        color: @text-color-primary;
+      }
+
+      &-tbody > tr {
+        &:nth-child(odd) {
+          background: fade(@primary-color, 2%);
+        }
+
+        &:hover > td {
+          background: @bg-color-hover !important;
+        }
+      }
+
+      &-cell {
+        vertical-align: top;
+        padding: @spacing-md @spacing-lg;
+      }
+    }
+  }
+}
+
+// 属性信息区域样式
+.property-section {
+  .property-main {
+    display: flex;
+    align-items: center;
+    gap: @spacing-sm;
+    margin-bottom: @spacing-sm;
+
+    .property-title {
+      margin: 0;
+      font-size: @font-size-base;
+      font-weight: @font-weight-semibold;
+      color: @text-color-primary;
+      line-height: 1.4;
+    }
+
+    .required-badge {
+      padding: 2px @spacing-xs;
+      background: fade(@error-color, 10%);
+      color: @error-color;
+      font-size: @font-size-xs;
+      border-radius: @border-radius-sm;
+      border: 1px solid fade(@error-color, 30%);
+      font-weight: @font-weight-medium;
+    }
+  }
+
+  .property-details {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-xs;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: @spacing-xs;
+      font-size: @font-size-sm;
+
+      .detail-label {
+        color: @text-color-secondary;
+        font-weight: @font-weight-medium;
+        min-width: 60px;
+      }
+
+      .detail-code {
+        padding: 2px @spacing-xs;
+        background: @bg-color-hover;
+        border: 1px solid @border-color;
+        border-radius: @border-radius-sm;
+        font-family: @font-family-mono;
+        font-size: @font-size-xs;
+        color: @primary-color;
+      }
+
+      .detail-value {
+        color: @text-color-primary;
+        font-weight: @font-weight-medium;
+      }
+    }
+  }
+}
+
+// 配置信息区域样式
+.config-section {
+  .config-primary {
+    margin-bottom: @spacing-sm;
+
+    .config-info {
+      display: flex;
+      align-items: center;
+      gap: @spacing-sm;
+
+      .config-type {
+        padding: 2px @spacing-sm;
+        background: fade(@primary-color, 10%);
+        color: @primary-color;
+        font-size: @font-size-xs;
+        border-radius: @border-radius-sm;
+        border: 1px solid fade(@primary-color, 30%);
+        font-weight: @font-weight-medium;
+
+        &.computed {
+          background: fade(@warning-color, 10%);
+          color: @warning-color;
+          border-color: fade(@warning-color, 30%);
+        }
+      }
+
+      .component-text,
+      .engine-text {
+        font-size: @font-size-sm;
+        color: @text-color-primary;
+        font-weight: @font-weight-medium;
+
+        .options-count {
+          color: @text-color-secondary;
+          font-weight: @font-weight-normal;
+          font-size: @font-size-xs;
+        }
+      }
+    }
+  }
+
+  .config-secondary {
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: @spacing-xs;
+      font-size: @font-size-sm;
+
+      .detail-label {
+        color: @text-color-secondary;
+        font-weight: @font-weight-medium;
+        min-width: 60px;
+      }
+
+      .detail-code {
+        padding: 2px @spacing-xs;
+        background: @bg-color-hover;
+        border: 1px solid @border-color;
+        border-radius: @border-radius-sm;
+        font-family: @font-family-mono;
+        font-size: @font-size-xs;
+        color: @primary-color;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .option-name {
+        color: @text-color-secondary;
+        font-size: @font-size-xs;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+// Popover 内容样式
+.popover-options {
+  max-width: 400px;
+
+  .popover-title {
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    margin-bottom: @spacing-sm;
+    padding-bottom: @spacing-xs;
+    border-bottom: 1px solid @border-color;
+  }
+
+  .popover-option-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .popover-option-item {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+    padding: @spacing-xs 0;
+    font-size: @font-size-sm;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid fade(@border-color, 50%);
+    }
+
+    &.is-default {
+      background: fade(@success-color, 5%);
+      border-radius: @border-radius-sm;
+      padding: @spacing-xs @spacing-sm;
+      margin: 2px 0;
+    }
+
+    .option-label {
+      font-weight: @font-weight-medium;
+      color: @text-color-primary;
+      min-width: 80px;
+    }
+
+    .option-separator {
+      color: @text-color-secondary;
+    }
+
+    .option-code {
+      padding: 1px @spacing-xs;
+      background: @bg-color-hover;
+      border: 1px solid @border-color;
+      border-radius: @border-radius-sm;
+      font-family: @font-family-mono;
+      font-size: @font-size-xs;
+      color: @primary-color;
+      flex: 1;
+    }
+
+    .default-tag {
+      padding: 1px @spacing-xs;
+      background: fade(@success-color, 10%);
+      color: @success-color;
+      font-size: @font-size-xs;
+      border-radius: @border-radius-sm;
+      border: 1px solid fade(@success-color, 30%);
+      font-weight: @font-weight-medium;
+    }
+  }
+}
+
+.popover-no-options {
+  .popover-title {
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    margin-bottom: @spacing-sm;
+  }
+
+  .no-options-text {
+    color: @text-color-secondary;
+    font-style: italic;
+    font-size: @font-size-sm;
+  }
+}
+
+// 备注信息样式
+.remarks-section {
+  .remarks-title {
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    margin-bottom: @spacing-xs;
+    font-size: @font-size-sm;
+  }
+
+  .remarks-content {
+    color: @text-color-secondary;
+    line-height: 1.5;
+    font-size: @font-size-sm;
+  }
+
+  .remarks-preview {
+    color: @primary-color;
+    cursor: pointer;
+    font-size: @font-size-sm;
+
+    &:hover {
+      color: @primary-color-hover;
+    }
+  }
+}
+
+// 操作按钮区域样式
+.action-section {
+  display: flex;
+  gap: @spacing-sm;
+  flex-wrap: wrap;
+
+  .ant-btn {
+    &-link {
+      padding: 0 @spacing-xs;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-medium;
+      height: auto;
+      line-height: 1.4;
+
+      &.ballcat-text-danger {
+        color: @error-color;
+
+        &:hover {
+          color: @error-color-hover;
+        }
+      }
+    }
+  }
+}
+
+// 响应式适配
+@media (max-width: @screen-md) {
+  .template-property-page {
+    padding: @spacing-md;
+
+    &__table {
+      .ant-table {
+        &-cell {
+          padding: @spacing-sm;
+        }
+      }
+    }
+  }
+
+  .property-section {
+    .property-main {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: @spacing-xs;
+    }
+
+    .property-details {
+      .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+
+        .detail-label {
+          min-width: auto;
+        }
+      }
+    }
+  }
+
+  .config-section {
+    .config-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: @spacing-xs;
+    }
+
+    .config-secondary {
+      .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+
+        .detail-code {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  .action-section {
+    flex-direction: column;
+    gap: @spacing-xs;
+
+    .ant-btn-link {
+      text-align: left;
+    }
+  }
+}

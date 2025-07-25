@@ -1,5 +1,5 @@
 <template>
-  <a-card v-show="tableShow" :bordered="false" style="min-height: calc(100vh - 108px)">
+  <a-card v-show="tableShow" :bordered="false" style="height: 100%">
     <!-- 操作按钮区域 -->
     <div class="table-list-toolbar">
       <a-input-search

@@ -1,0 +1,62 @@
+// 基础样式 - 全局重置和基础元素样式
+@import './tokens.less';
+
+// ===== 全局重置 =====
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  color: @text-color-primary;
+  background-color: @bg-color-page;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ===== 滚动条样式 =====
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: @gray-5;
+  border-radius: 3px;
+  
+  &:hover {
+    background-color: @gray-6;
+  }
+}
+
+// ===== 选择文本样式 =====
+::selection {
+  background-color: rgba(24, 144, 255, 0.2);
+  color: @text-color-primary;
+}
+
+// ===== 焦点样式 =====
+:focus-visible {
+  outline: 2px solid @primary-color;
+  outline-offset: 2px;
+}
+
+// 隐藏默认的focus outline
+:focus:not(:focus-visible) {
+  outline: none;
+}

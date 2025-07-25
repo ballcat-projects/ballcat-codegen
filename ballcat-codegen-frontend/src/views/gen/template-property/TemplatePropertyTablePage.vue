@@ -1,23 +1,24 @@
 <template>
-  <div>
-    <!-- 操作按钮区域 -->
-    <div class="table-list-toolbar">
-      <add-button @click="handleCreate()" />
-    </div>
+  <div class="template-property-page">
+    <div class="template-property-page__container">
+      <!-- 操作按钮区域 -->
+      <div class="template-property-page__toolbar">
+        <add-button @click="handleCreate()" />
+      </div>
 
-    <!--数据表格区域-->
-    <a-table
-      ref="table"
-      size="small"
-      row-key="id"
-      :columns="columns"
-      :data-source="dataSource"
-      :pagination="pagination"
-      :loading="loading"
-      :scroll="{ x: 720 }"
-      :row-class-name="(_record: any, index: number) => index % 2 === 1 ? 'table-row-alternate' : ''"
-      @change="tableState.handleTableChange"
-    >
+      <!--数据表格区域-->
+      <div class="template-property-page__table">
+        <a-table
+          ref="table"
+          size="small"
+          row-key="id"
+          :columns="columns"
+          :data-source="dataSource"
+          :pagination="pagination"
+          :loading="loading"
+          :scroll="{ x: 720 }"
+          @change="tableState.handleTableChange"
+        >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'property'">
           <div class="property-section">
@@ -136,7 +137,9 @@
           </div>
         </template>
       </template>
-    </a-table>
+        </a-table>
+      </div>
+    </div>
   </div>
 </template>
 

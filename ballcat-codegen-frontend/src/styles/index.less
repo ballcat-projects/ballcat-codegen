@@ -1,17 +1,106 @@
-body {
-  margin: 0;
-  padding: 0;
-}
+// 主样式入口文件
+@import './tokens.less';
+@import './base.less';
+@import './components.less';
 
-// 表格的按钮区域
-.table-list-toolbar {
-  margin-bottom: 18px;
-  button {
-    margin-right: 8px;
+// ===== 工具类 =====
+
+// 布局工具类
+.flex {
+  display: flex;
+  
+  &-center {
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &-between {
+    justify-content: space-between;
+  }
+  
+  &-wrap {
+    flex-wrap: wrap;
+  }
+  
+  &-1 {
+    flex: 1;
   }
 }
 
-// 警告文本，多用于删除按钮
+// 间距工具类
+.m {
+  &-0 { margin: 0; }
+  &-xs { margin: @spacing-xs; }
+  &-sm { margin: @spacing-sm; }
+  &-md { margin: @spacing-md; }
+  &-lg { margin: @spacing-lg; }
+  &-xl { margin: @spacing-xl; }
+  &-xxl { margin: @spacing-xxl; }
+  
+  &t {
+    &-0 { margin-top: 0; }
+    &-xs { margin-top: @spacing-xs; }
+    &-sm { margin-top: @spacing-sm; }
+    &-md { margin-top: @spacing-md; }
+    &-lg { margin-top: @spacing-lg; }
+    &-xl { margin-top: @spacing-xl; }
+    &-xxl { margin-top: @spacing-xxl; }
+  }
+  
+  &b {
+    &-0 { margin-bottom: 0; }
+    &-xs { margin-bottom: @spacing-xs; }
+    &-sm { margin-bottom: @spacing-sm; }
+    &-md { margin-bottom: @spacing-md; }
+    &-lg { margin-bottom: @spacing-lg; }
+    &-xl { margin-bottom: @spacing-xl; }
+    &-xxl { margin-bottom: @spacing-xxl; }
+  }
+}
+
+.p {
+  &-0 { padding: 0; }
+  &-xs { padding: @spacing-xs; }
+  &-sm { padding: @spacing-sm; }
+  &-md { padding: @spacing-md; }
+  &-lg { padding: @spacing-lg; }
+  &-xl { padding: @spacing-xl; }
+  &-xxl { padding: @spacing-xxl; }
+}
+
+// 文本工具类
+.text {
+  &-center { text-align: center; }
+  &-left { text-align: left; }
+  &-right { text-align: right; }
+  
+  &-primary { color: @text-color-primary; }
+  &-secondary { color: @text-color-secondary; }
+  &-tertiary { color: @text-color-tertiary; }
+  &-disabled { color: @text-color-disabled; }
+  
+  &-xs { font-size: @font-size-xs; }
+  &-sm { font-size: @font-size-sm; }
+  &-base { font-size: @font-size-base; }
+  &-lg { font-size: @font-size-lg; }
+  &-xl { font-size: @font-size-xl; }
+  
+  &-normal { font-weight: @font-weight-normal; }
+  &-medium { font-weight: @font-weight-medium; }
+  &-semibold { font-weight: @font-weight-semibold; }
+  &-bold { font-weight: @font-weight-bold; }
+}
+
+// 表格的按钮区域 (保持兼容性)
+.table-list-toolbar {
+  margin-bottom: @spacing-xl;
+  
+  button {
+    margin-right: @spacing-sm;
+  }
+}
+
+// 警告文本，多用于删除按钮 (保持兼容性)
 .ballcat-text-danger {
-  color: #e75455;
+  color: @error-color;
 }
