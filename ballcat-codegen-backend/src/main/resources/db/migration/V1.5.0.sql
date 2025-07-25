@@ -3,3 +3,8 @@ ALTER TABLE `gen_template_property`
     ADD COLUMN `prop_type` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '属性类型：1=配置属性，2=计算属性' AFTER `prop_key`,
 -- 2. 添加表达式字段，仅计算属性使用
     ADD COLUMN `expression` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '表达式内容，仅计算属性使用' AFTER `prop_type`;
+
+
+-- 为模板属性配置表添加模板引擎类型字段
+ALTER TABLE `gen_template_property`
+    ADD COLUMN `engine_type` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '模板引擎类型：0=普通文本，1=Velocity，2=Freemarker' AFTER `expression`;

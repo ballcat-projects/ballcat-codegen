@@ -21,7 +21,7 @@ public enum TemplatePropertyTypeEnum {
 	/**
 	 * 计算属性。
 	 */
-	COMPUTED_SPEL(2, "计算属性，使用SPEL表达式");
+	COMPUTED(2, "计算属性，支持多种模板引擎");
 
 	private final Integer value;
 

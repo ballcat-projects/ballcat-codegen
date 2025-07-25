@@ -78,7 +78,7 @@ public interface TemplatePropertyMapper extends ExtendMapper<TemplateProperty> {
 	default List<TemplateProperty> listComputedProperties(String groupKey) {
 		return this.selectList(Wrappers.<TemplateProperty>lambdaQuery()
 			.eq(TemplateProperty::getGroupKey, groupKey)
-			.eq(TemplateProperty::getPropType, TemplatePropertyTypeEnum.COMPUTED_SPEL.getValue())
+			.eq(TemplateProperty::getPropType, TemplatePropertyTypeEnum.COMPUTED.getValue())
 			.orderByAsc(TemplateProperty::getOrderValue));
 	}
 

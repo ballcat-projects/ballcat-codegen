@@ -59,6 +59,14 @@ public class TemplatePropertyPageVO {
 	private String expression;
 
 	/**
+	 * 模板引擎类型，用于计算属性的模板引擎选择
+	 * 
+	 * @see com.hccake.ballcat.codegen.engine.TemplateEngineTypeEnum
+	 */
+	@Schema(title = "模板引擎类型")
+	private Integer engineType;
+
+	/**
 	 * 默认值
 	 */
 	@Schema(title = "默认值")

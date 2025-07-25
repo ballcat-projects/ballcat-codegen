@@ -14,6 +14,8 @@ export interface TemplateProperty {
   propType: number
   // 表达式，计算属性必填
   expression?: string
+  // 模板引擎类型，用于计算属性的模板引擎选择
+  engineType?: number
   // 默认值(可为空值)
   defaultValue?: string
   // 组件类型

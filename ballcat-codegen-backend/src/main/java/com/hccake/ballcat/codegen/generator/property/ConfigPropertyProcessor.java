@@ -28,8 +28,7 @@ public class ConfigPropertyProcessor implements PropertyProcessor {
 		}
 
 		// 将 Map<String, String> 转换为 Map<String, Object>
-		Map<String, Object> configProperties = new HashMap<>();
-		customProperties.forEach(configProperties::put);
+		Map<String, Object> configProperties = new HashMap<>(customProperties);
 
 		log.debug("配置属性处理完成，属性数量: {}", configProperties.size());
 		return configProperties;

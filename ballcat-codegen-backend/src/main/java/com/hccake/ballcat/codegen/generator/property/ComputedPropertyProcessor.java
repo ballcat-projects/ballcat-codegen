@@ -44,8 +44,16 @@ public class ComputedPropertyProcessor implements PropertyProcessor {
 					continue;
 				}
 
-				// 使用模板引擎渲染表达式，默认使用Velocity引擎
-				TemplateEngineTypeEnum engineType = TemplateEngineTypeEnum.VELOCITY;
+				// 获取模板引擎类型，如果未指定则使用Velocity作为默认值
+				Integer engineTypeValue = computedProperty.getEngineType();
+				TemplateEngineTypeEnum engineType = engineTypeValue != null ? TemplateEngineTypeEnum.of(engineTypeValue)
+						: TemplateEngineTypeEnum.VELOCITY;
+
+				// 如果转换失败，使用默认的Velocity引擎
+				if (engineType == null) {
+					engineType = TemplateEngineTypeEnum.VELOCITY;
+				}
+
 				String renderedValue = templateEngineDelegator.render(engineType, expression, processedProperties);
 
 				// 尝试转换为合适的数据类型

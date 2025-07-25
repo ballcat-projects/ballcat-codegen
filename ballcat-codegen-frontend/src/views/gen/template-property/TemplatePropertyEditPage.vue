@@ -82,6 +82,12 @@
         <a-form-item label="表达式" name="expression">
           <a-input v-model:value="modelRef.expression" placeholder="请输入" />
         </a-form-item>
+        <a-form-item label="模板引擎" name="engineType">
+          <a-radio-group v-model:value="modelRef.engineType">
+            <a-radio :value="1">Velocity</a-radio>
+            <a-radio :value="2">Freemarker</a-radio>
+          </a-radio-group>
+        </a-form-item>
       </template>
 
       <a-form-item label="排序值" name="orderValue">
@@ -111,7 +117,7 @@
 
 <script setup lang="ts">
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { computed, reactive, ref, toRaw } from 'vue'
+import { computed, reactive, ref, toRaw, watch } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
 import { PropType, type TemplateProperty } from "@/api/gen/template-property/types";
 import { ComponentType } from '@/api/gen/template-property/types'
@@ -143,12 +149,20 @@ const modelRef = reactive<TemplateProperty>({
   propKey: '',
   propType: 1,
   expression: '',
+  engineType: 1, // 默认使用 Velocity
   defaultValue: '',
   required: 0,
   componentOptions: [],
   componentType: ComponentType.INPUT,
   orderValue: 0,
   remarks: ''
+})
+
+// 监听属性类型变化，确保计算属性使用正确的引擎类型
+watch(() => modelRef.propType, (newType) => {
+  if (newType === PropType.COMPUTED && (modelRef.engineType === 0 || !modelRef.engineType)) {
+    modelRef.engineType = 1 // 切换到计算属性时，默认使用 Velocity
+  }
 })
 
 const removeOption = (item: Option) => {
