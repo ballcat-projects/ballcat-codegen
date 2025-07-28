@@ -8,13 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AAlert: typeof import('ant-design-vue/es')['Alert']
     AAvatar: typeof import('ant-design-vue/es')['Avatar']
     ABadge: typeof import('ant-design-vue/es')['Badge']
     AButton: typeof import('ant-design-vue/es')['Button']
     AButtonGroup: typeof import('ant-design-vue/es')['ButtonGroup']
     ACard: typeof import('ant-design-vue/es')['Card']
-    ACardMeta: typeof import('ant-design-vue/es')['CardMeta']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
     ACol: typeof import('ant-design-vue/es')['Col']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
@@ -29,10 +27,6 @@ declare module 'vue' {
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
-    ALayout: typeof import('ant-design-vue/es')['Layout']
-    ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent']
-    ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter']
-    ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     AModal: typeof import('ant-design-vue/es')['Modal']
@@ -49,7 +43,6 @@ declare module 'vue' {
     ASpace: typeof import('ant-design-vue/es')['Space']
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ASteps: typeof import('ant-design-vue/es')['Steps']
-    ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATable: typeof import('ant-design-vue/es')['Table']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
@@ -64,6 +57,9 @@ declare module 'vue' {
     MenuItemContent: typeof import('./src/components/menu/MenuItemContent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterMenu: typeof import('./src/components/menu/RouterMenu.vue')['default']
+    RouterMenuAnt: typeof import('./src/components/menu/RouterMenu-ant.vue')['default']
+    RouterMenuNew: typeof import('./src/components/menu/RouterMenu-new.vue')['default']
+    RouterMenuOld: typeof import('./src/components/menu/RouterMenu-old.vue')['default']
     RouterView: typeof import('vue-router')['RouterView']
     SubMenu: typeof import('./src/components/menu/SubMenu.vue')['default']
   }

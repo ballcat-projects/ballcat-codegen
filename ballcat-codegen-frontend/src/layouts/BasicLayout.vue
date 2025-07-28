@@ -1,264 +1,101 @@
 <template>
-  <a-layout id="components-layout-side">
-    <a-layout style="min-height: 100vh; display: flex; flex-direction: column;">
-      <a-layout-header
-        style="padding: 0; height: 64px; line-height: 64px; width: 100%; z-index: 19; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06); flex-shrink: 0; border-bottom: 1px solid #f0f0f0;"
-      >
-        <basic-header theme="light" />
-      </a-layout-header>
-      <a-layout-content style="flex: 1; margin: 16px; background: #f5f5f5; display: flex; flex-direction: column;">
-        <div class="ballcat-layout-content wide">
+  <div class="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="px-6 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo and Title -->
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-lg">CG</span>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Code Generator</h1>
+              <p class="text-sm text-gray-500">v2.1.0</p>
+            </div>
+          </div>
+          
+          <!-- Header Actions -->
+          <div class="flex items-center space-x-4">
+            <a 
+              href="https://docs.codegen.com/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span class="text-sm font-medium">文档</span>
+            </a>
+            <a 
+              href="https://github.com/codegen/codegen" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+              <span class="text-sm font-medium">GitHub</span>
+            </a>
+            <a 
+              href="https://gitee.com/codegen/codegen" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="text-sm font-medium">Gitee</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <aside class="w-72 bg-white shadow-sm border-r border-gray-200">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-6">功能菜单</h2>
+          <RouterMenu />
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 overflow-auto">
+        <div class="max-w-7xl mx-auto">
           <router-view />
         </div>
-      </a-layout-content>
-      <a-layout-footer style="padding: 0; flex-shrink: 0;">
-        <BasicFooter />
-      </a-layout-footer>
-    </a-layout>
-  </a-layout>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div class="px-6 py-4">
+        <div class="flex items-center justify-center">
+          <p class="text-sm text-gray-600 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            © 2024 Code Generator. All rights reserved. Powered by Modern Tech Stack.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </div>
 </template>
+
 <script setup lang="ts">
-import BasicHeader from '@/layouts/BasicHeader.vue'
-import BasicFooter from '@/layouts/BasicFooter.vue'
+import RouterMenu from '@/components/menu/RouterMenu.vue'
 </script>
-<style lang="less">
-#components-layout-side {
-  min-height: 100vh;
-  height: 100%;
-  background: @bg-color-page;
 
-  .ballcat-layout-content {
-    &.wide {
-      width: 100%;
-      margin: 0 auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      
-      // 大屏幕优化：平衡空间利用和内容可读性
-      @media (min-width: 2560px) {
-        max-width: 1800px;
-        padding: 0 40px;
-      }
-      
-      @media (min-width: 1920px) and (max-width: 2559px) {
-        max-width: 1600px;
-        padding: 0 32px;
-      }
-      
-      @media (min-width: 1440px) and (max-width: 1919px) {
-        max-width: 1300px;
-        padding: 0 28px;
-      }
-      
-      @media (min-width: 1200px) and (max-width: 1439px) {
-        max-width: 1100px;
-        padding: 0 24px;
-      }
-      
-      @media (min-width: 768px) and (max-width: 1199px) {
-        max-width: 95%;
-        padding: 0 20px;
-      }
-      
-      @media (max-width: 767px) {
-        max-width: 100%;
-        padding: 0 16px;
-      }
-      
-      @media (max-width: 480px) {
-        padding: 0 12px;
-      }
-    }
-  }
-}
-
-// 现代化的卡片设计
-:global(.ant-card) {
-  border-radius: @border-radius-lg;
-  box-shadow: @shadow-card;
-  border: 1px solid #f0f0f0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: @bg-color-container;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-  
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
-  }
-  
-  .ant-card-head {
-    border-bottom: 1px solid #f0f0f0;
-    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-    border-radius: @border-radius-lg @border-radius-lg 0 0;
-    flex-shrink: 0;
-    
-    .ant-card-head-title {
-      font-weight: 600;
-      color: #262626;
-      font-size: 16px;
-    }
-  }
-  
-  .ant-card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-  }
-}
-
-// 工具栏现代化设计
-:global(.table-list-toolbar) {
-  background: @bg-color-container;
-  padding: 20px 24px;
-  border-radius: @border-radius-lg @border-radius-lg 0 0;
-  border: 1px solid #f0f0f0;
-  border-bottom: none;
-  margin-bottom: 0;
-  flex-shrink: 0;
-  box-shadow: @box-shadow-base;
-  
-  .ant-btn {
-    border-radius: @border-radius-base;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-  }
-  
-  .ant-input, .ant-select {
-    border-radius: @border-radius-base;
-    
-    &:hover, &:focus {
-      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
-    }
-  }
-}
-
-// 表格现代化样式
-:global(.ant-table-wrapper) {
-  background: @bg-color-container;
-  border-radius: 0 0 @border-radius-lg @border-radius-lg;
-  border: 1px solid #f0f0f0;
-  border-top: none;
-  flex: 1;
-  overflow: hidden;
-  box-shadow: @box-shadow-base;
-  
-  .ant-table {
-    .ant-table-thead > tr > th {
-      background: #fafafa;
-      border-bottom: 1px solid #f0f0f0;
-      font-weight: 600;
-      color: #595959;
-      font-size: 14px;
-      
-      &:first-child {
-        border-radius: 0;
-      }
-      
-      &:last-child {
-        border-radius: 0;
-      }
-    }
-    
-    .ant-table-tbody > tr {
-      transition: background-color 0.2s ease;
-      
-      &:hover > td {
-        background: #f8f9fa !important;
-      }
-      
-      > td {
-        border-bottom: 1px solid #f5f5f5;
-        transition: background-color 0.2s ease;
-      }
-    }
-  }
-  
-  .ant-table-container {
-    border-radius: 0 0 @border-radius-lg @border-radius-lg;
-    overflow: auto;
-  }
-}
-
-// 按钮系统优化
-:global(.ant-btn) {
-  border-radius: @border-radius-base;
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-  
-  &.ant-btn-primary {
-    background: linear-gradient(135deg, @primary-color 0%, #40a9ff 100%);
-    border: none;
-    
-    &:hover {
-      background: linear-gradient(135deg, #40a9ff 0%, @primary-color 100%);
-    }
-  }
-  
-  &.ant-btn-link {
-    font-weight: 500;
-    padding: 4px 8px;
-    
-    &:hover {
-      background: rgba(24, 144, 255, 0.06);
-      border-radius: @border-radius-sm;
-    }
-  }
-}
-
-// 状态指示器
-:global(.status-indicator) {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  
-  &.status-success {
-    background: #f6ffed;
-    color: @success-color;
-    border: 1px solid #b7eb8f;
-  }
-  
-  &.status-warning {
-    background: #fffbe6;
-    color: @warning-color;
-    border: 1px solid #ffe58f;
-  }
-  
-  &.status-error {
-    background: #fff2f0;
-    color: @error-color;
-    border: 1px solid #ffccc7;
-  }
-}
-
-// 加载状态优化
-:global(.ant-spin-container) {
-  transition: opacity 0.3s ease;
-}
-
-:global(.ant-spin-blur) {
-  opacity: 0.6;
-  filter: blur(0.5px);
+<style scoped>
+/* 保持原有的背景渐变效果 */
+.min-h-screen {
+  background: linear-gradient(to bottom right, #f9fafb, #f3f4f6);
 }
 </style>

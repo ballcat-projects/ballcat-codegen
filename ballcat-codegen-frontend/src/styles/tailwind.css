@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 强制修复 reset-css 可能造成的边框问题 */
+@layer base {
+  /* 确保边框样式不被 reset-css 覆盖 */
+  .border-b {
+    border-bottom-width: 1px !important;
+    border-bottom-style: solid !important;
+  }
+  
+  .border-r {
+    border-right-width: 1px !important;
+    border-right-style: solid !important;
+  }
+  
+  .border-t {
+    border-top-width: 1px !important;
+    border-top-style: solid !important;
+  }
+  
+  .border {
+    border-width: 1px !important;
+    border-style: solid !important;
+  }
+  
+  .border-gray-200 {
+    border-color: rgb(229, 231, 235) !important;
+  }
+  
+  .border-blue-200 {
+    border-color: rgb(191, 219, 254) !important;
+  }
+  
+  .border-transparent {
+    border-color: transparent !important;
+  }
+}
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 25px;
+  transition: all 0.3s;
+  background-color: rgba(106, 115, 125, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(106, 115, 125, 0.27);
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
+}
+
+/* 自定义组件样式 */
+@layer components {
+  .sidebar-menu-item {
+    @apply w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200;
+  }
+  
+  .sidebar-menu-item-active {
+    @apply bg-blue-50 text-blue-700 border border-blue-200;
+  }
+  
+  .sidebar-menu-item-inactive {
+    @apply text-gray-600 hover:bg-gray-50 hover:text-gray-900;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500;
+  }
+  
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors;
+  }
+}

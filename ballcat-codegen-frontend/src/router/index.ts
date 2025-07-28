@@ -6,25 +6,25 @@ const menuRouters: Array<BallcatRouteRecordRaw> = [
   {
     path: '/codegen',
     name: 'CodeGen',
-    meta: { title: '代码生成' },
+    meta: { title: '代码生成', icon: 'CodeOutlined' },
     component: () => import('@/views/gen/codegen/index.vue')
   },
   {
     path: '/template/group',
     name: 'TemplateGroup',
-    meta: { title: '模板管理' },
+    meta: { title: '模板管理', icon: 'FileTextOutlined' },
     component: () => import('@/views/gen/template-group/index.vue')
   },
   {
     path: '/field/type',
     name: 'FieldType',
-    meta: { title: '数据类型管理' },
+    meta: { title: '数据类型管理', icon: 'DatabaseOutlined' },
     component: () => import('@/views/gen/field-type/index.vue')
   },
   {
     path: '/datasource',
     name: 'DataSource',
-    meta: { title: '数据源管理' },
+    meta: { title: '数据源管理', icon: 'ClusterOutlined' },
     component: () => import('@/views/gen/datasource-config/index.vue')
   },
   {
