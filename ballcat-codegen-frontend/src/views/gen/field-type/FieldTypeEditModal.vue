@@ -3,48 +3,166 @@
     v-model:open="visible"
     :title="title"
     :mask-closable="false"
-    :body-style="{ paddingBottom: '8px' }"
     :confirm-loading="submitLoading"
-    :width="520"
+    :width="720"
+    :ok-text="isUpdate ? '更新' : '创建'"
+    cancel-text="取消"
     @ok="handleSubmit"
     @cancel="handleClose"
   >
-    <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
+    <template #title>
+      <div class="flex items-center">
+        <a-avatar :size="40" class="mr-3" style="background-color: #1890ff;">
+          <template #icon>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+              <path d="M3 12A9 3 0 0 0 21 12"></path>
+            </svg>
+          </template>
+        </a-avatar>
+        <div>
+          <div class="text-lg font-semibold">{{ title }}</div>
+          <div class="text-sm text-gray-500">{{ isUpdate ? '修改已有的数据类型映射配置' : '创建新的数据类型映射配置' }}</div>
+        </div>
+      </div>
+    </template>
+
+    <a-form layout="vertical" :model="modelRef">
       <a-form-item v-if="isUpdate" style="display: none">
         <a-input v-model:value="modelRef.id" />
       </a-form-item>
 
-      <a-form-item label="数据库类型" v-bind="validateInfos.dbType">
-        <a-select v-model:value="modelRef.dbType" :placeholder="'数据库类型'">
-          <a-select-option v-for="(value, key) in DbType" :key="key" :value="value">{{ key }}</a-select-option>
-        </a-select>
-      </a-form-item>
+      <!-- 基础信息卡片 -->
+      <a-card size="small" title="基础信息" class="mb-4">
+        <template #extra>
+          <a-tag color="blue">必填</a-tag>
+        </template>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item 
+              label="数据库类型" 
+              v-bind="validateInfos.dbType"
+              :required="true"
+            >
+              <a-select 
+                v-model:value="modelRef.dbType" 
+                placeholder="请选择数据库类型"
+                size="large"
+                show-search
+              >
+                <a-select-option v-for="(value, key) in DbType" :key="key" :value="value">
+                  <a-tag color="geekblue">{{ key }}</a-tag>
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item
+              label="模板组标识"
+              v-bind="validateInfos.groupKey"
+              :required="true"
+            >
+              <a-input 
+                v-model:value="modelRef.groupKey" 
+                placeholder="请输入模板组标识" 
+                size="large"
+              >
+                <template #prefix>
+                  <span style="color: #1890ff">🏷️</span>
+                </template>
+              </a-input>
+              <template #extra>
+                <a-typography-text type="secondary" :style="{ fontSize: '12px' }">
+                  用户自定义的模板组标识
+                </a-typography-text>
+              </template>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-card>
 
-      <a-form-item
-        label="模板组标识"
-        v-bind="validateInfos.groupKey"
-        extra="用户自定义的模板组标识"
-      >
-        <a-input v-model:value="modelRef.groupKey" placeholder="模板组标识" />
-      </a-form-item>
+      <!-- 类型映射配置卡片 -->
+      <a-card size="small" title="类型映射配置" class="mb-4">
+        <template #extra>
+          <a-tag color="orange">映射</a-tag>
+        </template>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item 
+              label="数据库字段类型" 
+              v-bind="validateInfos.columnKey"
+              :required="true"
+            >
+              <a-input 
+                v-model:value="modelRef.columnKey" 
+                placeholder="如：VARCHAR, INT, DATETIME" 
+                size="large"
+              >
+                <template #prefix>
+                  <span style="color: #52c41a">🗄️</span>
+                </template>
+              </a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-item 
+              label="Java属性类型" 
+              v-bind="validateInfos.columnValue"
+              :required="true"
+            >
+              <a-input 
+                v-model:value="modelRef.columnValue" 
+                placeholder="如：String, Integer, LocalDateTime" 
+                size="large"
+              >
+                <template #prefix>
+                  <span style="color: #fa8c16">☕</span>
+                </template>
+              </a-input>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-alert
+          message="类型映射说明"
+          description="数据库字段类型将映射为对应的Java属性类型，请确保类型兼容性"
+          type="info"
+          show-icon
+          class="mt-2"
+        />
+      </a-card>
 
-      <a-form-item label="代码属性值" v-bind="validateInfos.columnValue">
-        <a-input v-model:value="modelRef.columnValue" placeholder="DB对应代码属性值"/>
-      </a-form-item>
-
-      <a-form-item label="DB属性类型" v-bind="validateInfos.columnKey">
-        <a-input v-model:value="modelRef.columnKey" placeholder="DB属性类型" />
-      </a-form-item>
-
-      <a-form-item label="属性包路径" v-bind="validateInfos.packageName">
-        <a-input v-model:value="modelRef.packageName" placeholder="属性包路径+类名" />
-      </a-form-item>
+      <!-- 包路径配置卡片 -->
+      <a-card size="small" title="包路径配置">
+        <template #extra>
+          <a-tag color="purple">可选</a-tag>
+        </template>
+        <a-form-item 
+          label="属性包路径" 
+          v-bind="validateInfos.packageName"
+        >
+          <a-input 
+            v-model:value="modelRef.packageName" 
+            placeholder="如：java.lang.String, java.time.LocalDateTime" 
+            size="large"
+          >
+            <template #prefix>
+              <span style="color: #722ed1">📦</span>
+            </template>
+          </a-input>
+          <template #extra>
+            <a-typography-text type="secondary" :style="{ fontSize: '12px' }">
+              完整的包路径+类名，留空则使用默认包路径
+            </a-typography-text>
+          </template>
+        </a-form-item>
+      </a-card>
     </a-form>
   </a-modal>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, h } from 'vue'
 import { addFieldType, updateFieldType } from '@/api/gen/field-type'
 import { copyProperties } from '@/utils/bean-util'
 import { usePopup } from '@/hooks/popup'
@@ -153,3 +271,14 @@ defineExpose<FieldTypeEditModalInstance>({
   update
 })
 </script>
+
+<style scoped>
+/* 简化样式，主要使用 Ant Design 原生样式 */
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+</style>
