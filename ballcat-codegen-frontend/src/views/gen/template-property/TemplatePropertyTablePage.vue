@@ -1,11 +1,6 @@
 <template>
   <div class="template-property-page">
     <div class="template-property-page__container">
-      <!-- 操作按钮区域 -->
-      <div class="template-property-page__toolbar">
-        <add-button @click="handleCreate()" />
-      </div>
-
       <!--数据表格区域-->
       <div class="template-property-page__table">
         <a-table
@@ -154,7 +149,6 @@ import type { PageParam } from '@/api/types'
 
 const emits = defineEmits<{
   // 提交完成事件
-  (e: 'create'): void
   (e: 'update', record: TemplateProperty): void
 }>()
 
@@ -236,10 +230,6 @@ function getDefaultOptionName(record: TemplateProperty) {
   return defaultOption?.name || null
 }
 
-function handleCreate() {
-  emits('create')
-}
-
 function handleUpdate(record: TemplateProperty) {
   emits('update', record)
 }
@@ -272,21 +262,33 @@ export default {
 </script>
 
 <style scoped>
-/* 表格基础样式 */
-:deep(.ant-table-thead > tr > th) {
-  background: #fafafa;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 8px 12px !important;
+/* 表格整体样式 */
+:deep(.ant-table) {
+  background: white;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
 }
 
-:deep(.ant-table-tbody > tr.table-row-alternate) {
-  background-color: #fff !important;
+:deep(.ant-table-thead > tr > th) {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 20px 16px !important;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e293b;
+  line-height: 1.4;
 }
 
 :deep(.ant-table-tbody > tr > td) {
-  border-bottom: 1px solid #f0f0f0;
-  padding: 12px !important;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 20px 16px !important;
   vertical-align: top;
+  font-size: 14px;
+}
+
+:deep(.ant-table-tbody > tr:hover > td) {
+  background: #f8fafc !important;
 }
 
 /* 修复测量行占用空间的问题 */
@@ -311,133 +313,233 @@ export default {
   max-height: 0 !important;
 }
 
-/* 属性配置区域样式 */
+/* 分页器样式修复 */
+:deep(.ant-pagination-item-active) {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+:deep(.ant-pagination-item-active a) {
+  color: white;
+}
+
+:deep(.ant-pagination-item:hover) {
+  border-color: #3b82f6;
+}
+
+:deep(.ant-pagination-item:hover a) {
+  color: #3b82f6;
+}
+
+/* 属性配置区域 */
 .property-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  line-height: 1.6;
 }
 
 .property-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .property-title {
   margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #262626;
-  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.required-badge {
+  background: #dc2626;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .property-details {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-/* 配置详情区域样式 */
-.config-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+/* 配置详情区域 */
+.config-section {
+  line-height: 1.6;
+}
+
 .config-primary {
+  margin-bottom: 12px;
+}
+
+.config-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
 }
 
-.config-secondary {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+.config-type {
+  background: #059669;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.config-tertiary {
-  border-top: 1px solid #f0f0f0;
-  padding-top: 8px;
-  margin-top: 4px;
+.config-type.computed {
+  background: #7c3aed;
 }
 
-/* 通用详情项样式 */
+.component-text {
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.component-text:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.engine-text {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.options-count {
+  color: #64748b;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* 详情项样式 */
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .detail-label {
-  color: #666;
-  white-space: nowrap;
+  color: #64748b;
+  font-weight: 500;
+  min-width: 70px;
 }
 
 .detail-code {
-  background: #f5f5f5;
-  border: 1px solid #d9d9d9;
-  padding: 2px 4px;
-  border-radius: 2px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 11px;
-  color: #262626;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: 'SFMono-Regular', 'Monaco', 'Consolas', monospace;
+  font-size: 12px;
+  color: #3b82f6;
+  font-weight: 500;
 }
 
 .detail-code.expression {
-  color: #1890ff;
-  background: #f0f7ff;
-  border-color: #bae7ff;
-  max-width: 300px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .detail-value {
-  font-size: 12px;
-  color: #262626;
-}
-
-.detail-text {
-  font-size: 12px;
-  color: #666;
-  max-width: 300px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 500;
 }
 
 .option-name {
   font-size: 11px;
-  color: #52c41a;
+  color: #16a34a;
   font-style: italic;
+  font-weight: 500;
+}
+
+/* 备注区域 */
+.remarks-section {
+  padding: 4px 0;
+}
+
+.remarks-text {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.remarks-empty {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.action-buttons .ant-btn {
+  padding: 8px 12px;
+  height: auto;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.action-buttons .ant-btn-link {
+  color: #3b82f6;
+}
+
+.action-buttons .ant-btn-link:hover {
+  color: #2563eb;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.action-buttons .ant-btn-link.ant-btn-dangerous {
+  color: #dc2626;
+}
+
+.action-buttons .ant-btn-link.ant-btn-dangerous:hover {
+  color: #b91c1c;
+  background-color: rgba(220, 38, 38, 0.1);
 }
 
 /* Popover 样式 */
+:deep(.ant-popover-inner) {
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
 .popover-options {
-  max-width: 320px;
+  max-width: 350px;
 }
 
 .popover-title {
-  color: #262626;
+  color: #1e293b;
   margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  font-weight: 600;
   padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .popover-option-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .popover-option-item {
@@ -446,190 +548,86 @@ export default {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 6px;
-  font-size: 12px;
-  background: #fafafa;
-  border: 1px solid #f0f0f0;
+  font-size: 13px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
 }
 
 .popover-option-item:hover {
-  background: #f0f7ff;
-  border-color: #bae7ff;
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .popover-option-item.is-default {
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-}
-
-.popover-option-item.is-default:hover {
-  background: #ecf5ff;
-  border-color: #87d068;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
 }
 
 .popover-option-item .option-label {
-  color: #262626;
-  flex-shrink: 0;
-  min-width: 60px;
+  color: #1e293b;
+  min-width: 80px;
   font-weight: 500;
-}
-
-.popover-option-item .option-separator {
-  color: #8c8c8c;
-  flex-shrink: 0;
 }
 
 .popover-option-item .option-code {
-  background: #fff;
-  border: 1px solid #d9d9d9;
-  padding: 2px 6px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  padding: 3px 6px;
   border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: 'SFMono-Regular', 'Monaco', 'Consolas', monospace;
   font-size: 11px;
-  color: #1890ff;
+  color: #3b82f6;
+  font-weight: 500;
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .popover-option-item.is-default .option-code {
-  background: #fff;
-  border-color: #52c41a;
-  color: #389e0d;
+  border-color: #16a34a;
+  color: #15803d;
 }
 
 .default-tag {
-  background: #52c41a;
-  color: #fff;
+  background: #16a34a;
+  color: white;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
-  flex-shrink: 0;
-  font-weight: 500;
-}
-
-.popover-no-options {
-  max-width: 200px;
-  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .no-options-text {
-  color: #8c8c8c;
-  font-size: 12px;
-  margin-top: 8px;
+  color: #9ca3af;
+  font-size: 13px;
   font-style: italic;
+  text-align: center;
+  padding: 12px;
 }
 
-.tooltip-code {
-  color: #fff;
-  background: transparent;
-  margin: 0;
-  padding: 8px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-width: 400px;
-}
-
-/* 备注区域样式 */
-.remarks-section {
-  padding: 8px 0;
-}
-
-.remarks-text {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.remarks-empty {
-  font-size: 12px;
-  color: #ccc;
-}
-
-/* 徽章样式 */
-.required-badge {
-  background: #ff4d4f;
-  color: #fff;
-  padding: 1px 4px;
-  border-radius: 2px;
-  font-size: 10px;
-  white-space: nowrap;
-}
-
-/* 配置信息简化样式 */
-.config-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-}
-
-.config-type {
-  background: #52c41a;
-  color: #fff;
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-.config-type.computed {
-  background: #722ed1;
-}
-
-.component-text {
-  color: #1890ff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-}
-
-.component-text:hover {
-  color: #40a9ff;
-}
-
-.options-count {
-  color: #fa8c16;
-  font-size: 10px;
-  margin-left: 4px;
-}
-
-.engine-text {
-  color: #cf1322;
-  font-size: 12px;
-}
-
-
-
-/* 操作按钮样式 */
-.action-buttons {
-  display: flex;
-  gap: 0;
-  justify-content: center;
-  align-items: center;
-}
-
-.action-buttons .ant-btn {
-  padding: 4px 8px;
-  height: auto;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 1.2;
-}
-
-.action-buttons .ant-btn:hover {
-  background-color: #f0f7ff;
-}
-
-.action-buttons .ant-btn.ant-btn-dangerous:hover {
-  background-color: #fff1f0;
+/* 响应式设计 */
+@media (max-width: 768px) {
+  :deep(.ant-table-thead > tr > th) {
+    padding: 16px 12px !important;
+    font-size: 14px;
+  }
+  
+  :deep(.ant-table-tbody > tr > td) {
+    padding: 16px 12px !important;
+  }
+  
+  .property-title {
+    font-size: 15px;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .detail-label {
+    min-width: auto;
+  }
 }
 </style>

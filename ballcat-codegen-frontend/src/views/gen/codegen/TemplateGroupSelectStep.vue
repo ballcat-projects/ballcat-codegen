@@ -75,57 +75,58 @@
               <a-card
                 hoverable
                 :class="[
-                  'template-card',
-                  { 'template-card-selected': item.value === templateGroupKey }
+                  'modern-template-card',
+                  { 'selected': item.value === templateGroupKey }
                 ]"
                 @click="selectGroup(item)"
                 :body-style="{ padding: 0 }"
               >
-                <!-- 卡片头部 -->
-                <div class="card-header">
-                  <div class="card-avatar">
+                <div class="card-wrapper">
+                  <!-- 头部区域：图标 + 选中状态 -->
+                  <div class="card-header">
                     <a-avatar 
                       :size="48" 
                       :src="item.attributes?.icon"
-                      :style="{ backgroundColor: item.attributes?.color || '#1890ff' }"
+                      :style="{ backgroundColor: item.attributes?.color || '#3b82f6' }"
+                      class="template-icon"
                     >
                       <template #icon>
                         <AppstoreOutlined />
                       </template>
                     </a-avatar>
+                    
+                    <!-- 选中指示器 -->
+                    <div v-if="item.value === templateGroupKey" class="selected-indicator">
+                      <CheckCircleFilled />
+                    </div>
                   </div>
-                  <!-- 选中标识 -->
-                  <div v-if="item.value === templateGroupKey" class="selected-indicator">
-                    <CheckCircleFilled />
+                  
+                  <!-- 内容区域 -->
+                  <div class="card-content">
+                    <h3 class="template-title" :title="item.name">
+                      {{ item.name }}
+                    </h3>
+                    
+                    <div class="description-container">
+                      <p class="template-description" :title="item.attributes?.remarks || '暂无描述'">
+                        {{ item.attributes?.remarks || '暂无描述' }}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                
-                <!-- 卡片内容 -->
-                <div class="card-content">
-                  <div class="card-title">{{ item.name }}</div>
-                  <div class="card-description">
-                    {{ item.attributes?.remarks || '暂无描述' }}
+                  
+                  <!-- 底部功能区 -->
+                  <div class="card-footer">
+                    <div class="feature-badge">
+                      <span v-if="item.attributes?.useTable" class="badge-text">
+                        <DatabaseOutlined />
+                        需要数据源
+                      </span>
+                      <span v-else class="badge-text">
+                        <CodeOutlined />
+                        通用模板
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
-                <!-- 卡片底部 -->
-                <div class="card-footer">
-                  <a-tag 
-                    v-if="item.attributes?.useTable" 
-                    color="blue"
-                    class="feature-tag"
-                  >
-                    <DatabaseOutlined />
-                    <span>需要数据源</span>
-                  </a-tag>
-                  <a-tag 
-                    v-else 
-                    color="green"
-                    class="feature-tag"
-                  >
-                    <CodeOutlined />
-                    <span>无需数据源</span>
-                  </a-tag>
                 </div>
               </a-card>
             </a-col>
@@ -307,135 +308,147 @@ export default {
   }
 }
 
-.template-card {
+/* 现代化模板卡片设计 - 紧凑版 */
+.modern-template-card {
   position: relative;
-  height: 220px; // 减少高度，更紧凑
-  transition: @animation-base;
-  border-radius: @border-radius-lg;
-  cursor: pointer;
+  height: 200px; /* 增加高度 */
+  border-radius: 12px;
   border: 2px solid transparent;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border-color: @primary-color;
+    border-color: #e0e7ff;
   }
   
-  &.template-card-selected {
-    border-color: @primary-color;
-    box-shadow: 0 4px 16px rgba(24, 144, 255, 0.2);
+  &.selected {
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(99, 102, 241, 0.03) 100%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
     
-    &:hover {
-      border-color: @primary-color-hover;
-      box-shadow: 0 8px 24px rgba(24, 144, 255, 0.3);
+    .card-header .template-icon {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .selected-indicator {
+      opacity: 1;
     }
   }
   
-  .card-header {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 0 0 auto; // 不伸缩，保持内容大小
-    padding: @spacing-lg 0; // 使用padding控制高度而不是固定height
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    
-    .card-avatar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      
-      .ant-avatar {
-        width: 48px;
-        height: 48px;
-        border: 3px solid rgba(255, 255, 255, 0.9);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-  
-  .card-content {
-    flex: 1; // 占据剩余的所有空间
+  .card-wrapper {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    padding: @spacing-lg @spacing-md;
-    overflow: hidden; // 防止内容溢出
-    
-    .card-title {
-      font-size: @font-size-base;
-      font-weight: @font-weight-semibold;
-      color: @text-color-primary;
-      margin-bottom: @spacing-md;
-      line-height: 1.4;
-      flex: 0 0 auto; // 标题不伸缩
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    .card-description {
-      font-size: @font-size-sm;
-      color: @text-color-secondary;
-      line-height: 1.6;
-      flex: 1; // 描述占据内容区域的剩余空间
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  }
-  
-  .card-footer {
-    flex: 0 0 auto; // 不伸缩，保持内容大小
-    padding: @spacing-md @spacing-lg;
-    background-color: @background-color-light;
-    border-top: 1px solid @border-color-base;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    .feature-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: @spacing-xs;
-      font-size: @font-size-sm;
-      font-weight: @font-weight-medium;
-      border: none;
-      border-radius: @border-radius-sm;
-      padding: @spacing-xs @spacing-sm;
-      
-      span {
-        margin: 0;
-        line-height: 1;
-      }
-      
-      .anticon {
-        font-size: @font-size-sm;
-      }
-    }
-  }
-  
-  .selected-indicator {
-    position: absolute;
-    top: @spacing-xs; // 减少距离顶部的间距
-    right: @spacing-xs; // 减少距离右边的间距
-    color: #fff;
-    font-size: @font-size-lg; // 减小图标大小
+    transition: all 0.3s ease;
+    position: relative;
     z-index: 2;
-    background: @primary-color;
-    border-radius: 50%;
-    width: 24px; // 减小尺寸
-    height: 24px;
+  }
+  
+  /* 头部区域 - 图标和选中状态 */
+  .card-header {
+    position: relative;
+    padding: 20px 16px 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.4);
+    flex: 0 0 auto;
+    
+    .template-icon {
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .selected-indicator {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: #3b82f6;
+      font-size: 18px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      background: #ffffff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+  }
+  
+  /* 内容区域 */
+  .card-content {
+    flex: 1;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* 允许子元素收缩 */
+    
+    .template-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 10px 0;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .description-container {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      
+      .template-description {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        word-break: break-word;
+      }
+    }
+  }
+  
+  /* 底部功能区 */
+  .card-footer {
+    padding: 12px 16px 16px;
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .feature-badge {
+      .badge-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(59, 130, 246, 0.08);
+        color: #3b82f6;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(59, 130, 246, 0.15);
+        
+        .anticon {
+          font-size: 10px;
+        }
+      }
+    }
   }
 }
 
@@ -450,39 +463,49 @@ export default {
   }
   
   .template-card {
-    height: 200px; // 调整响应式高度
+    height: 180px; // 中等屏幕稍小的高度
     
     .card-header {
-      height: 70px;
+      height: 60px; // 稍小的头部
+      flex: 0 0 60px;
       
       .card-avatar .ant-avatar {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         font-size: @font-size-base;
       }
     }
     
     .card-content {
-      padding: @spacing-md @spacing-sm; // 中等屏幕的内边距
+      height: 76px; // 相应调整内容高度
+      flex: 0 0 76px;
+      padding: 10px 12px;
       
       .card-title {
-        font-size: @font-size-sm;
-        margin-bottom: @spacing-xs; // 稍微减少间距
+        font-size: 13px;
+        height: 20px;
+        line-height: 20px;
+        margin-bottom: 6px;
       }
       
       .card-description {
-        font-size: @font-size-xs;
-        line-height: 1.4;
-        -webkit-line-clamp: 3; // 中等屏幕显示3行
-        line-clamp: 3;
+        height: 40px; // 2行，每行20px
+        font-size: 11px;
+        line-height: 20px;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
       }
     }
     
     .card-footer {
-      padding: @spacing-sm @spacing-md; // 中等屏幕的底部内边距
-      min-height: 32px;
+      height: 44px; // 保持底部高度
+      flex: 0 0 44px;
+      padding: 8px 12px;
       
       .feature-tag {
+        font-size: 11px;
+        padding: 3px 6px;
+        height: 22px;
         font-size: @font-size-xs;
         padding: @spacing-xs; // 稍微减小padding
       }
@@ -496,52 +519,50 @@ export default {
   }
   
   .template-card {
-    height: 180px; // 小屏幕进一步减小高度
+    height: 160px; // 小屏幕更紧凑的高度
     
     .card-header {
-      height: 60px; // 更小的头部
+      height: 50px; // 更小的头部
+      flex: 0 0 50px;
       
       .card-avatar .ant-avatar {
-        width: 36px; // 更小的头像
-        height: 36px;
+        width: 32px; // 更小的头像
+        height: 32px;
         font-size: @font-size-sm;
       }
     }
     
     .card-content {
-      padding: @spacing-xs @spacing-sm; // 更紧凑的内边距
+      height: 66px; // 相应调整内容高度
+      flex: 0 0 66px;
+      padding: 8px 10px;
       
       .card-title {
-        font-size: @font-size-sm;
-        margin-bottom: 2px; // 更小的间距
+        font-size: 12px;
+        height: 18px;
+        line-height: 18px;
+        margin-bottom: 4px;
       }
       
       .card-description {
-        font-size: @font-size-xs;
+        height: 36px; // 2行，每行18px
+        font-size: 10px;
+        line-height: 18px;
         -webkit-line-clamp: 2;
         line-clamp: 2;
       }
     }
     
     .card-footer {
-      padding: @spacing-xs; // 最小的底部内边距
-      min-height: 28px; // 更小的最小高度
+      height: 44px; // 保持底部高度不变
+      flex: 0 0 44px;
+      padding: 6px 10px;
       
       .feature-tag {
-        font-size: 10px; // 极小的字体
-        padding: 1px @spacing-xs;
-        gap: 2px; // 更小的间距
-        
-        .anticon {
-          font-size: 10px;
-        }
+        font-size: 10px;
+        padding: 2px 4px;
+        height: 20px;
       }
-    }
-    
-    .selected-indicator {
-      width: 20px; // 更小的选中指示器
-      height: 20px;
-      font-size: @font-size-sm;
     }
   }
 }

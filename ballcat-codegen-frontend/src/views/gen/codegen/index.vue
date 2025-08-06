@@ -1,116 +1,151 @@
 <template>
-  <div class="codegen-container">
-    <a-card
-      :bordered="false"
-      :body-style="{ minHeight: '600px', display: 'flex', flexDirection: 'column' }"
-      class="codegen-card"
-    >
-      <!-- 页面头部 -->
-      <div class="codegen-header">
-        <!-- 步骤指示器 -->
-        <div class="header-steps">
-          <a-steps 
-            :current="currentStepNumber" 
-            :items="enhancedStepInfos"
-            class="compact-steps"
-          />
-        </div>
-      </div>
-
-      <!-- 步骤内容区域 -->
-      <div class="step-content-area">
-        <div class="step-content">
-          <div class="step-container" :key="currentStepNumber">
-            <!-- 模板组选择 -->
-            <template-group-select-step
-              v-if="currentStepNumber === 0"
-              ref="templateGroupSelectStepRef"
-            />
-
-            <!-- 模板配置 -->
-            <template-config-step 
-              v-if="currentStepNumber === 1" 
-              ref="templateConfigStepRef" 
-            />
-
-            <!-- 数据源选择 -->
-            <table-select-step 
-              v-if="currentStepNumber === 2" 
-              ref="tableSelectStepRef" 
-            />
-
-            <!-- 代码生成 -->
-            <generate-step 
-              v-if="currentStepNumber === 3" 
-              ref="generateStepRef" 
-            />
+  <div class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div>
+      <!-- Compact Header -->
+      <div class="relative mb-6">
+        <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4">
+          <div class="flex items-center">
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg mr-3 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                代码生成器
+              </h1>
+              <p class="text-gray-600 text-sm">选择模板，配置参数，一键生成项目代码</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 操作按钮区域 -->
-      <div class="step-actions">
-        <a-row type="flex" justify="space-between" align="middle">
-          <a-col>
-            <a-space>
-              <span class="step-tip">
-                步骤 {{ currentStepNumber + 1 }} / {{ stepInfos.length }}
-              </span>
-            </a-space>
-          </a-col>
-          <a-col>
-            <a-space :size="12">
-              <a-button 
-                v-if="currentStepNumber > 0" 
-                @click="prev"
-                :disabled="isProcessing"
-              >
-                <LeftOutlined />
-                上一步
-              </a-button>
-              <a-button 
-                v-if="currentStepNumber < stepInfos.length - 2" 
-                type="primary" 
-                @click="next"
-                :loading="isValidating"
-              >
-                下一步
-                <RightOutlined />
-              </a-button>
-              <a-button 
-                v-if="currentStepNumber === stepInfos.length - 2" 
-                type="primary" 
-                @click="next"
-                :loading="isValidating"
-              >
-                <ThunderboltOutlined />
-                代码生成
-              </a-button>
-              <a-button
-                v-if="currentStepNumber === stepInfos.length - 1"
-                type="primary"
-                @click="download"
-                :loading="isDownloading"
-              >
-                <DownloadOutlined />
-                打包下载
-              </a-button>
-            </a-space>
-          </a-col>
-        </a-row>
+      <!-- Main Content Card -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+        <!-- Steps Navigation -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
+          <div>
+            <a-steps 
+              :current="currentStepNumber" 
+              :items="enhancedStepInfos"
+              class="elegant-steps"
+            />
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6">
+          <div>
+            <div class="step-container" :key="currentStepNumber">
+              <!-- 模板组选择 -->
+              <template-group-select-step
+                v-if="currentStepNumber === 0"
+                ref="templateGroupSelectStepRef"
+              />
+
+              <!-- 模板配置 -->
+              <template-config-step 
+                v-if="currentStepNumber === 1" 
+                ref="templateConfigStepRef" 
+              />
+
+              <!-- 数据源选择 -->
+              <table-select-step 
+                v-if="currentStepNumber === 2" 
+                ref="tableSelectStepRef" 
+              />
+
+              <!-- 代码生成 -->
+              <generate-step 
+                v-if="currentStepNumber === 3" 
+                ref="generateStepRef" 
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-100 p-6">
+          <div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                  <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full shadow-sm"></div>
+                  <span class="text-sm font-semibold text-gray-800">
+                    步骤 {{ currentStepNumber + 1 }} / {{ stepInfos.length }}
+                  </span>
+                </div>
+                <div class="h-4 w-px bg-gray-300"></div>
+                <span class="text-sm text-gray-600 font-medium">{{ enhancedStepInfos[currentStepNumber]?.title }}</span>
+              </div>
+              
+              <div class="flex items-center space-x-4">
+                <button 
+                  v-if="currentStepNumber > 0" 
+                  @click="prev"
+                  :disabled="isProcessing"
+                  class="group relative flex items-center px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:-translate-x-0.5 transition-transform">
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                  </svg>
+                  上一步
+                </button>
+                
+                <button 
+                  v-if="currentStepNumber < stepInfos.length - 2" 
+                  @click="next"
+                  :disabled="isValidating"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span v-if="!isValidating">下一步</span>
+                  <span v-else>验证中...</span>
+                  <svg v-if="!isValidating" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 group-hover:translate-x-0.5 transition-transform">
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+                
+                <button 
+                  v-if="currentStepNumber === stepInfos.length - 2" 
+                  @click="next"
+                  :disabled="isValidating"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:scale-110 transition-transform">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                  <span v-if="!isValidating">开始生成</span>
+                  <span v-else>验证中...</span>
+                </button>
+                
+                <button
+                  v-if="currentStepNumber === stepInfos.length - 1"
+                  @click="download"
+                  :disabled="isDownloading"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:translate-y-0.5 transition-transform">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7,10 12,15 17,10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span v-if="!isDownloading">打包下载</span>
+                  <span v-else>下载中...</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </a-card>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from 'vue'
-import { 
-  LeftOutlined, 
-  RightOutlined, 
-  ThunderboltOutlined, 
-  DownloadOutlined 
-} from '@ant-design/icons-vue'
+import { computed, ref, nextTick, watch } from 'vue'
 import TemplateConfigStep from './TemplateConfigStep.vue'
 import type { GenerateStepInstance } from '@/views/gen/codegen/types'
 import TableSelectStep from '@/views/gen/codegen/TableSelectStep.vue'
@@ -137,384 +172,324 @@ const isValidating = ref<boolean>(false)
 const isDownloading = ref<boolean>(false)
 const isProcessing = ref<boolean>(false)
 
-interface StepInfo {
-  title: string
-  componentRef: GenerateStepInstance | undefined
-}
-
-// 基础步骤信息
-const stepInfos = computed<StepInfo[]>(() => [
+// 步骤信息
+const stepInfos = [
   {
-    title: '模板选择',
-    componentRef: templateGroupSelectStepRef.value
+    title: '选择模板组',
+    description: '选择代码生成的模板组',
   },
   {
     title: '模板配置',
-    componentRef: templateConfigStepRef.value
+    description: '配置模板的基础信息',
   },
   {
-    title: '数据源选择',
-    componentRef: tableSelectStepRef.value
+    title: '选择数据源',
+    description: '选择要生成代码的数据表',
   },
   {
-    title: '代码生成',
-    componentRef: generateStepRef.value
-  }
-])
+    title: '生成代码',
+    description: '查看生成结果并下载',
+  },
+]
 
-// 增强的步骤信息（用于步骤指示器）
-const enhancedStepInfos = computed(() => [
-  {
-    title: '模板选择',
-    description: '选择代码生成模板组'
-  },
-  {
-    title: '模板配置', 
-    description: '配置模板参数'
-  },
-  {
-    title: '数据源选择',
-    description: '选择数据表'
-  },
-  {
-    title: '代码生成',
-    description: '生成并下载代码'
+// 计算属性：增强的步骤信息
+const enhancedStepInfos = computed(() => {
+  return stepInfos.map((step, index) => ({
+    ...step,
+    status: index < currentStepNumber.value ? 'finish' : index === currentStepNumber.value ? 'process' : 'wait'
+  }))
+})
+
+// 监听步骤变化，确保组件准备就绪后调用 enter 方法
+watch(currentStepNumber, async (newStep, oldStep) => {
+  if (newStep > oldStep) {
+    // 等待组件渲染完成
+    await nextTick()
+    await nextTick()
+    
+    const refMap = {
+      0: templateGroupSelectStepRef.value,
+      1: templateConfigStepRef.value,
+      2: tableSelectStepRef.value,
+      3: generateStepRef.value,
+    }
+    
+    const currentRef = refMap[newStep as keyof typeof refMap]
+    console.log(`Step ${newStep} ref:`, currentRef)
+    
+    if (currentRef?.enter) {
+      console.log(`Calling enter method for step ${newStep}`)
+      currentRef.enter()
+    }
   }
-])
+}, { flush: 'post' })
+
+// 验证当前步骤
+const validate = async (): Promise<boolean> => {
+  const refMap = {
+    0: templateGroupSelectStepRef.value,
+    1: templateConfigStepRef.value,
+    2: tableSelectStepRef.value,
+    3: generateStepRef.value,
+  }
+
+  const currentRef = refMap[currentStepNumber.value as keyof typeof refMap]
+  
+  if (currentRef?.validate) {
+    try {
+      await currentRef.validate()
+      return true
+    } catch (error: any) {
+      console.error('Validation error:', error)
+      // 如果错误对象有 message 属性，显示具体错误信息
+      if (error?.message) {
+        message.error(error.message)
+      } else {
+        message.error('请完成当前步骤的必填项')
+      }
+      return false
+    }
+  }
+  
+  return true
+}
 
 // 下一步
 const next = async () => {
-  const stepInfo = stepInfos.value[currentStepNumber.value]
+  isValidating.value = true
   
-  if (stepInfo.componentRef?.validate) {
-    try {
-      isValidating.value = true
-      await stepInfo.componentRef.validate()
-      enterNext(stepInfo)
-    } catch (e: any) {
-      message.error(e.message || '请将当前页面选项填写完整')
-    } finally {
-      isValidating.value = false
+  try {
+    const isValid = await validate()
+    
+    if (!isValid) {
+      return
     }
-  } else {
-    enterNext(stepInfo)
+
+    // 调用当前步骤的 next 方法
+    const refMap = {
+      0: templateGroupSelectStepRef.value,
+      1: templateConfigStepRef.value,
+      2: tableSelectStepRef.value,
+      3: generateStepRef.value,
+    }
+    
+    const currentRef = refMap[currentStepNumber.value as keyof typeof refMap]
+    if (currentRef?.next) {
+      currentRef.next()
+    }
+
+    if (currentStepNumber.value < stepInfos.length - 1) {
+      currentStepNumber.value++
+      // watcher 会自动调用新步骤的 enter 方法
+    }
+  } catch (error) {
+    console.error('Next step error:', error)
+    message.error('步骤验证失败，请重试')
+  } finally {
+    isValidating.value = false
   }
 }
 
 // 上一步
-const prev = () => {
+const prev = async () => {
   if (currentStepNumber.value > 0) {
     currentStepNumber.value--
+    // watcher 会自动调用新步骤的 enter 方法
   }
-}
-
-// 进入下一步的逻辑
-function enterNext(stepInfo: StepInfo) {
-  stepInfo.componentRef?.next?.()
-  const nextStepNumber = currentStepNumber.value + 1
-  currentStepNumber.value++
-  
-  // 使用 nextTick 确保组件已经渲染完成后再调用 enter 方法
-  nextTick(() => {
-    const nextStepInfo = stepInfos.value[nextStepNumber]
-    nextStepInfo.componentRef?.enter?.()
-  })
 }
 
 // 下载生成的代码
 const download = async () => {
+  isDownloading.value = true
+  
   try {
-    isDownloading.value = true
     const response = await generate(generatorConfigStore.dsName, generatorConfigStore.options)
-    remoteFileDownload(response, 'BallCat-CodeGen.zip')
-    message.success('代码生成完成！')
+    
+    // 创建下载链接
+    const blob = new Blob([response.data])
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'generated-code.zip'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+    
+    message.success('代码生成成功')
   } catch (error) {
-    message.error('代码生成异常')
+    console.error('Download error:', error)
+    message.error('代码下载失败，请重试')
   } finally {
     isDownloading.value = false
   }
 }
 </script>
 
-<style scoped lang="less">
-.codegen-container {
-  padding: @spacing-lg;
-}
-
-.codegen-card {
-  border-radius: @border-radius-lg;
-  box-shadow: @shadow-card;
-  
-  :deep(.ant-card-body) {
-    padding: 0;
-  }
-}
-
-.codegen-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: @spacing-xl @spacing-xl @spacing-lg;
-  border-bottom: 1px solid @border-color-light;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  
-  .header-steps {
-    width: 100%;
-    max-width: 800px;
-    
-    .compact-steps {
-      :deep(.ant-steps-item) {
-        .ant-steps-item-title {
-          font-weight: 600;
-          color: @text-color-primary;
-          font-size: @font-size-base;
-          margin-top: 8px;
-        }
-        
-        .ant-steps-item-description {
-          color: @text-color-secondary;
-          font-size: @font-size-sm;
-          margin-top: 4px;
-          line-height: 1.4;
-        }
-        
-        &.ant-steps-item-active {
-          .ant-steps-item-title {
-            color: @primary-color;
-            font-weight: 700;
-          }
-          
-          .ant-steps-item-description {
-            color: @primary-color;
-          }
-        }
-        
-        &.ant-steps-item-finish {
-          .ant-steps-item-title {
-            color: @success-color;
-          }
-        }
-        
-        .ant-steps-item-content {
-          min-height: 60px;
-        }
-      }
-      
-      :deep(.ant-steps-item-icon) {
-        width: 32px;
-        height: 32px;
-        line-height: 32px;
-        font-size: @font-size-base;
-        border-width: 2px;
-        
-        .ant-steps-icon {
-          font-size: @font-size-base;
-          font-weight: 600;
-        }
-      }
-      
-      :deep(.ant-steps-item-tail) {
-        &::after {
-          height: 2px;
-          background: @border-color-light;
-        }
-      }
-      
-      :deep(.ant-steps-item-finish .ant-steps-item-tail::after) {
-        background: @success-color;
-      }
-    }
-  }
-}
-
-.step-content-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 500px;
-  background: #fff;
-  
-  .step-content {
-    flex: 1;
-    padding: @spacing-lg @spacing-lg @spacing-lg;
-    overflow-y: auto;
-    
-    .step-container {
-      width: 100%;
-      animation: fadeInUp 0.4s ease-out;
-    }
-  }
-}
-
-.step-actions {
-  padding: @spacing-xl @spacing-xl @spacing-lg;
-  border-top: 1px solid @border-color-light;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.02);
-  
-  .step-tip {
-    color: @text-color-secondary;
-    font-size: @font-size-base;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    
-    &::before {
-      content: '';
-      width: 4px;
-      height: 16px;
-      background: @primary-color;
-      border-radius: 2px;
-      margin-right: 8px;
-    }
-  }
-  
-  :deep(.ant-btn) {
-    height: 44px;
-    padding: 0 @spacing-xl;
+<style scoped>
+/* Elegant Steps 样式 */
+.elegant-steps :deep(.ant-steps-item) {
+  .ant-steps-item-title {
     font-weight: 600;
-    border-radius: @border-radius-lg;
-    font-size: @font-size-base;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #1f2937;
+    font-size: 15px;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  
+  .ant-steps-item-description {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  
+  &.ant-steps-item-active {
+    .ant-steps-item-title {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
     }
     
-    &:active {
-      transform: translateY(0);
+    .ant-steps-item-description {
+      color: #3b82f6;
+      font-weight: 500;
+    }
+  }
+  
+  &.ant-steps-item-finish {
+    .ant-steps-item-title {
+      color: #059669;
+      font-weight: 600;
     }
     
-    &.ant-btn-primary {
-      background: linear-gradient(135deg, @primary-color 0%, #40a9ff 100%);
-      border: none;
-      
-      &:hover {
-        background: linear-gradient(135deg, #40a9ff 0%, @primary-color 100%);
-      }
-      
-      &:disabled {
-        background: #f5f5f5;
-        color: rgba(0, 0, 0, 0.25);
-        transform: none;
-        box-shadow: none;
-        cursor: not-allowed;
-      }
+    .ant-steps-item-description {
+      color: #10b981;
     }
-    
-    &:not(.ant-btn-primary) {
-      background: #fff;
-      border: 1px solid @border-color-base;
-      color: @text-color-primary;
-      
-      &:hover {
-        border-color: @primary-color;
-        color: @primary-color;
-      }
-    }
-    
-    .anticon {
-      font-size: @font-size-base;
-      margin-right: 4px;
-      
-      &:last-child {
-        margin-right: 0;
-        margin-left: 4px;
-      }
-    }
+  }
+  
+  .ant-steps-item-content {
+    min-height: 60px;
+    padding-top: 6px;
   }
 }
 
-// 响应式设计
-@media (max-width: 768px) {
-  .codegen-container {
-    padding: @spacing-md;
-  }
+.elegant-steps :deep(.ant-steps-item-icon) {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+  border-width: 2px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   
-  .codegen-header {
-    padding: @spacing-sm @spacing-md;
-    
-    .header-steps {
-      max-width: 100%;
-      
-      .compact-steps {
-        :deep(.ant-steps-item-title) {
-          font-size: @font-size-xs;
-        }
-      }
-    }
-  }
-  
-  .step-content-area .step-content {
-    padding: @spacing-md @spacing-lg;
-  }
-  
-  .step-actions {
-    padding: @spacing-md;
-    
-    :deep(.ant-row) {
-      flex-direction: column;
-      gap: @spacing-md;
-    }
+  .ant-steps-icon {
+    font-size: 14px;
+    font-weight: 700;
   }
 }
 
-// 动画效果
-@keyframes fadeInUp {
+.elegant-steps :deep(.ant-steps-item-tail) {
+  &::after {
+    height: 3px;
+    background: linear-gradient(90deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 2px;
+    top: 16px;
+  }
+}
+
+.elegant-steps :deep(.ant-steps-item-finish .ant-steps-item-tail::after) {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+.elegant-steps :deep(.ant-steps-item-process .ant-steps-item-icon) {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+  border-color: #3b82f6;
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  
+  .ant-steps-icon {
+    color: white;
+  }
+}
+
+.elegant-steps :deep(.ant-steps-item-finish .ant-steps-item-icon) {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  
+  .anticon {
+    color: white;
+  }
+}
+
+.elegant-steps :deep(.ant-steps-item-wait .ant-steps-item-icon) {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-color: #d1d5db;
+  
+  .ant-steps-icon {
+    color: #9ca3af;
+  }
+}
+
+/* Step Container 动画增强 */
+.step-container {
+  animation: elegantFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes elegantFadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.step-content {
-  transition: all 0.3s ease;
+/* 按钮hover效果增强 */
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-// Loading 状态样式
-:deep(.ant-btn-loading) {
+button:active:not(:disabled) {
+  transform: translateY(-1px);
+  transition-duration: 0.1s;
+}
+
+/* 加载状态 */
+button:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 背景装饰 */
+.min-h-screen::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
   pointer-events: none;
+  z-index: -1;
 }
 
-// 步骤指示器增强样式
-.codegen-header .header-steps .compact-steps {
-  :deep(.ant-steps-item-process) {
-    .ant-steps-item-icon {
-      background: @primary-color;
-      border-color: @primary-color;
-      
-      .ant-steps-icon {
-        color: #fff;
-      }
-    }
-  }
-  
-  :deep(.ant-steps-item-finish) {
-    .ant-steps-item-icon {
-      background: @success-color;
-      border-color: @success-color;
-      
-      .anticon {
-        color: #fff;
-      }
-    }
-  }
-  
-  :deep(.ant-steps-item-wait) {
-    .ant-steps-item-icon {
-      background: #fff;
-      border-color: @border-color-base;
-      
-      .ant-steps-icon {
-        color: @text-color-secondary;
-      }
-    }
-  }
+/* 卡片悬浮效果 */
+.bg-white\/80 {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bg-white\/80:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 </style>
