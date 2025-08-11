@@ -1,7 +1,7 @@
 <template>
-  <div class="h-screen flex flex-col space-y-6">
+  <div class="h-[calc(100vh-200px)] flex flex-col overflow-hidden">
     <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex-shrink-0">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex-shrink-0 mb-6">
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-bold text-gray-900 flex items-center">
@@ -29,44 +29,46 @@
       </div>
     </div>
 
-    <!-- Search and Filters -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex-shrink-0">
-      <div class="flex gap-4">
-        <div class="flex-1">
-          <label class="block text-sm font-medium text-gray-700 mb-2">搜索数据源</label>
-          <a-input v-model:value="queryParam.title" placeholder="搜索数据源描述..." allow-clear @change="tableState.loadData()"
-            @clear="tableState.loadData()" @press-enter="tableState.loadData()">
-            <template #prefix>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-search text-gray-400">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
-            </template>
-          </a-input>
-        </div>
-      </div>
-    </div>
-
     <!-- Main Layout -->
     <div class="grid grid-cols-3 gap-6 flex-1 min-h-0">
       <!-- Data Source List -->
-      <div class="col-span-2">
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col">
-          <div class="p-4 border-b border-gray-200 flex-shrink-0">
+      <div class="col-span-2 min-h-0">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col min-h-0">
+          <div class="p-6 border-b border-gray-200 flex-shrink-0">
+            <!-- Header Row -->
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900">
-                数据源列表 ({{ pagination.total || 0 }} 项)
-              </h3>
-              <div class="text-sm text-gray-500" v-if="selectedDataSource">
-                已选择: {{ selectedDataSource.title }}
+              <div class="flex items-center space-x-4">
+                <h3 class="text-lg font-semibold text-gray-900">
+                  数据源列表 ({{ pagination.total || 0 }} 项)
+                </h3>
+                <div class="text-sm text-gray-500" v-if="selectedDataSource">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    已选择: {{ selectedDataSource.title }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Search Input -->
+              <div class="w-80">
+                <a-input v-model:value="queryParam.title" placeholder="搜索数据源..." allow-clear
+                  @change="tableState.loadData()" @clear="tableState.loadData()" @press-enter="tableState.loadData()"
+                  class="w-full" size="middle">
+                  <template #prefix>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="lucide lucide-search text-gray-400">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                  </template>
+                </a-input>
               </div>
             </div>
           </div>
 
           <!-- Scrollable Content Area -->
-          <div class="flex-1 overflow-y-auto">
+          <div class="flex-1 overflow-y-auto min-h-0">
             <!-- Empty State -->
             <div v-if="!dataSource || dataSource.length === 0" class="p-8 text-center text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -151,7 +153,7 @@
           </div>
 
           <!-- Pagination -->
-          <div class="px-6 py-4 border-t border-gray-200 flex-shrink-0" v-if="(pagination.total ?? 0) > 0">
+          <div class="px-6 py-4 border-t border-gray-200 flex-shrink-0" v-if="dataSource && dataSource.length > 0">
             <a-pagination v-model:current="pagination.current" v-model:pageSize="pagination.pageSize"
               :total="pagination.total" :show-size-changer="true" :show-quick-jumper="true"
               :show-total="(total: number, range: [number, number]) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`"
@@ -162,9 +164,9 @@
 
       </div>
       <!-- Detail Panel -->
-      <div class="col-span-1">
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col">
-          <div class="p-4 border-b border-gray-200 flex-shrink-0">
+      <div class="col-span-1 min-h-0">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col min-h-0">
+          <div class="px-6 py-6 border-b border-gray-200 flex-shrink-0">
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-semibold text-gray-900">
                 <span v-if="isAdding">添加数据源</span>
@@ -184,7 +186,7 @@
             </div>
           </div>
 
-          <div class="flex-1 overflow-y-auto">
+          <div class="flex-1 overflow-y-auto min-h-0">
             <!-- Add New Data Source Form -->
             <div v-if="isAdding" class="p-6">
               <div class="space-y-4">
@@ -194,49 +196,53 @@
                   </label>
                   <a-input v-model:value="editForm.title" placeholder="请输入数据源名称" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     数据源键 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.dsKey" placeholder="请输入数据源键" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     连接地址 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     用户名 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.username" placeholder="请输入用户名" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     密码 <span class="text-red-500">*</span>
                   </label>
                   <a-input-password v-model:value="editForm.password" placeholder="请输入密码" />
                 </div>
-                
+
                 <div class="pt-4 border-t border-gray-200 space-y-2">
-                  <button @click="handleSave" 
+                  <button @click="handleSave"
                     class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     :disabled="!isFormValid">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="w-4 h-4 mr-2">
                       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                       <polyline points="17,21 17,13 7,13 7,21"></polyline>
                       <polyline points="7,3 7,8 15,8"></polyline>
                     </svg>
                     保存
                   </button>
-                  <button @click="cancelEdit" 
+                  <button @click="cancelEdit"
                     class="w-full flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="w-4 h-4 mr-2">
                       <path d="M18 6 6 18"></path>
                       <path d="m6 6 12 12"></path>
                     </svg>
@@ -255,47 +261,51 @@
                   </label>
                   <a-input v-model:value="editForm.title" placeholder="请输入数据源名称" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     数据源键 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.dsKey" placeholder="请输入数据源键" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     连接地址 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     用户名 <span class="text-red-500">*</span>
                   </label>
                   <a-input v-model:value="editForm.username" placeholder="请输入用户名" />
                 </div>
-                
+
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
                   <a-input-password v-model:value="editForm.password" placeholder="不修改请留空" />
                 </div>
-                
+
                 <div class="pt-4 border-t border-gray-200 space-y-2">
-                  <button @click="handleSave" 
+                  <button @click="handleSave"
                     class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     :disabled="!isFormValid">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="w-4 h-4 mr-2">
                       <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                       <polyline points="17,21 17,13 7,13 7,21"></polyline>
                       <polyline points="7,3 7,8 15,8"></polyline>
                     </svg>
                     保存修改
                   </button>
-                  <button @click="cancelEdit" 
+                  <button @click="cancelEdit"
                     class="w-full flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="w-4 h-4 mr-2">
                       <path d="M18 6 6 18"></path>
                       <path d="m6 6 12 12"></path>
                     </svg>
@@ -433,8 +443,8 @@ tableState.loadData()
 
 // 表单验证
 const isFormValid = computed(() => {
-  return editForm.title && editForm.dsKey && editForm.url && editForm.username && 
-         (isAdding.value ? editForm.password : true)
+  return editForm.title && editForm.dsKey && editForm.url && editForm.username &&
+    (isAdding.value ? editForm.password : true)
 })
 
 // 重置表单
@@ -480,7 +490,7 @@ function startEdit(record: DataSourceConfig) {
   editForm.url = record.url || ''
   editForm.username = record.username || ''
   editForm.password = '' // 密码不显示，留空表示不修改
-  
+
   isAdding.value = false
   isEditing.value = true
   selectedDataSource.value = record
@@ -496,7 +506,7 @@ function cancelEdit() {
 // 保存数据
 function handleSave() {
   if (!isFormValid.value) return
-  
+
   if (isAdding.value) {
     // 添加新数据源
     doRequest<void>({
@@ -522,12 +532,12 @@ function handleSave() {
       url: editForm.url,
       username: editForm.username
     }
-    
+
     // 只有输入了密码才更新密码
     if (editForm.password) {
       updateData.password = editForm.password
     }
-    
+
     doRequest<void>({
       request: updateDatasourceConfig(updateData),
       successMessage: '更新成功！',

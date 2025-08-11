@@ -22,6 +22,7 @@ declare module 'vue' {
     ADescriptionsItem: typeof import('ant-design-vue/es')['DescriptionsItem']
     ADirectoryTree: typeof import('ant-design-vue/es')['DirectoryTree']
     ADivider: typeof import('ant-design-vue/es')['Divider']
+    ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AEmpty: typeof import('ant-design-vue/es')['Empty']
     AForm: typeof import('ant-design-vue/es')['Form']
     AFormItem: typeof import('ant-design-vue/es')['FormItem']
@@ -63,6 +64,8 @@ declare module 'vue' {
     MenuItemContent: typeof import('./src/components/menu/MenuItemContent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterMenu: typeof import('./src/components/menu/RouterMenu.vue')['default']
+    RouterMenuAnt: typeof import('./src/components/menu/RouterMenu-ant.vue')['default']
+    RouterMenuNew: typeof import('./src/components/menu/RouterMenu-new.vue')['default']
     RouterView: typeof import('vue-router')['RouterView']
     SubMenu: typeof import('./src/components/menu/SubMenu.vue')['default']
   }
