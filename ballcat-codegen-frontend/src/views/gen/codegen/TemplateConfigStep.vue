@@ -420,10 +420,6 @@ defineExpose<GenerateStepInstance>({
 </script>
 
 <style scoped lang="less">
-.template-config-step {
-  padding: @spacing-lg 0;
-}
-
 .step-header {
   display: flex;
   justify-content: space-between;
@@ -630,10 +626,6 @@ defineExpose<GenerateStepInstance>({
 }
 
 @media (max-width: @screen-md) {
-  .template-config-step {
-    padding: @spacing-md 0;
-  }
-  
   .config-form {
     .section-card {
       padding: @spacing-lg;

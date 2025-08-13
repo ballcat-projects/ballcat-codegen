@@ -239,10 +239,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.template-group-select {
-  padding: @spacing-lg 0;
-}
-
 .loading-container {
   .skeleton-card {
     min-height: 200px;
@@ -584,9 +580,6 @@ export default {
 }
 
 @media (max-width: @screen-sm) {
-  .template-group-select {
-    padding: @spacing-md 0;
-  }
 
   .template-card {
     height: 160px; // 小屏幕更紧凑的高度

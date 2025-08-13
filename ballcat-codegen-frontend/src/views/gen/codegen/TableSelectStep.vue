@@ -299,8 +299,6 @@ defineExpose<GenerateStepInstance>({
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 400px;
-    padding: @spacing-xl;
 
     .template-info {
       text-align: center;

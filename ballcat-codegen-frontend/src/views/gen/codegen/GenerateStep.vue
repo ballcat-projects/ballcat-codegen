@@ -1,9 +1,9 @@
 <template>
-  <div style="position: relative">
+  <div class="h-full flex flex-col relative">
     <!-- 代码复制下载，放在面板里面渲染会出问题，所以拿到外面 -->
     <span
       v-show="selectedEntry && selectedEntry.type === TemplateEntryTypeEnum.TEMPLATE_FILE"
-      style="position: absolute; top: 0; right: 28px"
+      class="absolute top-0 right-7 z-10"
     >
       <a-button type="link" style="padding: 0" @click="handleDownload">
         <template #icon>
@@ -20,7 +20,7 @@
       </a-button>
     </span>
 
-    <splitpanes class="preview-splitpanes">
+    <splitpanes class="preview-splitpanes flex-1">
       <pane size="25" class="template-entry-tree-wrapper">
         <a-skeleton v-if="loading" style="margin: 16px; width: 260px" :paragraph="{ rows: 8 }" />
         <a-directory-tree
@@ -170,6 +170,10 @@ pre code.hljs {
   min-width: 5px;
   cursor: col-resize;
 }
+
+.preview-splitpanes {
+  height: 100%;
+}
 </style>
 
 <style scoped lang="less">
@@ -195,7 +199,7 @@ pre code.hljs {
 }
 
 .template-entry-tree-wrapper {
-  height: 650px;
+  height: 100%;
   overflow: auto;
   border-right-style: solid;
   border-right-width: 1px;
@@ -204,7 +208,7 @@ pre code.hljs {
 }
 
 .template-content-wrapper {
-  height: 650px;
+  height: 100%;
   overflow: auto;
 }
 

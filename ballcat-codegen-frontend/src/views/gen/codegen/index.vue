@@ -1,12 +1,16 @@
 <template>
-  <div class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-    <div>
+  <div
+    class="h-[calc(100vh-200px)] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col min-h-0">
       <!-- Compact Header -->
       <div class="relative mb-6">
         <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4">
           <div class="flex items-center">
-            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg mr-3 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+            <div
+              class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg mr-3 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="text-white">
                 <polyline points="16 18 22 12 16 6"></polyline>
                 <polyline points="8 6 2 12 8 18"></polyline>
               </svg>
@@ -22,51 +26,36 @@
       </div>
 
       <!-- Main Content Card -->
-      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+      <div
+        class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden flex-1 flex flex-col min-h-0">
         <!-- Steps Navigation -->
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
           <div>
-            <a-steps 
-              :current="currentStepNumber" 
-              :items="enhancedStepInfos"
-              class="elegant-steps"
-            />
+            <a-steps :current="currentStepNumber" :items="enhancedStepInfos" class="elegant-steps" />
           </div>
         </div>
 
         <!-- Content Area -->
-        <div class="p-6">
-          <div>
-            <div class="step-container" :key="currentStepNumber">
+        <div class="p-6 flex-1 overflow-y-auto min-h-0">
+          <div class="h-full">
+            <div class="step-container h-full" :key="currentStepNumber">
               <!-- 模板组选择 -->
-              <template-group-select-step
-                v-if="currentStepNumber === 0"
-                ref="templateGroupSelectStepRef"
-              />
+              <template-group-select-step v-if="currentStepNumber === 0" ref="templateGroupSelectStepRef" />
 
               <!-- 模板配置 -->
-              <template-config-step 
-                v-if="currentStepNumber === 1" 
-                ref="templateConfigStepRef" 
-              />
+              <template-config-step v-if="currentStepNumber === 1" ref="templateConfigStepRef" />
 
               <!-- 数据源选择 -->
-              <table-select-step 
-                v-if="currentStepNumber === 2" 
-                ref="tableSelectStepRef" 
-              />
+              <table-select-step v-if="currentStepNumber === 2" ref="tableSelectStepRef" />
 
               <!-- 代码生成 -->
-              <generate-step 
-                v-if="currentStepNumber === 3" 
-                ref="generateStepRef" 
-              />
+              <generate-step v-if="currentStepNumber === 3" ref="generateStepRef" />
             </div>
           </div>
         </div>
 
         <!-- Action Bar -->
-        <div class="bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-100 p-6">
+        <div class="bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-100 p-6 flex-shrink-0">
           <div>
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
@@ -79,55 +68,47 @@
                 <div class="h-4 w-px bg-gray-300"></div>
                 <span class="text-sm text-gray-600 font-medium">{{ enhancedStepInfos[currentStepNumber]?.title }}</span>
               </div>
-              
+
               <div class="flex items-center space-x-4">
-                <button 
-                  v-if="currentStepNumber > 0" 
-                  @click="prev"
-                  :disabled="isProcessing"
-                  class="group relative flex items-center px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:-translate-x-0.5 transition-transform">
+                <button v-if="currentStepNumber > 0" @click="prev" :disabled="isProcessing"
+                  class="group relative flex items-center px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="mr-2 group-hover:-translate-x-0.5 transition-transform">
                     <path d="M19 12H5"></path>
                     <path d="M12 19l-7-7 7-7"></path>
                   </svg>
                   上一步
                 </button>
-                
-                <button 
-                  v-if="currentStepNumber < stepInfos.length - 2" 
-                  @click="next"
-                  :disabled="isValidating"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+
+                <button v-if="currentStepNumber < stepInfos.length - 2" @click="next" :disabled="isValidating"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                   <span v-if="!isValidating">下一步</span>
                   <span v-else>验证中...</span>
-                  <svg v-if="!isValidating" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 group-hover:translate-x-0.5 transition-transform">
+                  <svg v-if="!isValidating" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="ml-2 group-hover:translate-x-0.5 transition-transform">
                     <path d="M5 12h14"></path>
                     <path d="M12 5l7 7-7 7"></path>
                   </svg>
                 </button>
-                
-                <button 
-                  v-if="currentStepNumber === stepInfos.length - 2" 
-                  @click="next"
-                  :disabled="isValidating"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:scale-110 transition-transform">
+
+                <button v-if="currentStepNumber === stepInfos.length - 2" @click="next" :disabled="isValidating"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="mr-2 group-hover:scale-110 transition-transform">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                   </svg>
                   <span v-if="!isValidating">开始生成</span>
                   <span v-else>验证中...</span>
                 </button>
-                
-                <button
-                  v-if="currentStepNumber === stepInfos.length - 1"
-                  @click="download"
-                  :disabled="isDownloading"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:translate-y-0.5 transition-transform">
+
+                <button v-if="currentStepNumber === stepInfos.length - 1" @click="download" :disabled="isDownloading"
+                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="mr-2 group-hover:translate-y-0.5 transition-transform">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7,10 12,15 17,10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -184,7 +165,7 @@ const stepInfos = [
   },
   {
     title: '选择数据源',
-    description: '选择要生成代码的数据表',
+    description: '选择生成代码的数据表',
   },
   {
     title: '生成代码',
@@ -206,17 +187,17 @@ watch(currentStepNumber, async (newStep, oldStep) => {
     // 等待组件渲染完成
     await nextTick()
     await nextTick()
-    
+
     const refMap = {
       0: templateGroupSelectStepRef.value,
       1: templateConfigStepRef.value,
       2: tableSelectStepRef.value,
       3: generateStepRef.value,
     }
-    
+
     const currentRef = refMap[newStep as keyof typeof refMap]
     console.log(`Step ${newStep} ref:`, currentRef)
-    
+
     if (currentRef?.enter) {
       console.log(`Calling enter method for step ${newStep}`)
       currentRef.enter()
@@ -234,7 +215,7 @@ const validate = async (): Promise<boolean> => {
   }
 
   const currentRef = refMap[currentStepNumber.value as keyof typeof refMap]
-  
+
   if (currentRef?.validate) {
     try {
       await currentRef.validate()
@@ -250,17 +231,17 @@ const validate = async (): Promise<boolean> => {
       return false
     }
   }
-  
+
   return true
 }
 
 // 下一步
 const next = async () => {
   isValidating.value = true
-  
+
   try {
     const isValid = await validate()
-    
+
     if (!isValid) {
       return
     }
@@ -272,7 +253,7 @@ const next = async () => {
       2: tableSelectStepRef.value,
       3: generateStepRef.value,
     }
-    
+
     const currentRef = refMap[currentStepNumber.value as keyof typeof refMap]
     if (currentRef?.next) {
       currentRef.next()
@@ -301,10 +282,10 @@ const prev = async () => {
 // 下载生成的代码
 const download = async () => {
   isDownloading.value = true
-  
+
   try {
     const response = await generate(generatorConfigStore.dsName, generatorConfigStore.options)
-    
+
     // 创建下载链接
     const blob = new Blob([response.data])
     const url = window.URL.createObjectURL(blob)
@@ -315,7 +296,7 @@ const download = async () => {
     link.click()
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
-    
+
     message.success('代码生成成功')
   } catch (error) {
     console.error('Download error:', error)
@@ -336,14 +317,14 @@ const download = async () => {
     margin-top: 8px;
     line-height: 1.4;
   }
-  
+
   .ant-steps-item-description {
     color: #6b7280;
     font-size: 13px;
     margin-top: 4px;
     line-height: 1.5;
   }
-  
+
   &.ant-steps-item-active {
     .ant-steps-item-title {
       background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
@@ -352,24 +333,24 @@ const download = async () => {
       background-clip: text;
       font-weight: 700;
     }
-    
+
     .ant-steps-item-description {
       color: #3b82f6;
       font-weight: 500;
     }
   }
-  
+
   &.ant-steps-item-finish {
     .ant-steps-item-title {
       color: #059669;
       font-weight: 600;
     }
-    
+
     .ant-steps-item-description {
       color: #10b981;
     }
   }
-  
+
   .ant-steps-item-content {
     min-height: 60px;
     padding-top: 6px;
@@ -384,7 +365,7 @@ const download = async () => {
   border-width: 2px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  
+
   .ant-steps-icon {
     font-size: 14px;
     font-weight: 700;
@@ -409,7 +390,7 @@ const download = async () => {
   border-color: #3b82f6;
   transform: scale(1.05);
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-  
+
   .ant-steps-icon {
     color: white;
   }
@@ -419,7 +400,7 @@ const download = async () => {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   border-color: #10b981;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-  
+
   .anticon {
     color: white;
   }
@@ -428,7 +409,7 @@ const download = async () => {
 .elegant-steps :deep(.ant-steps-item-wait .ant-steps-item-icon) {
   background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
   border-color: #d1d5db;
-  
+
   .ant-steps-icon {
     color: #9ca3af;
   }
@@ -444,6 +425,7 @@ const download = async () => {
     opacity: 0;
     transform: translateY(24px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -475,7 +457,7 @@ button:disabled {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
