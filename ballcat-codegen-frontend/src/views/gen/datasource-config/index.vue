@@ -208,7 +208,8 @@
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     连接地址 <span class="text-red-500">*</span>
                   </label>
-                  <a-input v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" />
+                  <a-textarea v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" :rows="3"
+                    :auto-size="{ minRows: 2, maxRows: 4 }" />
                 </div>
 
                 <div>
@@ -273,7 +274,8 @@
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     连接地址 <span class="text-red-500">*</span>
                   </label>
-                  <a-input v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" />
+                  <a-textarea v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" :rows="3"
+                    :auto-size="{ minRows: 2, maxRows: 4 }" />
                 </div>
 
                 <div>
