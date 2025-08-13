@@ -20,7 +20,7 @@
 	</modules>
 
 	<properties>
-		<revision>1.4.1</revision>
+		<revision>1.5.0</revision>
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<!-- maven 配置 -->
 		<java.version>1.8</java.version>
