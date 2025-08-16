@@ -18,11 +18,11 @@
     <!-- 需要数据源的模板组 -->
     <template v-else>
       <div class="step-content">
-        <div class="main-content">
+  <div class="main-content" :style="panelHeightVars">
           <a-row :gutter="24">
             <!-- 数据源选择面板 -->
             <a-col :span="6">
-              <div class="datasource-panel">
+              <div class="panel datasource-panel">
                 <div class="panel-header">
                   <div class="header-content">
                     <DatabaseOutlined class="header-icon" />
@@ -36,18 +36,22 @@
                         :loading="datasourceLoading"
                         @click="refreshData"
                       >
-                        <ReloadOutlined />
+                        <template #icon>
+                          <ReloadOutlined />
+                        </template>
                       </a-button>
                     </a-tooltip>
                     <a-tooltip title="管理数据源">
                       <a-button type="text" size="small" @click="openDatasourcePage">
-                        <PlusOutlined />
+                        <template #icon>
+                          <PlusOutlined />
+                        </template>
                       </a-button>
                     </a-tooltip>
                   </div>
                 </div>
 
-                <div class="panel-content">
+                <div class="panel-content" :style="{ maxHeight: tablePanelMaxPx }">
                   <a-spin :spinning="datasourceLoading">
                     <template v-if="dataSourceSelectData.length > 0">
                       <a-radio-group v-model:value="selectedDsNames" style="width: 100%">
@@ -68,7 +72,9 @@
                     <template v-else>
                       <a-empty description="暂无数据源">
                         <a-button type="primary" @click="openDatasourcePage">
-                          <PlusOutlined />
+                          <template #icon>
+                            <PlusOutlined />
+                          </template>
                           添加数据源
                         </a-button>
                       </a-empty>
@@ -80,7 +86,7 @@
 
             <!-- 表格选择面板 -->
             <a-col :span="18">
-              <div class="table-panel">
+              <div class="panel table-panel">
                 <div class="panel-header">
                   <div class="header-content">
                     <TableOutlined class="header-icon" />
@@ -105,7 +111,7 @@
                     :data-source="dataSource"
                     :pagination="pagination"
                     :loading="loading"
-                    :scroll="{ y: 'calc(100vh - 400px)' }"
+                    :scroll="tableScroll"
                     row-key="tableName"
                     @change="tableState.handleTableChange"
                     :row-selection="{
@@ -210,6 +216,31 @@ const enhancedColumns = computed<ColumnProps[]>(() => [
   }
 ])
 
+// 面板内容高度与表格滚动统一：最多按 10 行表格内容高度显示
+const TABLE_ROW_H = 54 // 依据默认尺寸，若全局设为 small/middle 可改为 40/48
+const TABLE_THEAD_H = 54 // 估算表头高度
+const TABLE_PAGINATION_H = 72 // 估算分页区块（含间距）高度，可按主题调整
+const MAX_VISIBLE_ROWS = 10
+// 数据源面板的最大高度：等于 10 行表体高度
+const datasourceMaxPx = computed(() => `${TABLE_ROW_H * MAX_VISIBLE_ROWS}px`)
+// 表格面板内容最大高度：表头 + 10 行表体 + 分页区块
+const tablePanelMaxPx = computed(
+  () => `${TABLE_THEAD_H + TABLE_ROW_H * MAX_VISIBLE_ROWS + TABLE_PAGINATION_H}px`
+)
+// 注入到容器的 CSS 变量，便于样式与媒体查询覆盖
+const panelHeightVars = computed(() => ({
+  "--panel-ds-max": datasourceMaxPx.value,
+  "--panel-table-max": tablePanelMaxPx.value
+}))
+// 表格滚动：可见行数不超过 10；超过则按 10 行高度出现滚动
+const pageSize = computed(() => pagination.value?.pageSize ?? MAX_VISIBLE_ROWS)
+const visibleRows = computed(() => Math.min(pageSize.value, MAX_VISIBLE_ROWS))
+const tableScroll = computed(() => {
+  const len = dataSource.value?.length ?? 0
+  const y = TABLE_ROW_H * visibleRows.value
+  return len > visibleRows.value ? { y } : undefined
+})
+
 // 加载数据源列表
 const loadDataSources = () => {
   datasourceLoading.value = true
@@ -295,6 +326,7 @@ defineExpose<GenerateStepInstance>({
 
 <style lang="less" scoped>
 .table-select-step {
+  padding: @spacing-lg; // 紧凑的外围留白，保证与网格 gutter 视觉对齐
   .no-datasource-container {
     display: flex;
     justify-content: center;
@@ -319,20 +351,20 @@ defineExpose<GenerateStepInstance>({
 
   .step-content {
     padding: 0;
-    height: 100%;
+  height: 100%;
     display: flex;
     flex-direction: column;
   }
 
   .main-content {
-    flex: 1;
+  flex: 1;
     display: flex;
     flex-direction: column;
-    padding: @spacing-lg;
+  padding: 0;
 
     :deep(.ant-row) {
-      flex: 1;
       display: flex;
+      align-items: stretch; // 保持两侧面板等高（以更高的一侧为准）
     }
 
     :deep(.ant-col) {
@@ -340,62 +372,13 @@ defineExpose<GenerateStepInstance>({
       flex-direction: column;
     }
 
-    .datasource-panel,
-    .table-panel {
-      background: @component-background;
-      border-radius: @border-radius-base;
-      box-shadow: @box-shadow-base;
-      overflow: hidden;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-
-      .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: @spacing-md @spacing-lg;
-        background: @background-color-light;
-        border-bottom: 1px solid @border-color-base;
-        height: 64px;
-        min-height: 64px;
-
-        .header-content {
-          display: flex;
-          align-items: center;
-          gap: @spacing-sm;
-
-          .header-icon {
-            color: @primary-color;
-            font-size: @font-size-lg;
-          }
-
-          .header-title {
-            font-weight: @font-weight-medium;
-            font-size: @font-size-base;
-            color: @text-color;
-          }
-        }
-
-        .header-actions {
-          display: flex;
-          align-items: center;
-          gap: @spacing-xs;
-        }
-      }
-
-      .panel-content {
-        padding: @spacing-lg;
-      }
-    }
+  // 复用全局 .panel 样式
 
     // 数据源面板特殊样式
     .datasource-panel {
       .panel-content {
-        padding: @spacing-lg;
         flex: 1;
         min-height: 0;
-        max-height: calc(100vh - 400px);
         overflow-y: auto;
 
         // 优化滚动条样式
@@ -404,16 +387,16 @@ defineExpose<GenerateStepInstance>({
         }
 
         &::-webkit-scrollbar-track {
-          background: #f1f1f1;
+          background: @gray-3;
           border-radius: 3px;
         }
 
         &::-webkit-scrollbar-thumb {
-          background: #c1c1c1;
+          background: @gray-5;
           border-radius: 3px;
 
           &:hover {
-            background: #a8a8a8;
+            background: @gray-6;
           }
         }
       }
@@ -478,14 +461,29 @@ defineExpose<GenerateStepInstance>({
     .datasource-panel {
       .panel-header {
         flex-shrink: 0;
+        .header-actions {
+          /* 按钮内图标水平/垂直居中，不改变按钮本身的 display */
+          :deep(.ant-btn .anticon) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            line-height: 1;
+            vertical-align: -0.125em;
+          }
+          :deep(.ant-btn .anticon svg) {
+            display: block;
+          }
+        }
       }
 
       .datasource-item {
-        margin-bottom: @spacing-sm;
-        padding: @spacing-sm;
-        border: 1px solid @border-color-base;
-        border-radius: @border-radius-base;
-        transition: all @animation-duration-slow;
+  margin-bottom: @spacing-sm;
+  padding: @spacing-sm;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-base;
+  transition: all @animation-duration-slow;
+        box-sizing: border-box;
 
         &:hover {
           border-color: @primary-color;
@@ -494,6 +492,7 @@ defineExpose<GenerateStepInstance>({
 
         .datasource-radio {
           width: 100%;
+          box-sizing: border-box;
 
           .datasource-info {
             margin-left: @spacing-sm;
@@ -516,11 +515,29 @@ defineExpose<GenerateStepInstance>({
     .table-panel {
       .panel-header {
         flex-shrink: 0;
+        .header-actions {
+          /* 搜索框后缀（放大镜）图标水平垂直居中 */
+          :deep(.ant-input-affix-wrapper .ant-input-suffix) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            min-width: 24px;
+            padding: 0;
+          }
+          :deep(.ant-input-affix-wrapper .ant-input-suffix .anticon) {
+            line-height: 1;
+          }
+          :deep(.ant-input-affix-wrapper .ant-input-suffix .anticon svg) {
+            display: block;
+          }
+        }
       }
 
       .panel-content {
         flex: 1;
-        overflow: visible;
+        overflow: visible; // 由 a-table 内部表体滚动控制
+        max-height: var(--panel-table-max);
       }
     }
   }

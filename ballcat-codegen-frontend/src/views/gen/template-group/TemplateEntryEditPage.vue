@@ -210,8 +210,8 @@ defineExpose({
   justify-content: space-between;
   padding: 12px 20px;
   min-height: 60px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-radius: 6px 6px 0 0;
+  background: linear-gradient(135deg, @slate-50 0%, @slate-200 100%);
+  border-radius: @border-radius-md @border-radius-md 0 0;
   margin: 0;
 }
 
@@ -226,9 +226,9 @@ defineExpose({
 .template-name {
   display: flex;
   align-items: center;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: @font-size-lg;
+  font-weight: @font-weight-semibold;
+  color: @slate-800;
   margin-bottom: 4px;
   line-height: 1.2;
 }
@@ -237,7 +237,7 @@ defineExpose({
   width: 18px;
   height: 18px;
   margin-right: 8px;
-  color: #3b82f6;
+  color: @blue-500;
   flex-shrink: 0;
 }
 
@@ -248,41 +248,34 @@ defineExpose({
 
 // 操作按钮样式
 .action-btn {
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
-  padding: 6px 12px !important;
-  border-radius: 6px !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease !important;
-  border: 1px solid transparent !important;
+  font-size: @font-size-2sm !important; // 局部字号略小，保持现有视觉
   
   &:hover {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-    border-color: rgba(59, 130, 246, 0.2) !important;
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: @shadow-button-hover;
   }
-  
+
   &.primary {
-    background-color: rgba(34, 197, 94, 0.1) !important;
-    color: #059669 !important;
-    border-color: rgba(34, 197, 94, 0.2) !important;
+    background-color: fade(@green-600, 10%) !important;
+    color: @teal-600 !important;
+    border-color: fade(@green-600, 20%) !important;
     
     &:hover {
-      background-color: rgba(34, 197, 94, 0.15) !important;
-      border-color: rgba(34, 197, 94, 0.3) !important;
+      background-color: fade(@green-600, 15%) !important;
+      border-color: fade(@green-600, 30%) !important;
     }
   }
   
   &.secondary {
-    background-color: rgba(71, 85, 105, 0.1) !important;
-    color: #475569 !important;
-    border-color: rgba(71, 85, 105, 0.2) !important;
+    background-color: fade(@slate-600, 10%) !important;
+    color: @slate-600 !important;
+    border-color: fade(@slate-600, 20%) !important;
     
     &:hover {
-      background-color: rgba(71, 85, 105, 0.15) !important;
-      border-color: rgba(71, 85, 105, 0.3) !important;
+      background-color: fade(@slate-600, 15%) !important;
+      border-color: fade(@slate-600, 30%) !important;
     }
   }
 }
@@ -291,36 +284,36 @@ defineExpose({
 :deep(.ant-divider-vertical) {
   height: 20px;
   margin: 0 8px;
-  border-color: #cbd5e1;
+  border-color: @slate-300;
 }
 
 // 面板容器样式优化
 .splitpanes.default-theme {
-  background: #f8fafc;
-  border-radius: 0 0 8px 8px;
+  background: @slate-50;
+  border-radius: 0 0 @border-radius-lg @border-radius-lg;
   overflow: hidden;
-  box-shadow: inset 0 1px 0 rgba(226, 232, 240, 0.5);
+  box-shadow: inset 0 1px 0 fade(@slate-200, 50%);
 }
 
 // 面板样式优化
 .splitpanes.default-theme .splitpanes__pane {
-  background-color: #ffffff !important;
+  background-color: @bg-color-container !important;
   border: none !important;
   position: relative;
   
   &:first-child {
-    border-right: 1px solid #e2e8f0;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    border-right: 1px solid @slate-200;
+    background: linear-gradient(135deg, @gray-1 0%, @slate-50 100%) !important;
   }
   
   &:last-child {
-    background: #ffffff !important;
+    background: @bg-color-container !important;
   }
 }
 
 // 分割器样式优化
 .default-theme.splitpanes--vertical > .splitpanes__splitter {
-  background: linear-gradient(90deg, #e2e8f0 0%, #cbd5e1 50%, #e2e8f0 100%) !important;
+  background: linear-gradient(90deg, @slate-200 0%, @slate-300 50%, @slate-200 100%) !important;
   width: 4px;
   border: none;
   position: relative;
@@ -328,9 +321,9 @@ defineExpose({
   transition: all 0.2s ease;
   
   &:hover {
-    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 50%, #3b82f6 100%) !important;
+    background: linear-gradient(90deg, @blue-500 0%, @blue-600 50%, @blue-500 100%) !important;
     width: 6px;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 10px fade(@blue-500, 30%);
   }
   
   &:before {
@@ -341,27 +334,27 @@ defineExpose({
     transform: translate(-50%, -50%);
     width: 2px;
     height: 30px;
-    background: rgba(255, 255, 255, 0.6);
+    background: fade(@gray-1, 60%);
     border-radius: 1px;
   }
 }
 
 // 美化下拉菜单
 .file-menu {
-  border-radius: 8px !important;
+  border-radius: @border-radius-lg !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-  border: 1px solid #e2e8f0 !important;
-  padding: 4px !important;
+  border: 1px solid @slate-200 !important;
+  padding: @spacing-xs !important;
   min-width: 180px;
   
   .ant-menu-item {
-    border-radius: 6px !important;
+    border-radius: @border-radius-md !important;
     margin-bottom: 2px !important;
-    padding: 8px 12px !important;
-    transition: all 0.2s ease !important;
+    padding: @spacing-sm @spacing-md !important;
+    transition: @animation-base !important;
     
     &:hover {
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+      background: linear-gradient(135deg, @blue-50 0%, @blue-100 100%) !important;
       transform: translateX(2px);
     }
     
@@ -374,16 +367,16 @@ defineExpose({
 .menu-item-content {
   display: flex;
   align-items: center;
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
+  font-size: @font-size-2sm;
+  font-weight: @font-weight-medium;
+  color: @gray-700;
 }
 
 .menu-icon {
   width: 16px;
   height: 16px;
   margin-right: 10px;
-  color: #6b7280;
+  color: @slate-500;
 }
 
 // 上传组件样式优化
@@ -402,17 +395,17 @@ defineExpose({
 }
 
 .pane-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: @slate-100;
   border-radius: 4px;
 }
 
 .pane-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+  background: linear-gradient(135deg, @slate-300 0%, @slate-400 100%);
   border-radius: 4px;
   transition: all 0.2s ease;
   
   &:hover {
-    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    background: linear-gradient(135deg, @slate-400 0%, @slate-500 100%);
   }
 }
 
@@ -459,9 +452,9 @@ defineExpose({
 
 // 卡片样式优化
 :deep(.ant-card) {
-  border-radius: 8px;
+  border-radius: @border-radius-lg;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  border: 1px solid @slate-200;
   overflow: hidden;
 }
 

@@ -272,13 +272,13 @@ defineExpose<FieldTypeEditModalInstance>({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 /* 简化样式，主要使用 Ant Design 原生样式 */
 .mb-4 {
-  margin-bottom: 1rem;
+  margin-bottom: @spacing-xl;
 }
 
 .mt-2 {
-  margin-top: 0.5rem;
+  margin-top: @spacing-md;
 }
 </style>

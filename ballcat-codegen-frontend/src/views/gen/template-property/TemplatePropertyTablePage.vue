@@ -261,34 +261,34 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 /* 表格整体样式 */
 :deep(.ant-table) {
-  background: white;
+  background: @bg-color-container;
   border-radius: 0;
   box-shadow: none;
   border: none;
 }
 
 :deep(.ant-table-thead > tr > th) {
-  background: #f8fafc;
-  border-bottom: 2px solid #e2e8f0;
+  background: @slate-50;
+  border-bottom: 2px solid @slate-200;
   padding: 20px 16px !important;
   font-weight: 600;
-  font-size: 15px;
-  color: #1e293b;
-  line-height: 1.4;
+  font-size: @font-size-2lg;
+  color: @slate-800;
+  line-height: @line-height-compact;
 }
 
 :deep(.ant-table-tbody > tr > td) {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid @slate-100;
   padding: 20px 16px !important;
   vertical-align: top;
-  font-size: 14px;
+  font-size: @font-size-base;
 }
 
 :deep(.ant-table-tbody > tr:hover > td) {
-  background: #f8fafc !important;
+  background: @slate-50 !important;
 }
 
 /* 修复测量行占用空间的问题 */
@@ -345,18 +345,18 @@ export default {
 
 .property-title {
   margin: 0;
-  font-size: 16px;
+  font-size: @font-size-lg;
   font-weight: 600;
-  color: #1e293b;
-  line-height: 1.4;
+  color: @slate-800;
+  line-height: @line-height-compact;
 }
 
 .required-badge {
-  background: #dc2626;
+  background: @red-600;
   color: white;
   padding: 3px 8px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: @font-size-2xs;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
@@ -384,40 +384,40 @@ export default {
 }
 
 .config-type {
-  background: #059669;
+  background: @teal-600;
   color: white;
   padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: @border-radius-base;
+  font-size: @font-size-sm;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .config-type.computed {
-  background: #7c3aed;
+  background: @purple-600;
 }
 
 .component-text {
-  color: #3b82f6;
+  color: @blue-500;
   cursor: pointer;
-  font-size: 14px;
+  font-size: @font-size-base;
   font-weight: 500;
 }
 
 .component-text:hover {
-  color: #2563eb;
+  color: @blue-600;
   text-decoration: underline;
 }
 
 .engine-text {
-  color: #dc2626;
-  font-size: 14px;
+  color: @red-600;
+  font-size: @font-size-base;
   font-weight: 500;
 }
 
 .options-count {
-  color: #64748b;
-  font-size: 12px;
+  color: @slate-500;
+  font-size: @font-size-sm;
   margin-left: 4px;
 }
 
@@ -431,37 +431,37 @@ export default {
 }
 
 .detail-label {
-  color: #64748b;
+  color: @slate-500;
   font-weight: 500;
   min-width: 70px;
 }
 
 .detail-code {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: @slate-100;
+  border: 1px solid @slate-200;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: @border-radius-base;
   font-family: 'SFMono-Regular', 'Monaco', 'Consolas', monospace;
-  font-size: 12px;
-  color: #3b82f6;
+  font-size: @font-size-sm;
+  color: @blue-500;
   font-weight: 500;
 }
 
 .detail-code.expression {
-  color: #1d4ed8;
-  background: #eff6ff;
-  border-color: #bfdbfe;
+  color: @blue-700;
+  background: @blue-50;
+  border-color: @blue-200;
 }
 
 .detail-value {
-  font-size: 13px;
-  color: #1e293b;
+  font-size: @font-size-2sm;
+  color: @slate-800;
   font-weight: 500;
 }
 
 .option-name {
-  font-size: 11px;
-  color: #16a34a;
+  font-size: @font-size-2xs;
+  color: @green-600;
   font-style: italic;
   font-weight: 500;
 }
@@ -472,14 +472,14 @@ export default {
 }
 
 .remarks-text {
-  font-size: 13px;
-  color: #64748b;
+  font-size: @font-size-2sm;
+  color: @slate-500;
   line-height: 1.5;
 }
 
 .remarks-empty {
-  font-size: 13px;
-  color: #cbd5e1;
+  font-size: @font-size-2sm;
+  color: @slate-300;
 }
 
 /* 操作按钮 */
@@ -493,34 +493,34 @@ export default {
   padding: 8px 12px;
   height: auto;
   border: none;
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: @border-radius-base;
+  font-size: @font-size-2sm;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .action-buttons .ant-btn-link {
-  color: #3b82f6;
+  color: @blue-500;
 }
 
 .action-buttons .ant-btn-link:hover {
-  color: #2563eb;
-  background-color: rgba(59, 130, 246, 0.1);
+  color: @blue-600;
+  background-color: fade(@blue-500, 10%);
 }
 
 .action-buttons .ant-btn-link.ant-btn-dangerous {
-  color: #dc2626;
+  color: @red-600;
 }
 
 .action-buttons .ant-btn-link.ant-btn-dangerous:hover {
-  color: #b91c1c;
-  background-color: rgba(220, 38, 38, 0.1);
+  color: @red-700;
+  background-color: fade(@red-600, 10%);
 }
 
 /* Popover 样式 */
 :deep(.ant-popover-inner) {
-  border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  border-radius: @border-radius-lg;
+  box-shadow: @shadow-md-10;
 }
 
 .popover-options {
@@ -528,12 +528,12 @@ export default {
 }
 
 .popover-title {
-  color: #1e293b;
+  color: @slate-800;
   margin-bottom: 12px;
-  font-size: 14px;
+  font-size: @font-size-base;
   font-weight: 600;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid @slate-200;
 }
 
 .popover-option-list {
@@ -547,59 +547,59 @@ export default {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border-radius: @border-radius-base;
+  font-size: @font-size-2sm;
+  background: @slate-50;
+  border: 1px solid @slate-200;
   transition: all 0.2s ease;
 }
 
 .popover-option-item:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
+  background: @blue-50;
+  border-color: @blue-200;
 }
 
 .popover-option-item.is-default {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: @green-50;
+  border-color: @green-200;
 }
 
 .popover-option-item .option-label {
-  color: #1e293b;
+  color: @slate-800;
   min-width: 80px;
   font-weight: 500;
 }
 
 .popover-option-item .option-code {
-  background: white;
-  border: 1px solid #cbd5e1;
+  background: @bg-color-container;
+  border: 1px solid @slate-300;
   padding: 3px 6px;
   border-radius: 4px;
   font-family: 'SFMono-Regular', 'Monaco', 'Consolas', monospace;
-  font-size: 11px;
-  color: #3b82f6;
+  font-size: @font-size-2xs;
+  color: @blue-500;
   font-weight: 500;
   flex: 1;
 }
 
 .popover-option-item.is-default .option-code {
-  border-color: #16a34a;
-  color: #15803d;
+  border-color: @green-600;
+  color: @green-700;
 }
 
 .default-tag {
-  background: #16a34a;
+  background: @green-600;
   color: white;
   padding: 2px 6px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: @font-size-2xs;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
 
 .no-options-text {
-  color: #9ca3af;
-  font-size: 13px;
+  color: @gray-400;
+  font-size: @font-size-2sm;
   font-style: italic;
   text-align: center;
   padding: 12px;
@@ -609,7 +609,7 @@ export default {
 @media (max-width: 768px) {
   :deep(.ant-table-thead > tr > th) {
     padding: 16px 12px !important;
-    font-size: 14px;
+  font-size: @font-size-base;
   }
   
   :deep(.ant-table-tbody > tr > td) {
@@ -617,7 +617,7 @@ export default {
   }
   
   .property-title {
-    font-size: 15px;
+  font-size: @font-size-2lg;
   }
   
   .detail-item {

@@ -284,16 +284,16 @@
 
 // 数据卡片
 .data-card {
-  background: #fff;
-  border-radius: 8px;
+  background: @bg-color-container;
+  border-radius: @border-radius-lg;
   padding: 16px 20px;
   margin-bottom: 16px;
-  border: 1px solid #f0f0f0;
-  transition: all 0.2s ease;
+  border: 1px solid @border-color-base;
+  transition: @animation-base;
   
   &:hover {
-    border-color: #d9d9d9;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: @border-color-dark;
+    box-shadow: @box-shadow-base;
   }
   
   .data-card-header {
@@ -303,9 +303,9 @@
     margin-bottom: 12px;
     
     .data-card-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #262626;
+      font-size: @font-size-base;
+      font-weight: @font-weight-semibold;
+      color: @text-color-primary;
     }
     
     .data-card-actions {
@@ -320,31 +320,134 @@
       justify-content: space-between;
       align-items: center;
       padding: 6px 0;
-      border-bottom: 1px solid #f5f5f5;
+      border-bottom: 1px solid @border-color-light;
       
       &:last-child {
         border-bottom: none;
       }
       
       .data-label {
-        color: #8c8c8c;
-        font-size: 13px;
+        color: @text-color-secondary;
+        font-size: @font-size-2sm;
         min-width: 80px;
       }
       
       .data-value {
-        color: #262626;
-        font-size: 13px;
+        color: @text-color-primary;
+        font-size: @font-size-2sm;
         text-align: right;
         
         &.code {
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-          background: #f5f5f5;
+          font-family: @font-family-mono;
+          background: @gray-3;
           padding: 2px 6px;
-          border-radius: 4px;
-          font-size: 12px;
+          border-radius: @border-radius-sm;
+          font-size: @font-size-sm;
         }
       }
+    }
+  }
+}
+
+// 统一的操作按钮样式（供各页面复用）
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: @font-size-sm;
+  font-weight: @font-weight-medium;
+  border-radius: @border-radius-md;
+  border: 1px solid @slate-200;
+  background: @bg-color-container;
+  color: @slate-600;
+  transition: @animation-base;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: @shadow-xs-05;
+
+  svg {
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: @slate-50;
+    border-color: @slate-300;
+    color: @slate-700;
+    transform: translateY(-1px);
+    box-shadow: @shadow-md-10;
+  }
+
+  &:focus {
+    background: @slate-50;
+    border-color: @blue-500;
+    color: @slate-700;
+    box-shadow: @shadow-lg-ring-blue;
+  }
+
+  &:disabled {
+    background: @slate-100;
+    border-color: @slate-200;
+    color: @slate-400;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &.primary {
+    color: @blue-700;
+    background-color: @blue-100;
+    border-color: #93c5fd;
+
+    &:hover {
+      background-color: @blue-200;
+      border-color: #60a5fa;
+    }
+  }
+
+  &.secondary {
+    color: @gray-700;
+    background-color: #f3f4f6;
+    border-color: @gray-300;
+
+    &:hover {
+      background-color: #e5e7eb;
+      border-color: @gray-400;
+    }
+  }
+
+  &.danger {
+    color: @red-600;
+    background-color: #fef2f2;
+    border-color: #fecaca;
+
+    &:hover {
+      background-color: #fee2e2;
+      border-color: #f87171;
+    }
+  }
+
+  &.file {
+    color: @purple-600;
+    background-color: #f3e8ff;
+    border-color: #c4b5fd;
+
+    &:hover {
+      background-color: #e9d5ff;
+      border-color: #a78bfa;
+    }
+  }
+
+  &.config {
+    color: @teal-600;
+    background-color: #d1fae5;
+    border-color: #86efac;
+
+    &:hover {
+      background-color: #bbf7d0;
+      border-color: #4ade80;
     }
   }
 }
@@ -353,7 +456,7 @@
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: #8c8c8c;
+  color: @text-color-secondary;
   
   .empty-icon {
     font-size: 48px;
@@ -362,13 +465,13 @@
   }
   
   .empty-text {
-    font-size: 14px;
+    font-size: @font-size-base;
     margin-bottom: 8px;
   }
   
   .empty-description {
-    font-size: 12px;
-    color: #bfbfbf;
+    font-size: @font-size-sm;
+    color: @text-color-tertiary;
   }
 }
 
@@ -382,9 +485,9 @@
     display: inline-flex;
     align-items: center;
     padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 500;
+  border-radius: @border-radius-sm;
+  font-size: @font-size-2xs;
+  font-weight: @font-weight-medium;
     border: 1px solid transparent;
     
     &.tag-primary {
@@ -394,15 +497,15 @@
     }
     
     &.tag-success {
-      background: #f6ffed;
-      color: #52c41a;
-      border-color: #b7eb8f;
+      background: fade(@success-color, 6%);
+      color: @success-color;
+      border-color: fade(@success-color, 40%);
     }
     
     &.tag-warning {
-      background: #fffbe6;
-      color: #faad14;
-      border-color: #ffe58f;
+      background: fade(@warning-color, 8%);
+      color: @warning-color;
+      border-color: fade(@warning-color, 60%);
     }
     
     &.tag-purple {
@@ -429,42 +532,354 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: 600;
-      background: #f5f5f5;
-      color: #8c8c8c;
+      font-size: @font-size-sm;
+      font-weight: @font-weight-semibold;
+      background: @gray-3;
+      color: @text-color-secondary;
       
       &.active {
-        background: #1890ff;
-        color: #fff;
+        background: @primary-color;
+        color: @gray-1;
       }
       
       &.completed {
-        background: #52c41a;
-        color: #fff;
+        background: @success-color;
+        color: @gray-1;
       }
     }
     
     .step-title {
       margin-left: 8px;
-      font-size: 13px;
-      color: #595959;
+      font-size: @font-size-2sm;
+      color: @gray-8;
       
       &.active {
-        color: #1890ff;
-        font-weight: 500;
+        color: @primary-color;
+        font-weight: @font-weight-medium;
       }
     }
     
     .step-connector {
       width: 40px;
       height: 1px;
-      background: #f0f0f0;
+      background: @border-color-base;
       margin: 0 16px;
       
       &.completed {
-        background: #52c41a;
+        background: @success-color;
       }
     }
+  }
+}
+
+// 通用面板组件（头部/内容布局）
+.panel {
+  background: @component-background;
+  border-radius: @border-radius-base;
+  box-shadow: @box-shadow-base;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: @spacing-md @spacing-lg;
+    background: @background-color-light;
+    border-bottom: 1px solid @border-color-base;
+    height: 64px;
+    min-height: 64px;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: @spacing-sm;
+
+      .header-icon {
+        color: @primary-color;
+        font-size: @font-size-lg;
+      }
+
+      .header-title {
+        font-weight: @font-weight-medium;
+        font-size: @font-size-base;
+        color: @text-color;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: @spacing-xs;
+    }
+  }
+
+  .panel-content {
+    padding: @spacing-lg;
+  }
+}
+
+// 优雅步骤条样式（供多个向导页面复用）
+.elegant-steps {
+  .ant-steps-item {
+    .ant-steps-item-title {
+      font-weight: @font-weight-semibold;
+      color: #1f2937;
+      font-size: @font-size-2lg;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .ant-steps-item-description {
+      color: @slate-500;
+      font-size: @font-size-2sm;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    &.ant-steps-item-active {
+      .ant-steps-item-title {
+        background: linear-gradient(135deg, @blue-500 0%, #6366f1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: @font-weight-bold;
+      }
+
+      .ant-steps-item-description {
+        color: @blue-500;
+        font-weight: @font-weight-medium;
+      }
+    }
+
+    &.ant-steps-item-finish {
+      .ant-steps-item-title {
+        color: @teal-600;
+        font-weight: @font-weight-semibold;
+      }
+
+      .ant-steps-item-description {
+        color: #10b981;
+      }
+    }
+
+    .ant-steps-item-content {
+      min-height: 60px;
+      padding-top: 6px;
+    }
+  }
+
+  .ant-steps-item-icon {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    border-width: 2px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    .ant-steps-icon {
+      font-size: 14px;
+      font-weight: @font-weight-bold;
+    }
+  }
+
+  .ant-steps-item-tail::after {
+    height: 3px;
+    background: linear-gradient(90deg, @border-color-200 0%, @gray-300 100%);
+    border-radius: 2px;
+    top: 16px;
+  }
+
+  .ant-steps-item-finish .ant-steps-item-tail::after {
+    background: linear-gradient(90deg, #10b981 0%, @teal-600 100%);
+  }
+
+  .ant-steps-item-process .ant-steps-item-icon {
+    background: linear-gradient(135deg, @blue-500 0%, #6366f1 100%);
+    border-color: @blue-500;
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+
+    .ant-steps-icon {
+      color: @gray-1;
+    }
+  }
+
+  .ant-steps-item-finish .ant-steps-item-icon {
+    background: linear-gradient(135deg, #10b981 0%, @teal-600 100%);
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+
+    .anticon {
+      color: @gray-1;
+    }
+  }
+
+  .ant-steps-item-wait .ant-steps-item-icon {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border-color: @gray-300;
+
+    .ant-steps-icon { color: @gray-400; }
+  }
+}
+
+// 统一卡片工具栏（顶部条）- Option A: subtle background + hairline divider
+.card-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: @spacing-md;
+  background: linear-gradient(90deg, fade(@gray-1, 96%), fade(#f7faff, 96%));
+  border-bottom: 1px solid @border-color-200;
+}
+
+// 统一卡片标题区（适用于管理页的 card header）
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: @spacing-md;
+  /* Unified padding consistent with detail/list headers */
+  padding: 22px 24px;
+  background: @bg-color-container;
+  border-bottom: 1px solid @border-color-200;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+
+  .card-title {
+    display: inline-flex;
+    align-items: center;
+    gap: @spacing-sm;
+    margin: 0;
+    font-size: @font-size-lg;
+    font-weight: @font-weight-semibold;
+    color: @text-color-primary;
+    line-height: 1.25;
+  min-height: 36px; // unify inner content height of headers
+    /* Ensure icons align nicely with text */
+    .anticon, svg { display: block; }
+  }
+
+  .card-subtitle {
+    font-size: @font-size-sm;
+    color: @text-color-secondary;
+  }
+
+  .card-meta {
+    font-size: @font-size-sm;
+    color: @slate-500;
+  }
+
+  .card-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: @spacing-sm;
+    flex-shrink: 0;
+  }
+}
+
+// 全局主按钮（Tailwind 版本）的统一高度与对齐（避免不同容器下高度漂移）
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  height: 36px !important;
+  min-height: 36px !important;
+  line-height: 1 !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+
+  // 修正 Ant 图标/内联 SVG 的基线下沉
+  .anticon,
+  svg { display: block; }
+}
+
+// Hero Capsule（品牌胶囊图标）
+.hero-capsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: @gray-1;
+  background: linear-gradient(135deg, @blue-600 0%, #6366f1 100%);
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.25), 0 2px 6px rgba(99, 102, 241, 0.15);
+  border: 1px solid fade(@blue-500, 35%);
+  position: relative;
+
+  &.sm { width: 32px; height: 32px; }
+  &.md { width: 40px; height: 40px; }
+
+  // 内部发光环
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    box-shadow: 0 0 0 3px fade(@blue-500, 18%), 0 12px 28px fade(#6366f1, 22%);
+    pointer-events: none;
+  }
+}
+
+// Ghost Steps（极简步骤条）
+.steps-ghost {
+  .ant-steps-item {
+    .ant-steps-item-title {
+      font-weight: @font-weight-medium;
+      color: @slate-600;
+      font-size: @font-size-lg;
+      margin-top: 6px;
+    }
+
+    .ant-steps-item-description {
+      color: @slate-500;
+      font-size: @font-size-sm;
+      margin-top: 2px;
+    }
+
+    .ant-steps-item-content { min-height: 48px; padding-top: 2px; }
+  }
+
+  .ant-steps-item-icon {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 13px;
+    border-radius: 9999px;
+    border-width: 1.5px;
+    background: transparent;
+    border-color: @border-color-200;
+    box-shadow: none;
+  }
+
+  .ant-steps-item-tail::after {
+    height: 2px;
+    background: @border-color-200;
+    border-radius: 2px;
+    top: 14px;
+  }
+
+  .ant-steps-item-process {
+    .ant-steps-item-icon {
+      background: linear-gradient(135deg, @blue-500 0%, #6366f1 100%);
+      border-color: @blue-500;
+      .ant-steps-icon { color: @gray-1; }
+    }
+    .ant-steps-item-title { color: @text-color-primary; font-weight: @font-weight-semibold; }
+  }
+
+  .ant-steps-item-finish {
+    .ant-steps-item-icon {
+      background: linear-gradient(135deg, #10b981 0%, @teal-600 100%);
+      border-color: #10b981;
+      .anticon { color: @gray-1; }
+    }
+    .ant-steps-item-tail::after { background: linear-gradient(90deg, #10b981, @teal-600); }
+  }
+
+  .ant-steps-item-wait {
+    .ant-steps-item-icon { background: transparent; border-color: @border-color-200; }
+    .ant-steps-item-title { color: @slate-500; }
   }
 }

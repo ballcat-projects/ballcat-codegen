@@ -35,7 +35,9 @@
         <a-form-item label="文件上传">
           <a-upload :file-list="fileList" :before-upload="selectFile" :max-count="1">
             <a-button>
-              <UploadOutlined />
+              <template #icon>
+                <UploadOutlined />
+              </template>
               上传文件
             </a-button>
           </a-upload>

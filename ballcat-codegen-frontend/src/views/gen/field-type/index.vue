@@ -1,33 +1,6 @@
 <template>
   <div class="space-y-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-              <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
-              <path d="M3 12A9 3 0 0 0 21 12"></path>
-            </svg>
-            数据类型映射管理
-          </h1>
-          <p class="text-gray-600 mt-1">管理数据库字段类型到Java属性类型的映射关系</p>
-        </div>
-        <div class="flex items-center space-x-3">
-          <button 
-            @click="handleAdd"
-            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14"></path>
-            </svg>
-            添加映射
-          </button>
-        </div>
-      </div>
-    </div>
+    <PageBreadcrumb />
 
     <!-- Search and Filters -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -63,10 +36,12 @@
 
     <!-- Data Table -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">
-          类型映射 ({{ pagination.total || 0 }} 项)
-        </h2>
+      <div class="card-header">
+        <h2 class="card-title"><DatabaseOutlined /> 类型映射 ({{ pagination.total || 0 }} 项)</h2>
+        <button @click="handleAdd" class="btn-primary inline-flex items-center">
+          <PlusOutlined class="mr-2" />
+          添加映射
+        </button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full">
@@ -169,6 +144,8 @@ import { doRequest } from '@/utils/axios/request'
 import { queryFieldTypePage, removeFieldType } from '@/api/gen/field-type'
 import FieldTypeEditModal from '@/views/gen/field-type/FieldTypeEditModal.vue'
 import AddButton from '@/components/button/AddButton.vue'
+import { DatabaseOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
 
 import type { FieldType, FieldTypePageParam } from '@/api/gen/field-type/types'
 import type { FieldTypeEditModalInstance } from './types'
@@ -268,50 +245,29 @@ const handleTypeFilterChange = (value: string) => {
 }
 </script>
 
-<style scoped>
-/* 现代化表格样式 */
-:deep(.modern-table) {
-  /* 表头样式 */
-  .ant-table-thead > tr > th {
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-    color: #1f2937;
-    font-weight: 600;
-    font-size: 14px;
-  }
+<style scoped lang="less">
+/* Align input prefix/search icons with text baseline */
+:deep(.ant-input-affix-wrapper) { display: flex; align-items: center; }
+:deep(.ant-input-prefix) { display: inline-flex; align-items: center; }
+:deep(.ant-input-prefix svg) { display: block; }
 
-  /* 表格行样式 */
-  .ant-table-tbody > tr {
-    transition: all 0.2s;
-  }
+/* Normalize small action buttons with svg icons */
+.flex.items-center.space-x-3 button,
+.text-blue-600.hover\:text-blue-900,
+.text-red-600.hover\:text-red-900 {
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+.flex.items-center.space-x-3 button svg,
+.text-blue-600.hover\:text-blue-900 svg,
+.text-red-600.hover\:text-red-900 svg { display: block; }
 
-  .ant-table-tbody > tr:hover {
-    background: #f8fafc;
-  }
-
-  /* 表格边框 */
-  .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #f1f5f9;
-  }
-
-  /* 分页样式 */
-  .ant-pagination {
-    margin-top: 16px;
-    margin-bottom: 0;
-  }
-
-  .ant-pagination-item {
-    border: 1px solid #e2e8f0;
-    background: white;
-  }
-
-  .ant-pagination-item-active {
-    border-color: #3b82f6;
-    background: #3b82f6;
-  }
-
-  .ant-pagination-item-active a {
-    color: white;
-  }
+/* Align card header padding and corner radius to datasource list header */
+.card-header {
+  padding: 24px 24px;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 }
 </style>
+

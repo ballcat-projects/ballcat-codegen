@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col relative">
+  <div class="min-h-full flex flex-col relative">
     <!-- 代码复制下载，放在面板里面渲染会出问题，所以拿到外面 -->
     <span
       v-show="selectedEntry && selectedEntry.type === TemplateEntryTypeEnum.TEMPLATE_FILE"
@@ -20,37 +20,53 @@
       </a-button>
     </span>
 
-    <splitpanes class="preview-splitpanes flex-1">
+  <splitpanes class="preview-splitpanes w-full">
+      <!-- 左侧：文件树（独立滚动） -->
       <pane size="25" class="template-entry-tree-wrapper">
-        <a-skeleton v-if="loading" style="margin: 16px; width: 260px" :paragraph="{ rows: 8 }" />
-        <a-directory-tree
-          v-else
-          class="template-entry-tree"
-          :tree-data="fileEntryTree"
-          :show-icon="true"
-          style="overflow: initial"
-          @dblclick="ondblclick"
-        />
+        <div class="tree-pane">
+          <div class="tree-body">
+            <a-skeleton v-if="loading" style="margin: 16px; width: 260px" :paragraph="{ rows: 8 }" />
+            <a-directory-tree
+              v-else
+              class="template-entry-tree"
+              :tree-data="fileEntryTree"
+              :show-icon="true"
+              @dblclick="ondblclick"
+            />
+          </div>
+        </div>
       </pane>
+
+      <!-- 右侧：代码文件内容（独立滚动） -->
       <pane
         v-show="selectedEntry && selectedEntry.type === TemplateEntryTypeEnum.TEMPLATE_FILE"
         size="75"
         class="template-content-wrapper"
       >
-        <highlightjs :language="language" :code="code" style="overflow: initial" />
+        <div class="content-pane">
+          <div class="content-body">
+            <highlightjs :language="language" :code="code" />
+          </div>
+        </div>
       </pane>
+
+      <!-- 右侧：二进制/未选择占位（独立滚动） -->
       <pane
         v-show="!selectedEntry || selectedEntry.type === TemplateEntryTypeEnum.BINARY_FILE"
         size="75"
-        class="template-content-wrapper flex"
+        class="template-content-wrapper"
       >
-        <div v-show="!selectedEntry">
-          <h3>双击文件查看代码信息</h3>
+        <div class="content-pane">
+          <div class="content-body placeholder-body">
+            <div v-show="!selectedEntry">
+              <h3>双击文件查看代码信息</h3>
+            </div>
+            <div v-show="selectedEntry" class="binary-holder">
+              <h3>二进制文件无法预览</h3>
+              <a-button type="link" @click="handleBinaryDownload">下载文件</a-button>
+            </div>
+          </div>
         </div>
-        <h3 v-show="selectedEntry">二进制文件无法预览</h3>
-        <a-button v-show="selectedEntry" type="link" @click="handleBinaryDownload">
-          下载文件
-        </a-button>
       </pane>
     </splitpanes>
   </div>
@@ -161,8 +177,10 @@ defineExpose<GenerateStepInstance>({
 </script>
 
 <style lang="less">
+/* 代码高亮默认不换行，出现滚动条时在内容区域内滚动 */
 pre code.hljs {
-  overflow-x: visible;
+  overflow: auto;
+  white-space: pre;
 }
 
 // 分割器
@@ -172,11 +190,26 @@ pre code.hljs {
 }
 
 .preview-splitpanes {
-  height: 100%;
+  height: clamp(480px, 75vh, 960px);
+}
+
+@media (max-width: 1024px) {
+  .preview-splitpanes {
+    height: clamp(420px, 85vh, 900px);
+  }
 }
 </style>
 
 <style scoped lang="less">
+:host, .min-h-full {
+  padding: 0; // 预览页不需要外围 padding，最大化显示空间
+}
+
+:root {
+  --preview-header-h: 48px;
+  --preview-padding: 12px;
+}
+
 :deep(.ant-tree.ant-tree-block-node .ant-tree-list-holder-inner .ant-tree-node-content-wrapper) {
   white-space: nowrap;
 }
@@ -200,7 +233,6 @@ pre code.hljs {
 
 .template-entry-tree-wrapper {
   height: 100%;
-  overflow: auto;
   border-right-style: solid;
   border-right-width: 1px;
   border-right-color: #dcdcdc;
@@ -209,7 +241,7 @@ pre code.hljs {
 
 .template-content-wrapper {
   height: 100%;
-  overflow: auto;
+  overflow: hidden; // 防止内容溢出到 pane 外，内部 body 承担滚动
 }
 
 .flex {
@@ -222,5 +254,76 @@ pre code.hljs {
   /*实现水平居中*/
   justify-content: center;
   text-align: justify;
+}
+
+/* 确保 pane 内部能正确伸缩并允许子容器滚动 */
+:deep(.splitpanes__pane) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/* 确保左右 pane 等高，内部 wrapper 充满 pane 高度 */
+.template-entry-tree-wrapper,
+.template-content-wrapper {
+  height: 100%;
+}
+
+/* 内层：左侧树面板 */
+.tree-pane {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tree-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  max-height: 100%;
+  padding-top: 1em;
+}
+
+/* 内层：右侧内容面板 */
+.content-pane {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.content-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  max-height: 100%;
+}
+
+/* 约束代码块在内容区域内滚动，不撑破容器 */
+.content-body :deep(pre) {
+  margin: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.content-body :deep(code.hljs) {
+  display: block;
+  overflow: auto;
+  white-space: pre; /* 默认不换行 */
+  max-height: 100%;
+}
+
+.placeholder-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.binary-holder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 </style>

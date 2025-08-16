@@ -15,6 +15,18 @@
 
       <div class="ballcat-top-nav-header-right-content" style="padding-right: 6px">
         <a-space class="right" :size="0">
+          <!-- Wide mode toggle -->
+          <span
+            class="action"
+            role="button"
+            :aria-pressed="layout.wideMode"
+            :title="layout.wideMode ? '恢复默认宽度' : '宽屏模式'"
+            @click="layout.toggleWide()"
+          >
+            <FullscreenOutlined v-if="!layout.wideMode" />
+            <FullscreenExitOutlined v-else />
+            <span>{{ layout.wideMode ? '恢复默认' : '宽屏模式' }}</span>
+          </span>
           <span class="action" @click="jumpToDoc">
             <QuestionCircleOutlined />
             <span>文档</span>
@@ -37,11 +49,14 @@
 
 <script setup lang="ts">
 import RouterMenu from '@/components/menu'
-import { GithubOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue'
+import { GithubOutlined, QuestionCircleOutlined, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons-vue'
+import { useLayoutStore } from '@/store'
 
 defineProps<{
   theme: 'dark' | 'light'
 }>()
+
+const layout = useLayoutStore()
 
 const jumpToGithub = () => {
   window.open('https://github.com/ballcat-projects/ballcat-codegen')
@@ -59,13 +74,13 @@ const jumpToDoc = () => {
 <style scoped lang="less">
 @ant-prefix: ~'ballcat';
 @top-nav-header-prefix-cls: ~'@{ant-prefix}-top-nav-header';
-@pro-header-hover-bg: rgba(0, 0, 0, 0.025);
+@pro-header-hover-bg: @header-hover-bg;
 
 .@{top-nav-header-prefix-cls} {
   position: relative;
   width: 100%;
   height: 100%;
-  box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
+  box-shadow: @header-shadow;
   transition: background 0.3s, width 0.2s;
 
   .@{ant-prefix}-menu {
@@ -73,7 +88,7 @@ const jumpToDoc = () => {
   }
 
   &.light {
-    background-color: #fff;
+  background-color: @bg-color-container;
     .@{top-nav-header-prefix-cls}-logo {
       h1 {
         color: @primary-color;
@@ -114,14 +129,14 @@ const jumpToDoc = () => {
       display: inline-block;
       height: 32px;
       vertical-align: middle;
-      margin: 0 6px 4px 0;
+  margin: 0 6px 4px 0;
     }
 
     h1 {
       display: inline-block;
       margin: 0 0 0 12px;
-      color: #fff;
-      font-size: 20px;
+  color: @gray-1;
+  font-size: @font-size-xxl;
       vertical-align: top;
       font-weight: 600;
       letter-spacing: 0.5px;
@@ -139,7 +154,7 @@ const jumpToDoc = () => {
   &-right-content {
     display: flex;
     float: right;
-    height: 64px;
+  height: 64px;
     margin-left: auto;
     overflow: hidden;
     .action {

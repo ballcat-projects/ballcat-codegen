@@ -9,11 +9,15 @@
       <div class="header-actions">
         <a-space>
           <a-button @click="resetToDefaults" type="default">
-            <ReloadOutlined />
+            <template #icon>
+              <ReloadOutlined />
+            </template>
             重置默认值
           </a-button>
           <a-button @click="previewConfig" type="default">
-            <EyeOutlined />
+            <template #icon>
+              <EyeOutlined />
+            </template>
             预览配置
           </a-button>
         </a-space>
@@ -420,13 +424,15 @@ defineExpose<GenerateStepInstance>({
 </script>
 
 <style scoped lang="less">
+.template-config-step {
+  padding: @spacing-lg @spacing-xl;
+}
+
 .step-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: @spacing-xl;
   padding-bottom: @spacing-lg;
-  border-bottom: 1px solid @border-color-light;
   
   .header-info {
     h3 {
@@ -445,6 +451,17 @@ defineExpose<GenerateStepInstance>({
   
   .header-actions {
     flex-shrink: 0;
+    /* 按钮图标对齐修正：不更改 .ant-btn 的 display，避免布局偏移 */
+    :deep(.ant-btn .anticon) {
+      line-height: 1;
+      vertical-align: -0.125em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    :deep(.ant-btn .anticon svg) {
+      display: block;
+    }
   }
 }
 
@@ -504,11 +521,11 @@ defineExpose<GenerateStepInstance>({
       padding: @spacing-xs 0;
       
       &:hover {
-        background: @bg-color-hover;
+      background: @bg-color-hover;
       }
       
       &.ant-tree-treenode-selected {
-        background: #f6ffed;
+      background: #f6ffed;
       }
     }
     

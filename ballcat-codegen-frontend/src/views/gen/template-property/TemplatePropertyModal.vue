@@ -220,13 +220,13 @@ defineExpose<TemplatePropertyModalInstance>({
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 /* 自定义标题栏 */
 .modal-header {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  color: #1e293b;
+  background: linear-gradient(135deg, @slate-50 0%, @slate-200 100%);
+  color: @slate-800;
   padding: 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid @slate-200;
 }
 
 .header-content {
@@ -245,9 +245,9 @@ defineExpose<TemplatePropertyModalInstance>({
 .header-icon {
   width: 48px;
   height: 48px;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
+  background: fade(@blue-500, 10%);
+  border: 1px solid fade(@blue-500, 20%);
+  border-radius: @border-radius-xl;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -255,7 +255,7 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 .header-icon svg {
-  color: #3b82f6;
+  color: @blue-500;
 }
 
 .header-text {
@@ -263,16 +263,16 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 .modal-title {
-  font-size: 20px;
+  font-size: @font-size-xxl;
   font-weight: 600;
   margin: 0 0 4px 0;
-  color: #1e293b;
+  color: @slate-800;
 }
 
 .modal-subtitle {
-  font-size: 14px;
+  font-size: @font-size-base;
   margin: 0;
-  color: #64748b;
+  color: @slate-500;
 }
 
 .header-actions {
@@ -291,54 +291,15 @@ defineExpose<TemplatePropertyModalInstance>({
 .action-divider {
   width: 1px;
   height: 24px;
-  background: #cbd5e1;
+  background: @slate-300;
 }
 
-.action-btn {
-  background: white;
-  border: 1px solid #e2e8f0;
-  color: #475569;
-  border-radius: 8px;
-  height: 36px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 16px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.action-btn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #334155;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.action-btn:focus {
-  background: #f8fafc;
-  border-color: #3b82f6;
-  color: #334155;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.action-btn:disabled {
-  background: #f1f5f9;
-  border-color: #e2e8f0;
-  color: #94a3b8;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.action-btn .anticon {
-  font-size: 14px;
-}
+.action-btn { height: 36px; gap: 8px; padding: 0 16px; border-radius: @border-radius-lg; }
+.action-btn .anticon { font-size: @font-size-base; }
 
 /* 内容区域 */
 .modal-body {
-  background: #f8fafc;
+  background: @slate-50;
   height: 70vh;
   min-height: 600px;
   max-height: 800px;
@@ -348,8 +309,8 @@ defineExpose<TemplatePropertyModalInstance>({
 
 /* 面包屑导航 */
 .breadcrumb-nav {
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
+  background: @bg-color-container;
+  border-bottom: 1px solid @slate-200;
   padding: 16px 24px;
   flex-shrink: 0;
 }
@@ -367,17 +328,17 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 .breadcrumb-item {
-  font-size: 14px;
-  color: #64748b;
+  font-size: @font-size-base;
+  color: @slate-500;
 }
 
 .breadcrumb-item.current {
-  color: #1e293b;
+  color: @slate-800;
   font-weight: 500;
 }
 
 .breadcrumb-separator {
-  color: #94a3b8;
+  color: @slate-400;
 }
 
 /* 内容包装器 */
@@ -400,7 +361,7 @@ defineExpose<TemplatePropertyModalInstance>({
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #f8fafc;
+  background: @slate-50;
   margin: 0;
   border-radius: 0;
   box-shadow: none;
@@ -409,40 +370,40 @@ defineExpose<TemplatePropertyModalInstance>({
 
 :deep(.template-property-page__table) {
   flex: 1;
-  background: #f8fafc;
+  background: @slate-50;
   overflow: auto;
 }
 
 /* 表格样式优化 - 统一配色 */
 :deep(.ant-table-wrapper) {
   height: 100%;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  background: @bg-color-container;
+  border-radius: @border-radius-xl;
+  box-shadow: @shadow-xs-05;
+  border: 1px solid @slate-200;
 }
 
 :deep(.ant-table-container) {
   height: 100%;
-  border-radius: 12px;
+  border-radius: @border-radius-xl;
   overflow: hidden;
 }
 
 :deep(.ant-table-thead > tr > th) {
-  background: #f8fafc !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+  background: @slate-50 !important;
+  border-bottom: 1px solid @slate-200 !important;
   color: #374151 !important;
   font-weight: 600 !important;
   padding: 16px 12px !important;
 }
 
 :deep(.ant-table-tbody > tr > td) {
-  border-bottom: 1px solid #f1f5f9 !important;
+  border-bottom: 1px solid @slate-100 !important;
   padding: 16px 12px !important;
 }
 
 :deep(.ant-table-tbody > tr:hover > td) {
-  background: #f8fafc !important;
+  background: @slate-50 !important;
 }
 
 :deep(.ant-table-body) {
@@ -454,28 +415,28 @@ defineExpose<TemplatePropertyModalInstance>({
 :deep(.ant-pagination) {
   margin: 16px 0 0 0;
   text-align: center;
-  background: white;
+  background: @bg-color-container;
   padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid @slate-200;
 }
 
 :deep(.ant-pagination .ant-pagination-item) {
-  border-color: #e2e8f0;
+  border-color: @slate-200;
 }
 
 :deep(.ant-pagination .ant-pagination-item:hover) {
-  border-color: #3b82f6;
+  border-color: @blue-500;
 }
 
 :deep(.ant-pagination .ant-pagination-item-active) {
-  border-color: #3b82f6;
-  background: #3b82f6;
+  border-color: @blue-500;
+  background: @blue-500;
 }
 
 /* 编辑页面样式 - 统一配色 */
 :deep(.template-property-edit-page) {
   height: 100%;
-  background: #f8fafc;
+  background: @slate-50;
   overflow: auto;
   padding: 24px;
 }
@@ -483,11 +444,11 @@ defineExpose<TemplatePropertyModalInstance>({
 /* 编辑表单容器 - 统一配色 */
 :deep(.ant-form) {
   max-width: none;
-  background: white;
+  background: @bg-color-container;
   padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  border-radius: @border-radius-xl;
+  box-shadow: @shadow-xs-05;
+  border: 1px solid @slate-200;
 }
 
 :deep(.ant-form-item-label > label) {
@@ -496,78 +457,78 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 :deep(.ant-input) {
-  border-color: #e2e8f0;
-  border-radius: 8px;
+  border-color: @slate-200;
+  border-radius: @border-radius-lg;
 }
 
 :deep(.ant-input:hover) {
-  border-color: #cbd5e1;
+  border-color: @slate-300;
 }
 
 :deep(.ant-input:focus) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: @blue-500;
+  box-shadow: 0 0 0 2px fade(@blue-500, 10%);
 }
 
 :deep(.ant-input-number) {
-  border-color: #e2e8f0;
-  border-radius: 8px;
+  border-color: @slate-200;
+  border-radius: @border-radius-lg;
   width: 100%;
 }
 
 :deep(.ant-input-number:hover) {
-  border-color: #cbd5e1;
+  border-color: @slate-300;
 }
 
 :deep(.ant-input-number-focused) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: @blue-500;
+  box-shadow: 0 0 0 2px fade(@blue-500, 10%);
 }
 
 :deep(.ant-radio-button-wrapper) {
-  border-color: #e2e8f0;
-  color: #64748b;
+  border-color: @slate-200;
+  color: @slate-500;
 }
 
 :deep(.ant-radio-button-wrapper:hover) {
-  color: #3b82f6;
-  border-color: #3b82f6;
+  color: @blue-500;
+  border-color: @blue-500;
 }
 
 :deep(.ant-radio-button-wrapper-checked) {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: @blue-500;
+  border-color: @blue-500;
   color: white;
 }
 
 :deep(.ant-radio-wrapper) {
-  color: #64748b;
+  color: @slate-500;
 }
 
 :deep(.ant-radio-wrapper:hover .ant-radio-inner) {
-  border-color: #3b82f6;
+  border-color: @blue-500;
 }
 
 :deep(.ant-radio-checked .ant-radio-inner) {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: @blue-500;
+  border-color: @blue-500;
 }
 
 :deep(.ant-switch-checked) {
-  background: #3b82f6;
+  background: @blue-500;
 }
 
 /* 编辑页面内的卡片 - 统一配色 */
 :deep(.ant-card) {
-  border-radius: 12px;
+  border-radius: @border-radius-xl;
   margin-bottom: 16px;
-  border-color: #e2e8f0;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-color: @slate-200;
+  box-shadow: @shadow-xs-05;
 }
 
 :deep(.ant-card-head) {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: @slate-50;
+  border-bottom: 1px solid @slate-200;
 }
 
 :deep(.ant-card-head-title) {
@@ -584,81 +545,81 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 :deep(.ant-btn) {
-  border-radius: 8px;
+  border-radius: @border-radius-lg;
   height: 40px;
   padding: 0 24px;
   font-weight: 500;
 }
 
 :deep(.ant-btn-primary) {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background: @blue-500;
+  border-color: @blue-500;
+  box-shadow: @shadow-xs-05;
 }
 
 :deep(.ant-btn-primary:hover) {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: @blue-600;
+  border-color: @blue-600;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: @shadow-md-10;
 }
 
 :deep(.ant-btn-default) {
-  background: white;
-  border-color: #e2e8f0;
-  color: #64748b;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background: @bg-color-container;
+  border-color: @slate-200;
+  color: @slate-500;
+  box-shadow: @shadow-xs-05;
 }
 
 :deep(.ant-btn-default:hover) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: @slate-50;
+  border-color: @slate-300;
   color: #374151;
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: @shadow-md-10;
 }
 
 :deep(.ant-btn-dashed) {
-  border-color: #cbd5e1;
-  color: #64748b;
+  border-color: @slate-300;
+  color: @slate-500;
   border-style: dashed;
-  background: #f8fafc;
+  background: @slate-50;
 }
 
 :deep(.ant-btn-dashed:hover) {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background: white;
+  border-color: @blue-500;
+  color: @blue-500;
+  background: @bg-color-container;
 }
 
 /* 表格内按钮样式统一 */
 :deep(.ant-btn-link) {
-  color: #3b82f6;
+  color: @blue-500;
   padding: 0;
   height: auto;
 }
 
 :deep(.ant-btn-link:hover) {
-  color: #2563eb;
+  color: @blue-600;
 }
 
 :deep(.ant-btn-link.ant-btn-dangerous) {
-  color: #dc2626;
+  color: @red-600;
 }
 
 :deep(.ant-btn-link.ant-btn-dangerous:hover) {
-  color: #b91c1c;
+  color: @red-700;
 }
 
 /* 表格行悬停效果优化 */
 :deep(.ant-table-tbody > tr:hover .ant-btn-link) {
-  background: rgba(59, 130, 246, 0.1);
+  background: fade(@blue-500, 10%);
   border-radius: 4px;
   padding: 4px 8px;
 }
 
 :deep(.ant-table-tbody > tr:hover .ant-btn-link.ant-btn-dangerous) {
-  background: rgba(220, 38, 38, 0.1);
+  background: fade(@red-600, 10%);
 }
 
 /* 表格内容样式优化 - 统一配色 */
@@ -668,52 +629,52 @@ defineExpose<TemplatePropertyModalInstance>({
 }
 
 :deep(.config-section .detail-code) {
-  background: #f1f5f9 !important;
-  border: 1px solid #e2e8f0 !important;
+  background: @slate-100 !important;
+  border: 1px solid @slate-200 !important;
   color: #374151 !important;
 }
 
 :deep(.config-section .detail-code.expression) {
-  background: #eff6ff !important;
-  border-color: #bfdbfe !important;
-  color: #1d4ed8 !important;
+  background: @blue-50 !important;
+  border-color: @blue-200 !important;
+  color: @blue-700 !important;
 }
 
 :deep(.required-badge) {
-  background: #dc2626 !important;
+  background: @red-600 !important;
   color: white !important;
 }
 
 :deep(.config-type) {
-  background: #059669 !important;
+  background: @teal-600 !important;
   color: white !important;
 }
 
 :deep(.config-type.computed) {
-  background: #7c3aed !important;
+  background: @purple-600 !important;
   color: white !important;
 }
 
 :deep(.component-text) {
-  color: #3b82f6 !important;
+  color: @blue-500 !important;
 }
 
 :deep(.component-text:hover) {
-  color: #2563eb !important;
+  color: @blue-600 !important;
 }
 
 :deep(.engine-text) {
-  color: #dc2626 !important;
+  color: @red-600 !important;
 }
 
 :deep(.options-count) {
-  color: #d97706 !important;
+  color: @slate-500 !important;
 }
 
 /* Popover 内容样式统一 */
 :deep(.ant-popover-inner) {
-  border-radius: 8px !important;
-  border: 1px solid #e2e8f0 !important;
+  border-radius: @border-radius-lg !important;
+  border: 1px solid @slate-200 !important;
 }
 
 :deep(.ant-popover-inner-content) {

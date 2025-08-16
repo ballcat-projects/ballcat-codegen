@@ -37,7 +37,7 @@
       <div
         v-show="TemplateEntryTypeEnum.BINARY_FILE === templateEntryMap.get(activeKey)?.type"
         style="height: calc(100% - 32px)"
-        class="flex"
+    class="centered-column"
       >
         <h3>二进制文件不允许编辑内容</h3>
         <div>
@@ -365,15 +365,11 @@ defineExpose<TemplateContentEditorInstance>({
   z-index: 9999;
   background: white;
 }
-
-.flex {
-  /*flex 布局*/
+/* 局部居中布局（替代通用 .flex 工具，避免全局冲突） */
+.centered-column {
   display: flex;
-  // 垂直布局
   flex-direction: column;
-  /*实现垂直居中*/
   align-items: center;
-  /*实现水平居中*/
   justify-content: center;
   text-align: justify;
 }

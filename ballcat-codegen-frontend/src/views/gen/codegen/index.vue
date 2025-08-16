@@ -1,42 +1,23 @@
 <template>
   <div
-    class="h-[calc(100vh-200px)] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col overflow-hidden">
-    <div class="flex-1 flex flex-col min-h-0">
-      <!-- Compact Header -->
-      <div class="relative mb-6">
-        <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4">
-          <div class="flex items-center">
-            <div
-              class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg mr-3 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="text-white">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                代码生成器
-              </h1>
-              <p class="text-gray-600 text-sm">选择模板，配置参数，一键生成项目代码</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    class="codegen-page flex flex-col min-h-0">
+  <div class="flex-1 flex flex-col min-h-0">
+
+  <!-- Breadcrumb outside the card -->
+  <PageBreadcrumb />
 
       <!-- Main Content Card -->
       <div
-        class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden flex-1 flex flex-col min-h-0">
-        <!-- Steps Navigation -->
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
-          <div>
-            <a-steps :current="currentStepNumber" :items="enhancedStepInfos" class="elegant-steps" />
+        class="codegen-card bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden flex-1 flex flex-col min-h-0">
+  <!-- Steps Bar -->
+  <div class="card-toolbar steps-bar contrast" :class="[isCompact ? 'p-3 dot-mode' : 'p-5']">
+          <div class="steps-scroll overflow-x-auto w-full">
+            <a-steps :current="currentStepNumber" :items="enhancedStepInfos" class="steps-ghost" :size="isCompact ? 'small' : 'default'" :progressDot="isCompact" />
           </div>
         </div>
 
         <!-- Content Area -->
-        <div class="p-6 flex-1 overflow-y-auto min-h-0">
+  <div class="page-content flex-1 min-h-0">
           <div class="h-full">
             <div class="step-container h-full" :key="currentStepNumber">
               <!-- 模板组选择 -->
@@ -54,8 +35,8 @@
           </div>
         </div>
 
-        <!-- Action Bar -->
-        <div class="bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-100 p-6 flex-shrink-0">
+    <!-- Action Bar -->
+  <div class="page-action-bar bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-100 flex-shrink-0 sticky bottom-0 z-10" :class="[isCompact ? 'p-3' : 'p-5']">
           <div>
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
@@ -71,7 +52,8 @@
 
               <div class="flex items-center space-x-4">
                 <button v-if="currentStepNumber > 0" @click="prev" :disabled="isProcessing"
-                  class="group relative flex items-center px-5 py-2.5 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="group relative flex items-center text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :class="[isCompact ? 'px-4 py-2' : 'px-5 py-2.5']">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="mr-2 group-hover:-translate-x-0.5 transition-transform">
@@ -82,7 +64,8 @@
                 </button>
 
                 <button v-if="currentStepNumber < stepInfos.length - 2" @click="next" :disabled="isValidating"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="group relative flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :class="[isCompact ? 'px-4 py-2' : 'px-6 py-2.5']">
                   <span v-if="!isValidating">下一步</span>
                   <span v-else>验证中...</span>
                   <svg v-if="!isValidating" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -94,7 +77,8 @@
                 </button>
 
                 <button v-if="currentStepNumber === stepInfos.length - 2" @click="next" :disabled="isValidating"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="group relative flex items-center bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :class="[isCompact ? 'px-4 py-2' : 'px-6 py-2.5']">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     class="mr-2 group-hover:scale-110 transition-transform">
@@ -104,11 +88,12 @@
                   <span v-else>验证中...</span>
                 </button>
 
-                <button v-if="currentStepNumber === stepInfos.length - 1" @click="download" :disabled="isDownloading"
-                  class="group relative flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+        <button v-if="currentStepNumber === stepInfos.length - 1" @click="download" :disabled="isDownloading"
+                  class="group relative flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  :class="[isCompact ? 'px-4 py-2' : 'px-6 py-2.5']">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="mr-2 group-hover:translate-y-0.5 transition-transform">
+          class="mr-2 transition-transform">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7,10 12,15 17,10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -126,7 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, watch } from 'vue'
+import { computed, ref, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
+import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
 import TemplateConfigStep from './TemplateConfigStep.vue'
 import type { GenerateStepInstance } from '@/views/gen/codegen/types'
 import TableSelectStep from '@/views/gen/codegen/TableSelectStep.vue'
@@ -152,6 +138,11 @@ const currentStepNumber = ref<number>(0)
 const isValidating = ref<boolean>(false)
 const isDownloading = ref<boolean>(false)
 const isProcessing = ref<boolean>(false)
+const isCompact = ref<boolean>(false)
+
+const applyCompact = () => {
+  isCompact.value = window.innerHeight <= 768
+}
 
 // 步骤信息
 const stepInfos = [
@@ -204,6 +195,15 @@ watch(currentStepNumber, async (newStep, oldStep) => {
     }
   }
 }, { flush: 'post' })
+
+onMounted(() => {
+  applyCompact()
+  window.addEventListener('resize', applyCompact)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', applyCompact)
+})
 
 // 验证当前步骤
 const validate = async (): Promise<boolean> => {
@@ -307,113 +307,8 @@ const download = async () => {
 }
 </script>
 
-<style scoped>
-/* Elegant Steps 样式 */
-.elegant-steps :deep(.ant-steps-item) {
-  .ant-steps-item-title {
-    font-weight: 600;
-    color: #1f2937;
-    font-size: 15px;
-    margin-top: 8px;
-    line-height: 1.4;
-  }
-
-  .ant-steps-item-description {
-    color: #6b7280;
-    font-size: 13px;
-    margin-top: 4px;
-    line-height: 1.5;
-  }
-
-  &.ant-steps-item-active {
-    .ant-steps-item-title {
-      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 700;
-    }
-
-    .ant-steps-item-description {
-      color: #3b82f6;
-      font-weight: 500;
-    }
-  }
-
-  &.ant-steps-item-finish {
-    .ant-steps-item-title {
-      color: #059669;
-      font-weight: 600;
-    }
-
-    .ant-steps-item-description {
-      color: #10b981;
-    }
-  }
-
-  .ant-steps-item-content {
-    min-height: 60px;
-    padding-top: 6px;
-  }
-}
-
-.elegant-steps :deep(.ant-steps-item-icon) {
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
-  font-size: 14px;
-  border-width: 2px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-  .ant-steps-icon {
-    font-size: 14px;
-    font-weight: 700;
-  }
-}
-
-.elegant-steps :deep(.ant-steps-item-tail) {
-  &::after {
-    height: 3px;
-    background: linear-gradient(90deg, #e5e7eb 0%, #d1d5db 100%);
-    border-radius: 2px;
-    top: 16px;
-  }
-}
-
-.elegant-steps :deep(.ant-steps-item-finish .ant-steps-item-tail::after) {
-  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-}
-
-.elegant-steps :deep(.ant-steps-item-process .ant-steps-item-icon) {
-  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-  border-color: #3b82f6;
-  transform: scale(1.05);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-
-  .ant-steps-icon {
-    color: white;
-  }
-}
-
-.elegant-steps :deep(.ant-steps-item-finish .ant-steps-item-icon) {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  border-color: #10b981;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-
-  .anticon {
-    color: white;
-  }
-}
-
-.elegant-steps :deep(.ant-steps-item-wait .ant-steps-item-icon) {
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  border-color: #d1d5db;
-
-  .ant-steps-icon {
-    color: #9ca3af;
-  }
-}
+<style scoped lang="less">
+/* Elegant Steps 样式改为全局复用（见 components.less 的 .elegant-steps） */
 
 /* Step Container 动画增强 */
 .step-container {
@@ -458,9 +353,9 @@ button:disabled {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+  radial-gradient(circle at 20% 80%, fade(@blue-500, 10%) 0%, transparent 50%),
+  radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+  radial-gradient(circle at 40% 40%, fade(@green-600, 5%) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
 }
@@ -474,4 +369,49 @@ button:disabled {
   transform: translateY(-1px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
+
+/* Steps 横向滚动容器最小宽度以避免换行增高 */
+.steps-scroll :deep(.ant-steps) {
+  min-width: max-content;
+}
+
+/* 小屏紧凑样式（辅助，主要由动态类控制） */
+@media (max-height: 768px) {
+  .logo-badge {
+    width: 32px !important;
+    height: 32px !important;
+    margin-right: 8px !important;
+  }
+  .header-title {
+    font-size: 1rem !important;
+  }
+  .header-subtitle {
+    display: none !important;
+  }
+}
+
+/* Contrast Header + card min-height + icon alignment */
+.codegen-card {
+  /* min height strategy: clamp + header var + footer reserve */
+  min-height: clamp(640px, calc(100vh - var(--header-h, 64px) - 140px), 88vh);
+}
+
+.steps-bar.contrast {
+  background: #f7faff; /* blue-50 like */
+  border-bottom: 1px solid #dbeafe; /* blue-100 */
+  /* subtle inner separation */
+  box-shadow: inset 0 -1px 0 rgba(30, 58, 138, 0.04);
+}
+/* dot mode safe padding (isCompact => dot) */
+.steps-bar.dot-mode { padding-top: 14px !important; } /* +2px over ~p-3 */
+
+/* Fix dot mode vertical clipping in steps-ghost */
+:deep(.steps-ghost) {
+  .ant-steps-item-icon { margin-top: 2px; }
+  .ant-steps-item-tail::after { top: 16px; }
+}
+
+/* Icon baseline alignment in action buttons */
+.page-action-bar svg { display: block; }
+.page-action-bar button { line-height: 1; }
 </style>

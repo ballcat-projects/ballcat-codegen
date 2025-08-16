@@ -1,68 +1,40 @@
 <template>
   <div class="h-[calc(100vh-200px)] flex flex-col overflow-hidden">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex-shrink-0 mb-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="lucide lucide-database w-6 h-6 mr-2 text-blue-600">
-              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-              <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
-              <path d="M3 12A9 3 0 0 0 21 12"></path>
-            </svg>
-            数据源管理
-          </h1>
-          <p class="text-gray-600 mt-1">配置和管理数据库连接</p>
-        </div>
-        <button @click="handleAdd"
-          class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-plus w-4 h-4 mr-2">
-            <path d="M5 12h14"></path>
-            <path d="M12 5v14"></path>
-          </svg>
-          添加数据源
-        </button>
-      </div>
-    </div>
+    <PageBreadcrumb />
 
     <!-- Main Layout -->
     <div class="grid grid-cols-3 gap-6 flex-1 min-h-0">
       <!-- Data Source List -->
       <div class="col-span-2 min-h-0">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col min-h-0">
-          <div class="p-6 border-b border-gray-200 flex-shrink-0">
-            <!-- Header Row -->
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-4">
-                <h3 class="text-lg font-semibold text-gray-900">
-                  数据源列表 ({{ pagination.total || 0 }} 项)
+          <div class="card-header flex-shrink-0">
+            <div class="flex items-center justify-between gap-3 w-full">
+              <div class="flex items-center space-x-4 min-w-0">
+                <h3 class="card-title">
+                  <ClusterOutlined /> 数据源列表 ({{ pagination.total || 0 }} 项)
                 </h3>
-                <div class="text-sm text-gray-500" v-if="selectedDataSource">
-                  <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    已选择: {{ selectedDataSource.title }}
-                  </span>
-                </div>
               </div>
 
-              <!-- Search Input -->
-              <div class="w-80">
-                <a-input v-model:value="queryParam.title" placeholder="搜索数据源..." allow-clear
-                  @change="tableState.loadData()" @clear="tableState.loadData()" @press-enter="tableState.loadData()"
-                  class="w-full" size="middle">
-                  <template #prefix>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="lucide lucide-search text-gray-400">
-                      <circle cx="11" cy="11" r="8"></circle>
-                      <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                  </template>
-                </a-input>
+              <!-- Search + Add -->
+              <div class="card-actions">
+                <div class="w-80">
+                  <a-input v-model:value="queryParam.title" placeholder="搜索数据源..." allow-clear
+                    @change="tableState.loadData()" @clear="tableState.loadData()" @press-enter="tableState.loadData()"
+                    class="w-full" size="middle">
+                    <template #prefix>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-search text-gray-400">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                      </svg>
+                    </template>
+                  </a-input>
+                </div>
+                <button class="btn-primary inline-flex items-center" @click="handleAdd">
+                  <PlusOutlined class="mr-2" />
+                  添加数据源
+                </button>
               </div>
             </div>
           </div>
@@ -166,9 +138,9 @@
       <!-- Detail Panel -->
       <div class="col-span-1 min-h-0">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col min-h-0">
-          <div class="px-6 py-6 border-b border-gray-200 flex-shrink-0">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900">
+          <div class="card-header flex-shrink-0">
+            <div class="flex items-center justify-between w-full">
+              <h3 class="card-title">
                 <span v-if="isAdding">添加数据源</span>
                 <span v-else-if="isEditing">编辑数据源</span>
                 <span v-else>数据源详情</span>
@@ -409,6 +381,8 @@ import { reactive, ref, computed } from 'vue'
 import useTable from '@/hooks/table'
 import { doRequest } from '@/utils/axios/request'
 import { queryDatasourceConfigPage, removeDatasourceConfig, addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
+import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
+import { ClusterOutlined, PlusOutlined } from '@ant-design/icons-vue'
 
 import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
 
@@ -596,3 +570,7 @@ function formatUrl(url?: string) {
   }
 }
 </script>
+
+<style scoped lang="less">
+.btn-primary :deep(.anticon) { display: block; }
+</style>

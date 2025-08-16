@@ -14,25 +14,25 @@
 .ballcat-footer {
   text-align: center;
   padding: 24px 0;
-  background: #fafafa;
-  border-top: 1px solid #f0f0f0;
+  background: @background-color-light;
+  border-top: 1px solid @border-color-base;
   
   .footer-content {
-    color: #8c8c8c;
-    font-size: 14px;
+  color: @text-color-secondary;
+  font-size: @font-size-base;
     
     .footer-text {
-      font-weight: 500;
-      color: #595959;
+  font-weight: 500;
+  color: @gray-8;
     }
     
     .footer-divider {
-      margin: 0 12px;
-      color: #d9d9d9;
+  margin: 0 12px;
+  color: @gray-5;
     }
     
     .footer-year, .footer-author {
-      color: #8c8c8c;
+  color: @text-color-secondary;
     }
   }
 }

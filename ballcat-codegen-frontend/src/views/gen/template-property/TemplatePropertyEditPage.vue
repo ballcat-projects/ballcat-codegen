@@ -226,7 +226,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 /* 编辑页面整体样式 */
 .ant-spin-nested-loading {
   height: 100%;
@@ -239,11 +239,11 @@ export default {
 /* 表单容器样式 */
 .ant-form {
   height: 100%;
-  background: white;
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  background: @bg-color-container;
+  border-radius: @border-radius-xl;
+  padding: @spacing-xxl;
+  box-shadow: @shadow-xs-05;
+  border: 1px solid @slate-200;
 }
 
 /* 表单项样式 */
@@ -252,86 +252,86 @@ export default {
 }
 
 :deep(.ant-form-item-label > label) {
-  color: #1e293b !important;
-  font-weight: 600 !important;
-  font-size: 15px !important;
-  line-height: 1.5;
+  color: @slate-800 !important;
+  font-weight: @font-weight-semibold !important;
+  font-size: @font-size-2lg !important;
+  line-height: @line-height-base;
 }
 
 :deep(.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before) {
-  color: #dc2626 !important;
-  font-size: 15px;
-  font-weight: 600;
+  color: @red-600 !important;
+  font-size: @font-size-2lg;
+  font-weight: @font-weight-semibold;
 }
 
 /* 输入框样式 */
 :deep(.ant-input) {
-  border-color: #d1d5db;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  transition: all 0.2s ease;
+  border-color: @gray-300;
+  border-radius: @border-radius-lg;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  transition: @animation-base;
   min-height: auto;
 }
 
 :deep(.ant-input:hover) {
-  border-color: #9ca3af;
+  border-color: @gray-400;
 }
 
 :deep(.ant-input:focus) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: @blue-500;
+  box-shadow: @shadow-lg-ring-blue;
 }
 
 :deep(.ant-input::placeholder) {
-  color: #9ca3af;
-  font-size: 14px;
+  color: @gray-400;
+  font-size: @font-size-base;
 }
 
 /* 文本域样式 */
 :deep(.ant-textarea) {
-  border-color: #d1d5db;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.5;
-  transition: all 0.2s ease;
+  border-color: @gray-300;
+  border-radius: @border-radius-lg;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  transition: @animation-base;
   resize: vertical;
   min-height: 80px;
 }
 
 :deep(.ant-textarea:hover) {
-  border-color: #9ca3af;
+  border-color: @gray-400;
 }
 
 :deep(.ant-textarea:focus) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: @blue-500;
+  box-shadow: @shadow-lg-ring-blue;
 }
 
 /* 数字输入框样式 */
 :deep(.ant-input-number) {
-  border-color: #d1d5db;
-  border-radius: 8px;
+  border-color: @gray-300;
+  border-radius: @border-radius-lg;
   width: 100%;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  font-size: @font-size-base;
+  transition: @animation-base;
 }
 
 :deep(.ant-input-number:hover) {
-  border-color: #9ca3af;
+  border-color: @gray-400;
 }
 
 :deep(.ant-input-number-focused) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: @blue-500;
+  box-shadow: @shadow-lg-ring-blue;
 }
 
 :deep(.ant-input-number .ant-input-number-input) {
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.5;
+  padding: @spacing-sm @spacing-md;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
 }
 
 /* 单选按钮组样式 */
@@ -340,141 +340,141 @@ export default {
 }
 
 :deep(.ant-radio-button-wrapper) {
-  border-color: #d1d5db;
-  color: #64748b;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  border-color: @gray-300;
+  color: @slate-500;
+  font-weight: @font-weight-medium;
+  font-size: @font-size-base;
+  transition: @animation-base;
   border-radius: 0;
 }
 
 :deep(.ant-radio-button-wrapper:hover) {
-  color: #3b82f6;
-  border-color: #3b82f6;
+  color: @blue-500;
+  border-color: @blue-500;
   z-index: 1;
 }
 
 :deep(.ant-radio-button-wrapper-checked) {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: white;
+  background: @blue-500;
+  border-color: @blue-500;
+  color: @gray-1;
   box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
   z-index: 2;
 }
 
 :deep(.ant-radio-button-wrapper-checked:hover) {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: @blue-600;
+  border-color: @blue-600;
 }
 
 :deep(.ant-radio-button-wrapper:first-child) {
-  border-radius: 6px 0 0 6px;
+  border-radius: @border-radius-lg 0 0 @border-radius-lg;
 }
 
 :deep(.ant-radio-button-wrapper:last-child) {
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 @border-radius-lg @border-radius-lg 0;
 }
 
 :deep(.ant-radio-button-wrapper:only-child) {
-  border-radius: 6px;
+  border-radius: @border-radius-lg;
 }
 
 /* 单选框样式 */
 :deep(.ant-radio-wrapper) {
-  color: #64748b;
-  font-weight: 500;
-  font-size: 14px;
-  margin-right: 16px;
-  line-height: 1.5;
+  color: @slate-500;
+  font-weight: @font-weight-medium;
+  font-size: @font-size-base;
+  margin-right: @spacing-lg;
+  line-height: @line-height-base;
 }
 
 :deep(.ant-radio-wrapper:hover .ant-radio-inner) {
-  border-color: #3b82f6;
+  border-color: @blue-500;
 }
 
 :deep(.ant-radio-checked .ant-radio-inner) {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: @blue-500;
+  border-color: @blue-500;
 }
 
 :deep(.ant-radio-checked::after) {
-  border-color: #3b82f6;
+  border-color: @blue-500;
 }
 
 /* 开关样式 */
 :deep(.ant-switch) {
-  background: #e2e8f0;
+  background: @slate-200;
 }
 
 :deep(.ant-switch-checked) {
-  background: #3b82f6;
+  background: @blue-500;
 }
 
 :deep(.ant-switch:hover:not(.ant-switch-disabled)) {
-  background: #cbd5e1;
+  background: @slate-300;
 }
 
 :deep(.ant-switch-checked:hover:not(.ant-switch-disabled)) {
-  background: #2563eb;
+  background: @blue-600;
 }
 
 /* 按钮样式 */
 :deep(.ant-btn) {
-  border-radius: 8px;
+  border-radius: @border-radius-lg;
   height: 42px;
-  padding: 0 24px;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.5;
-  transition: all 0.2s ease;
+  padding: 0 @spacing-xl;
+  font-weight: @font-weight-semibold;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  transition: @animation-base;
 }
 
 :deep(.ant-btn-primary) {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: @blue-500;
+  border-color: @blue-500;
   box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.2);
 }
 
 :deep(.ant-btn-primary:hover) {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: @blue-600;
+  border-color: @blue-600;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px 0 rgba(59, 130, 246, 0.3);
 }
 
 :deep(.ant-btn-default) {
-  background: white;
-  border-color: #d1d5db;
-  color: #64748b;
-  font-weight: 500;
+  background: @gray-1;
+  border-color: @gray-300;
+  color: @slate-500;
+  font-weight: @font-weight-medium;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 :deep(.ant-btn-default:hover) {
-  background: #f8fafc;
-  border-color: #9ca3af;
-  color: #374151;
+  background: @slate-50;
+  border-color: @gray-400;
+  color: @gray-700;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 :deep(.ant-btn-dashed) {
-  border-color: #9ca3af;
-  color: #64748b;
+  border-color: @gray-400;
+  color: @slate-500;
   border-style: dashed;
-  background: #f8fafc;
-  border-radius: 8px;
-  padding: 10px 18px;
+  background: @slate-50;
+  border-radius: @border-radius-lg;
+  padding: 10px @spacing-lg;
   height: auto;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  font-weight: @font-weight-medium;
+  font-size: @font-size-base;
+  transition: @animation-base;
 }
 
 :deep(.ant-btn-dashed:hover) {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background: white;
+  border-color: @blue-500;
+  color: @blue-500;
+  background: @gray-1;
   transform: translateY(-1px);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
@@ -494,17 +494,17 @@ export default {
 
 /* 删除按钮样式 */
 :deep(.anticon-minus-circle) {
-  color: #dc2626;
+  color: @red-600;
   cursor: pointer;
   font-size: 16px;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: @animation-base;
 }
 
 :deep(.anticon-minus-circle:hover) {
-  color: #b91c1c;
-  background: rgba(220, 38, 38, 0.1);
+  color: @red-700;
+  background: fade(@red-600, 10%);
 }
 
 /* 添加按钮样式 */
@@ -515,7 +515,7 @@ export default {
 /* 表单底部按钮组样式 */
 :deep(.ant-form-item:last-child) {
   margin-bottom: 0;
-  margin-top: 32px;
+  margin-top: @spacing-xxl;
 }
 
 :deep(.ant-form-item:last-child .ant-form-item-control-input-content) {
@@ -524,7 +524,7 @@ export default {
 }
 
 :deep(.ant-space-horizontal) {
-  gap: 16px !important;
+  gap: @spacing-lg !important;
 }
 
 /* 加载状态样式 */
@@ -533,34 +533,34 @@ export default {
 }
 
 :deep(.ant-spin .ant-spin-dot-item) {
-  background: #3b82f6;
+  background: @blue-500;
 }
 
 /* 验证错误样式 */
 :deep(.ant-form-item-has-error .ant-input) {
-  border-color: #dc2626;
+  border-color: @red-600;
 }
 
 :deep(.ant-form-item-has-error .ant-input:hover) {
-  border-color: #dc2626;
+  border-color: @red-600;
 }
 
 :deep(.ant-form-item-has-error .ant-input:focus) {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  border-color: @red-600;
+  box-shadow: 0 0 0 3px fade(@red-600, 10%);
 }
 
 :deep(.ant-form-item-explain-error) {
-  color: #dc2626;
-  font-size: 13px;
-  font-weight: 500;
+  color: @red-600;
+  font-size: @font-size-2sm;
+  font-weight: @font-weight-medium;
   margin-top: 6px;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .ant-form {
-    padding: 24px 16px;
+  padding: @spacing-xl @spacing-lg;
   }
 
   :deep(.ant-form-item-label) {
@@ -579,17 +579,17 @@ export default {
 
   :deep(.ant-radio-group) {
     flex-direction: column;
-    gap: 8px;
+  gap: @spacing-sm;
   }
 
   :deep(.ant-radio-button-wrapper) {
     text-align: center;
-    border-radius: 8px !important;
+  border-radius: @border-radius-lg !important;
   }
 
   :deep(.ant-space-horizontal) {
     flex-direction: column;
-    gap: 12px !important;
+  gap: @spacing-md !important;
   }
 
   :deep(.ant-btn) {

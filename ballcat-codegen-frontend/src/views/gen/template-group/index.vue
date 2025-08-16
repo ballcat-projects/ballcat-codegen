@@ -1,53 +1,45 @@
 <template>
   <div v-show="tableShow" class="space-y-6">
-    <!-- Page Header -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-            </svg>
-            模板组管理
-          </h1>
-          <p class="text-gray-600 mt-1">管理代码生成模板组，包括模板文件和属性配置</p>
-        </div>
-        <button 
-          @click="handleAdd"
-          class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-          </svg>
-          添加模板组
-        </button>
-      </div>
-    </div>
-
-    <!-- Data Table -->
+    <PageBreadcrumb />
+    <!-- Data Card with CardToolbar -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900">
-            模板组列表 ({{ pagination.total || 0 }} 项)
-          </h2>
-          <!-- Search Bar -->
-          <div class="flex-shrink-0 w-80">
-            <a-input
-              v-model:value="queryParam.name"
-              placeholder="搜索模板组名称..."
-              allow-clear
-              @change="tableState.reloadTable(true)"
-              @clear="tableState.reloadTable(true)"
-              @press-enter="tableState.reloadTable(true)"
+      <!-- Card Toolbar: 标题/说明 + 操作 + 搜索 -->
+      <div class="card-header">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between w-full">
+          <div class="min-w-0">
+            <div class="min-w-0">
+              <h1 class="card-title truncate">
+                <FileTextOutlined />
+                模板组管理
+              </h1>
+            </div>
+          </div>
+          <div class="card-actions md:ml-6">
+            <div class="flex-shrink-0 w-64 md:w-80">
+              <a-input
+                v-model:value="queryParam.name"
+                placeholder="搜索模板组名称..."
+                allow-clear
+                @change="tableState.reloadTable(true)"
+                @clear="tableState.reloadTable(true)"
+                @press-enter="tableState.reloadTable(true)"
+              >
+                <template #prefix>
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                </template>
+              </a-input>
+            </div>
+            <button 
+              @click="handleAdd"
+              class="btn-primary inline-flex items-center"
+              title="添加模板组"
             >
-              <template #prefix>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-              </template>
-            </a-input>
+              <PlusOutlined class="mr-2" />
+              添加模板组
+            </button>
           </div>
         </div>
       </div>
@@ -192,7 +184,7 @@
       </div>
       
       <!-- Pagination -->
-      <div class="px-6 py-4 border-t border-gray-200" v-if="(pagination.total ?? 0) > 0">
+  <div class="px-6 py-4 border-t border-gray-200" v-if="(pagination.total ?? 0) > 0">
         <a-pagination
           v-model:current="pagination.current"
           v-model:pageSize="pagination.pageSize"
@@ -227,6 +219,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { FileTextOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import useTable from '@/hooks/table'
 import { queryTemplateGroupPage, removeTemplateGroup } from '@/api/gen/template-group'
 import {
@@ -242,6 +235,7 @@ import type { TemplateGroupFormModalInstance, TemplatePropertyModalInstance } fr
 import type { TemplateGroupPageParam } from '@/api/gen/template-group/types'
 import { remoteFileDownload } from '@/utils/file-util'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
+import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
 
 const templateGroupFormModalRef = ref<TemplateGroupFormModalInstance>()
 const templatePropertyModalRef = ref<TemplatePropertyModalInstance>()
@@ -342,97 +336,23 @@ function formatTime(dateTime: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 /* 现代化表格样式 */
 .hover\:bg-gray-50:hover {
-  background-color: #f9fafb;
+  background-color: @slate-50;
 }
 
-/* 操作按钮样式 */
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-}
+/* 操作按钮样式：使用全局 .action-btn，保留文件内的小型响应式覆盖 */
+.action-btn svg { margin-right: 4px; width: 16px; height: 16px; }
 
-.action-btn svg {
-  margin-right: 4px;
-  width: 16px;
-  height: 16px;
-}
+/* 基线对齐修正：紧凑的行高 + svg block 消除下沉 */
+.action-btn { line-height: 1; display: inline-flex; align-items: center; }
+.action-btn svg { display: block; }
 
-/* 主要操作按钮 */
-.action-btn.primary {
-  color: #1d4ed8;
-  background-color: #dbeafe;
-  border-color: #93c5fd;
-}
-
-.action-btn.primary:hover {
-  background-color: #bfdbfe;
-  border-color: #60a5fa;
-  transform: translateY(-1px);
-}
-
-/* 次要操作按钮 */
-.action-btn.secondary {
-  color: #374151;
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-}
-
-.action-btn.secondary:hover {
-  background-color: #e5e7eb;
-  border-color: #9ca3af;
-  transform: translateY(-1px);
-}
-
-/* 危险操作按钮 */
-.action-btn.danger {
-  color: #dc2626;
-  background-color: #fef2f2;
-  border-color: #fecaca;
-}
-
-.action-btn.danger:hover {
-  background-color: #fee2e2;
-  border-color: #f87171;
-  transform: translateY(-1px);
-}
-
-/* 文件管理按钮 */
-.action-btn.file {
-  color: #7c3aed;
-  background-color: #f3e8ff;
-  border-color: #c4b5fd;
-}
-
-.action-btn.file:hover {
-  background-color: #e9d5ff;
-  border-color: #a78bfa;
-  transform: translateY(-1px);
-}
-
-/* 配置按钮 */
-.action-btn.config {
-  color: #059669;
-  background-color: #d1fae5;
-  border-color: #86efac;
-}
-
-.action-btn.config:hover {
-  background-color: #bbf7d0;
-  border-color: #4ade80;
-  transform: translateY(-1px);
-}
+/* 对齐输入框前缀搜索图标 */
+:deep(.ant-input-affix-wrapper) { display: flex; align-items: center; }
+:deep(.ant-input-prefix) { display: inline-flex; align-items: center; }
+:deep(.ant-input-prefix svg) { display: block; }
 
 /* 图标容器样式 */
 .w-10.h-10 {
@@ -469,6 +389,13 @@ function formatTime(dateTime: string) {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Align card header padding and corner radius to datasource list header */
+.card-header {
+  padding: 24px 24px;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 }
 
 /* 表格行高度 */
@@ -513,10 +440,7 @@ tbody tr td {
     padding-bottom: 0.75rem;
   }
   
-  .action-btn {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
+  .action-btn { padding: 4px 8px; font-size: 11px; }
   
   .action-btn span {
     display: none;

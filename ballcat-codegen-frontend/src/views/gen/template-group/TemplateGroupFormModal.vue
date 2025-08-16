@@ -29,7 +29,7 @@
         <div class="icon-uploader" @click="handleUpload">
           <img v-if="modelRef.icon" :src="modelRef.icon" alt="icon" style="height: 100%" />
           <div v-else>
-            <plus-outlined />
+            <PlusOutlined />
             <div class="ant-upload-text">Upload</div>
           </div>
         </div>
@@ -116,9 +116,10 @@ function handleUpload() {
   cropperModalRef.value?.open(modelRef.icon)
 }
 
-function uploadProcess(dataURL: string) {
+function uploadProcess(dataURL: string) : Promise<R> {
   modelRef.icon = dataURL
-  return Promise.resolve()
+  // 返回一个符合 R 接口的对象，避免改动现有行为
+  return Promise.resolve({ code: 0, message: 'ok' })
 }
 
 function handleSubmit() {
@@ -175,8 +176,8 @@ defineExpose<TemplateGroupFormModalInstance>({
   margin-right: 8px;
   margin-bottom: 8px;
   vertical-align: top;
-  background-color: #fafafa;
-  border: 1px dashed #d9d9d9;
+  background-color: @background-color-light;
+  border: 1px dashed @gray-5;
   border-radius: 2px;
   cursor: pointer;
   transition: border-color 0.3s;

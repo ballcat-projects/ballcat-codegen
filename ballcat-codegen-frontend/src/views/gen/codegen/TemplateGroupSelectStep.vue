@@ -21,11 +21,15 @@
           <template #extra>
             <a-space>
               <a-button type="primary" @click="goToTemplateGroupPage">
-                <PlusOutlined />
+                <template #icon>
+                  <PlusOutlined />
+                </template>
                 创建模板组
               </a-button>
               <a-button @click="refreshTemplateGroups">
-                <ReloadOutlined />
+                <template #icon>
+                  <ReloadOutlined />
+                </template>
                 刷新列表
               </a-button>
             </a-space>
@@ -46,7 +50,9 @@
               <a-input-search v-model:value="searchKeyword" placeholder="搜索模板组..." style="width: 200px"
                 @search="handleSearch" />
               <a-button @click="refreshTemplateGroups">
-                <ReloadOutlined />
+                <template #icon>
+                  <ReloadOutlined />
+                </template>
                 刷新
               </a-button>
             </a-space>
@@ -239,6 +245,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.template-group-select {
+  padding: @spacing-lg @spacing-xl;
+}
+
 .loading-container {
   .skeleton-card {
     min-height: 200px;
@@ -275,6 +285,30 @@ export default {
 
     .header-actions {
       flex-shrink: 0;
+  /* 按钮图标细节对齐（不改变 .ant-btn 的 display） */
+      :deep(.ant-btn .anticon) {
+        line-height: 1;
+        vertical-align: -0.125em;
+      }
+      :deep(.ant-btn .anticon svg) {
+        display: block;
+      }
+
+  /* 搜索输入左侧图标对齐：不修改 affix wrapper 的 display，避免水平偏移 */
+      :deep(.ant-input-affix-wrapper .ant-input-prefix) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  min-width: 22px;
+  padding: 0;
+      }
+      :deep(.ant-input-affix-wrapper .ant-input-prefix .anticon) {
+        line-height: 1;
+      }
+      :deep(.ant-input-affix-wrapper .ant-input-prefix .anticon svg) {
+        display: block;
+      }
     }
   }
 
@@ -283,13 +317,15 @@ export default {
   }
 }
 
+/* no-op: icon alignment handled via Ant Button #icon slot */
+
 /* 全新UI设计 - 信息卡片式布局 */
 .modern-template-card {
   position: relative;
   height: 240px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  border-radius: @border-radius-xl;
+  border: 1px solid @border-color-200;
+  background: @bg-color-container;
   cursor: pointer;
   transition: all 0.25s ease;
   overflow: hidden;
@@ -298,15 +334,15 @@ export default {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-color: #d1d5db;
+  border-color: @gray-300;
   }
 
   &.selected {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(59, 130, 246, 0.15);
+  border-color: @blue-500;
+  box-shadow: 0 0 0 3px fade(@blue-500, 10%), 0 4px 12px fade(@blue-500, 15%);
 
     .logo-section {
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  background: linear-gradient(135deg, @blue-50 0%, @blue-100 100%);
 
       .template-logo {
         transform: scale(1.05);
@@ -344,8 +380,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f9fafb;
-    border-bottom: 1px solid #f3f4f6;
+  background: @slate-50;
+  border-bottom: 1px solid #f3f4f6;
     position: relative;
     transition: all 0.25s ease;
 
@@ -359,13 +395,13 @@ export default {
       font-size: 18px;
       font-weight: 600;
       color: white;
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
       box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
       transition: all 0.25s ease;
 
       /* 默认Logo样式 */
       &.default-logo {
-        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  background: linear-gradient(135deg, @slate-500 0%, @slate-600 100%);
 
         .anticon {
           font-size: 20px;
@@ -388,16 +424,16 @@ export default {
       right: 8px;
       width: 20px;
       height: 20px;
-      background: #3b82f6;
+  background: @blue-500;
       border-radius: 50%;
       display: flex !important;
       align-items: center;
       justify-content: center;
-      color: white;
+  color: @gray-1;
       font-size: 12px;
       font-weight: bold;
       transition: all 0.25s ease;
-      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 4px fade(@blue-500, 30%);
       z-index: 10;
     }
   }
@@ -417,7 +453,7 @@ export default {
       flex: 0 0 24px;
 
       .template-title {
-        font-size: 16px;
+  font-size: @font-size-lg;
         font-weight: 600;
         color: #111827;
         line-height: 24px;
@@ -435,7 +471,7 @@ export default {
       min-height: 0;
 
       .template-description {
-        font-size: 14px;
+  font-size: @font-size-base;
         color: #6b7280;
         line-height: 20px;
         margin: 0;
@@ -452,9 +488,9 @@ export default {
 
     /* 空描述占位 */
     .empty-description {
-      color: #9ca3af;
+  color: @gray-400;
       font-style: italic;
-      font-size: 14px;
+  font-size: @font-size-base;
       line-height: 20px;
     }
   }
@@ -468,7 +504,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fafafa;
+  background: @background-color-light;
 
     .datasource-indicator {
       display: inline-flex;
@@ -487,15 +523,15 @@ export default {
       /* 需要数据源 */
       &.needs-datasource {
         background: #f1f5f9;
-        color: #475569;
-        border: 1px solid #cbd5e1;
+  color: @slate-600;
+  border: 1px solid @slate-300;
       }
 
       /* 不需要数据源 */
       &.no-datasource {
-        background: #f8fafc;
-        color: #64748b;
-        border: 1px solid #e2e8f0;
+  background: @slate-50;
+  color: @slate-500;
+  border: 1px solid @slate-200;
       }
     }
   }
@@ -505,7 +541,7 @@ export default {
   /* 悬浮时的微妙效果 */
   &:hover:not(.selected) {
     .logo-section {
-      background: #f3f4f6;
+  background: #f3f4f6;
     }
 
     .template-logo {

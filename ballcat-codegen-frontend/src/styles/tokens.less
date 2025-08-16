@@ -32,6 +32,7 @@
 @gray-2: #fafafa;
 @gray-3: #f5f5f5;
 @gray-4: #f0f0f0;
+@gray-300: #d1d5db;
 @gray-5: #d9d9d9;
 @gray-6: #bfbfbf;
 @gray-7: #8c8c8c;
@@ -96,3 +97,75 @@
 @screen-lg: 992px;
 @screen-xl: 1200px;
 @screen-xxl: 1440px;
+
+// ===== 扩展色板（保持现有视觉不变的精确映射） =====
+// Tailwind/系统常用色（用于视图局部样式）
+@slate-50: #f8fafc;
+@slate-100: #f1f5f9;
+@slate-200: #e2e8f0;
+@slate-300: #cbd5e1;
+@slate-400: #94a3b8;
+@slate-500: #64748b;
+@slate-600: #475569;
+@slate-700: #334155;
+@slate-800: #1e293b;
+
+@blue-50: #eff6ff;
+@blue-100: #dbeafe;
+@blue-200: #bfdbfe;
+@blue-500: #3b82f6;
+@blue-600: #2563eb;
+@blue-700: #1d4ed8;
+
+@red-600: #dc2626;
+@red-700: #b91c1c;
+
+@green-50: #f0fdf4;
+@green-200: #bbf7d0;
+@green-600: #16a34a;
+@green-700: #15803d;
+
+@purple-600: #7c3aed;
+
+@teal-600: #059669; // 用于“配置”标记背景
+
+@gray-400: #9ca3af; // 空状态/次要提示
+@gray-700: #374151; // 文本深色（Tailwind gray-700）
+
+// ===== 语义化别名（可读性更强） =====
+@header-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
+@sidebar-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+@shadow-xs-05: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+@shadow-md-10: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+@shadow-lg-ring-blue: 0 0 0 3px rgba(59, 130, 246, 0.1);
+
+@border-color-200: #e5e7eb; // 与 Tailwind gray-200 对齐
+
+// 布局相关
+@layout-gradient-start: #f9fafb; // 背景渐变起点
+@layout-gradient-end: #f3f4f6;   // 背景渐变终点
+@layout-sidebar-width: 288px;    // 侧边栏固定宽度
+@layout-sidebar-width-collapsed: 64px; // 侧边栏折叠宽度（图标栏）
+
+// 自定义断点（用于当前布局的响应式策略）
+@bp-sm: 1024px;  // 抽屉化阈值
+@bp-md: 1366px;  // 自动折叠阈值
+@bp-lg: 1600px;  // 大屏优化起点
+
+// 交互/悬浮
+@header-hover-bg: rgba(0, 0, 0, 0.025);
+
+// ===== 扩展间距与尺寸 =====
+@spacing-lgx: 20px; // 介于 16 与 24 之间，当前视图使用
+@spacing-xxxl: 40px;
+
+// 扩展圆角
+@border-radius-xl: 12px;
+
+// 扩展字号
+@font-size-2xs: 10px;
+@font-size-2sm: 13px;
+@font-size-2lg: 15px;
+
+// 扩展行高/字距
+@line-height-compact: 1.4;
