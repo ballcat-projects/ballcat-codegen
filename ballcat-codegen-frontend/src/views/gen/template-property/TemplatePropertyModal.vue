@@ -5,7 +5,7 @@
     :mask-closable="false"
     :footer="null"
     :body-style="{ padding: 0 }"
-    :width="1400"
+  :width="'clamp(960px, 86vw, 1180px)'"
     :closable="true"
     class="template-property-modal"
     @cancel="handleClose"
@@ -15,10 +15,7 @@
       <div class="header-content">
         <div class="header-left">
           <div class="header-icon">
-            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
+            <SettingOutlined />
           </div>
           <div class="header-text">
             <h2 class="modal-title">{{ title }}</h2>
@@ -27,18 +24,17 @@
         </div>
         <div class="header-actions">
           <!-- 表格页面按钮组 -->
-          <div v-show="showTable" class="action-group">
-            <a-button 
-              type="default"
-              size="middle"
+      <div v-show="showTable" class="action-group">
+    <a-button 
+        type="default"
+        size="small"
               class="action-btn"
               @click="handleCreate"
               :disabled="!currentTemplateGroup"
+            :title="'新建属性'"
             >
               <template #icon>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
+        <PlusOutlined />
               </template>
               新建属性
             </a-button>
@@ -48,44 +44,41 @@
               :show-upload-list="false"
               :custom-request="handlePropertyImport"
               :disabled="!currentTemplateGroup"
+            :title="'导入属性'"
             >
-              <a-button type="default" size="middle" class="action-btn">
+        <a-button type="default" size="small" class="action-btn">
                 <template #icon>
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-                  </svg>
+          <UploadOutlined />
                 </template>
                 导入属性
               </a-button>
             </a-upload>
-            <a-button 
+      <a-button 
               type="default" 
-              size="middle"
+              size="small"
               class="action-btn"
               @click="handlePropertyExport"
               :disabled="!currentTemplateGroup"
+            :title="'导出属性'"
             >
               <template #icon>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                </svg>
+        <DownloadOutlined />
               </template>
               导出属性
             </a-button>
           </div>
           
           <!-- 编辑页面按钮组 -->
-          <div v-show="!showTable" class="action-group">
-            <a-button 
-              type="default"
-              size="middle"
+      <div v-show="!showTable" class="action-group">
+    <a-button 
+        type="default"
+        size="small"
               class="action-btn"
               @click="backToPage(false)"
+            :title="'返回列表'"
             >
               <template #icon>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
+        <ArrowLeftOutlined />
               </template>
               返回列表
             </a-button>
@@ -96,18 +89,7 @@
 
     <!-- 内容区域 -->
     <div class="modal-body">
-      <!-- 面包屑导航 -->
-      <div class="breadcrumb-nav" v-show="!showTable">
-        <div class="breadcrumb-content">
-          <div class="breadcrumb-path">
-            <span class="breadcrumb-item">{{ title }}</span>
-            <svg class="breadcrumb-separator w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-            <span class="breadcrumb-item current">编辑属性</span>
-          </div>
-        </div>
-      </div>
+  <!-- 面包屑导航移除以节省垂直空间 -->
 
       <!-- 属性列表页面 -->
       <div v-show="showTable" class="content-wrapper">
@@ -130,7 +112,7 @@
 
 <script setup lang="ts">
 // import type
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, ref } from 'vue'
 import { usePopup } from '@/hooks/popup'
 import TemplatePropertyTablePage from '@/views/gen/template-property/TemplatePropertyTablePage.vue'
 import TemplatePropertyEditPage from '@/views/gen/template-property/TemplatePropertyEditPage.vue'
@@ -141,6 +123,7 @@ import { exportTemplateGroupProperties, importTemplateGroupProperties } from '@/
 import { doRequest } from '@/utils/axios/request'
 import { remoteFileDownload } from '@/utils/file-util'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
+import { PlusOutlined, UploadOutlined, DownloadOutlined, ArrowLeftOutlined, SettingOutlined, RightOutlined } from '@ant-design/icons-vue'
 
 const templatePropertyTablePageRef = ref()
 const templatePropertyEditPageRef = ref()
@@ -233,7 +216,8 @@ defineExpose<TemplatePropertyModalInstance>({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: 12px 16px; /* 更紧凑 */
+  gap: 12px;
 }
 
 .header-left {
@@ -254,55 +238,76 @@ defineExpose<TemplatePropertyModalInstance>({
   margin-right: 16px;
 }
 
-.header-icon svg {
+.header-icon .anticon {
   color: @blue-500;
+  font-size: 24px;
+  line-height: 1;
 }
+.header-icon .anticon > svg { display: block; }
 
 .header-text {
   flex: 1;
+  min-width: 0; /* 允许截断 */
 }
 
 .modal-title {
-  font-size: @font-size-xxl;
+  font-size: @font-size-xl; /* 略缩小标题 */
   font-weight: 600;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0;
   color: @slate-800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .modal-subtitle {
-  font-size: @font-size-base;
+  font-size: @font-size-sm; /* 缩小副标题 */
   margin: 0;
   color: @slate-500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-right: 60px; /* 为关闭按钮留出空间 */
+  gap: 6px;
+  margin-right: 48px; /* 为关闭按钮留出空间 */
+  flex-wrap: nowrap; /* 强制单行 */
 }
 
 .action-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .action-divider {
   width: 1px;
-  height: 24px;
+  height: 18px;
   background: @slate-300;
 }
 
-.action-btn { height: 36px; gap: 8px; padding: 0 16px; border-radius: @border-radius-lg; }
-.action-btn .anticon { font-size: @font-size-base; }
+/* 紧凑按钮：更小的内边距与图标间距 */
+.action-btn { height: 28px; gap: 6px; padding: 0 10px; border-radius: @border-radius-md; font-size: @font-size-sm; }
+.action-btn .anticon { font-size: 13px; display: inline-flex; align-items: center; justify-content: center; line-height: 1; vertical-align: -0.125em; }
+.action-btn .anticon > svg { display: block; }
+
+/* 缩小 AntD 按钮内置的图标-文字间距 */
+.action-btn :deep(.anticon + span) { margin-left: 4px !important; }
+.action-btn :deep(span > .anticon + span) { margin-left: 4px !important; }
+
+/* 对齐上传按钮的容器，避免额外间距 */
+:deep(.ant-upload) { display: inline-flex; }
 
 /* 内容区域 */
 .modal-body {
   background: @slate-50;
-  height: 70vh;
-  min-height: 600px;
-  max-height: 800px;
+  height: 66vh; /* 略降整体高度 */
+  min-height: 520px;
+  max-height: 760px;
   display: flex;
   flex-direction: column;
 }
@@ -339,12 +344,14 @@ defineExpose<TemplatePropertyModalInstance>({
 
 .breadcrumb-separator {
   color: @slate-400;
+  display: inline-flex;
+  line-height: 1;
 }
 
 /* 内容包装器 */
 .content-wrapper {
   flex: 1;
-  overflow: hidden;
+  overflow: auto; /* 允许内容滚动，避免小屏无法操作 */
   display: flex;
   flex-direction: column;
 }
@@ -436,9 +443,12 @@ defineExpose<TemplatePropertyModalInstance>({
 /* 编辑页面样式 - 统一配色 */
 :deep(.template-property-edit-page) {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* 允许内部滚动 */
   background: @slate-50;
   overflow: auto;
-  padding: 24px;
+  padding: 0; /* 由表单自身提供内边距，避免双重 padding */
 }
 
 /* 编辑表单容器 - 统一配色 */
@@ -446,7 +456,8 @@ defineExpose<TemplatePropertyModalInstance>({
   max-width: none;
   background: @bg-color-container;
   padding: 32px;
-  border-radius: @border-radius-xl;
+  /* 顶部直角，与自定义头部无缝衔接 */
+  border-radius: 0 0 @border-radius-xl @border-radius-xl;
   box-shadow: @shadow-xs-05;
   border: 1px solid @slate-200;
 }
@@ -547,7 +558,6 @@ defineExpose<TemplatePropertyModalInstance>({
 :deep(.ant-btn) {
   border-radius: @border-radius-lg;
   height: 40px;
-  padding: 0 24px;
   font-weight: 500;
 }
 
@@ -713,64 +723,21 @@ defineExpose<TemplatePropertyModalInstance>({
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
-  .header-content {
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-  
-  .header-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-  
-  .action-group {
-    flex-wrap: wrap;
-  }
-  
-  .modal-subtitle {
-    display: none;
-  }
+  .modal-title { font-size: @font-size-lg; }
+  .modal-subtitle { display: none; }
+  .header-actions { margin-right: 40px; gap: 6px; }
 }
 
 @media (max-width: 768px) {
-  .header-left {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .header-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 0;
-  }
-  
-  .header-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
-  }
-  
-  .action-group {
-    flex-direction: column;
-    width: 100%;
-    gap: 8px;
-  }
-  
-  .action-divider {
-    width: 100%;
-    height: 1px;
-  }
-  
-  .action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .action-btn:disabled {
-    transform: none;
-  }
+  .header-content { padding: 10px 12px; }
+  .header-icon { width: 36px; height: 36px; margin-right: 10px; }
+  .modal-title { font-size: @font-size-base; }
+  .header-actions { margin-right: 36px; gap: 4px; }
+  .action-divider { display: none; }
+  /* 窄屏仅保留图标，隐藏文字，节省空间保持单行 */
+  .action-btn { padding: 0 8px; height: 26px; }
+  .action-btn :deep(.anticon + span) { display: none !important; }
+  .action-btn :deep(span > .anticon + span) { display: none !important; }
 }</style>
 
 <style>

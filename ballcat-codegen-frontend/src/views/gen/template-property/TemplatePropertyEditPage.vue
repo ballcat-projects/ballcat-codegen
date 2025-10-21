@@ -1,5 +1,6 @@
 <template>
-  <a-spin :spinning="loading">
+  <div class="template-property-edit-page">
+    <a-spin :spinning="loading">
     <a-form
       ref="formRef"
       :label-col="{ span: 6 }"
@@ -106,13 +107,14 @@
         <a-textarea v-model:value="modelRef.remarks" placeholder="请输入" />
       </a-form-item>
       <a-form-item label=" " :colon="false">
-        <a-space>
+        <a-space class="form-actions">
           <a-button type="primary" html-type="submit" :loading="loading">保存</a-button>
           <a-button @click="handleCancel">取消</a-button>
         </a-space>
       </a-form-item>
-    </a-form>
-  </a-spin>
+      </a-form>
+    </a-spin>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -236,6 +238,15 @@ export default {
   height: 100%;
 }
 
+/* 页面根容器，确保占满内容区域 */
+.template-property-edit-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* 允许内部滚动 */
+  padding: 0; /* 统一由表单内边距控制，避免与父级重复 */
+}
+
 /* 表单容器样式 */
 .ant-form {
   height: 100%;
@@ -254,7 +265,7 @@ export default {
 :deep(.ant-form-item-label > label) {
   color: @slate-800 !important;
   font-weight: @font-weight-semibold !important;
-  font-size: @font-size-2lg !important;
+  font-size: @font-size-lg !important;
   line-height: @line-height-base;
 }
 
@@ -523,6 +534,15 @@ export default {
   justify-content: center;
 }
 
+.form-actions {
+  position: sticky;
+  bottom: 0;
+  padding: @spacing-md @spacing-lg;
+  background: linear-gradient(180deg, fade(@bg-color-container, 95%), @bg-color-container);
+  border-top: 1px solid @slate-200;
+  z-index: 1;
+}
+
 :deep(.ant-space-horizontal) {
   gap: @spacing-lg !important;
 }
@@ -560,7 +580,7 @@ export default {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .ant-form {
-  padding: @spacing-xl @spacing-lg;
+  padding: @spacing-lg;
   }
 
   :deep(.ant-form-item-label) {

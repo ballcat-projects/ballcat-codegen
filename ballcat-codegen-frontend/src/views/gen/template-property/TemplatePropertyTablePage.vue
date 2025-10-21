@@ -11,7 +11,7 @@
           :data-source="dataSource"
           :pagination="pagination"
           :loading="loading"
-          :scroll="{ x: 720 }"
+          :scroll="{ x: 'max-content' }"
           @change="tableState.handleTableChange"
         >
       <template #bodyCell="{ column, record }">
@@ -19,37 +19,40 @@
           <div class="property-section">
             <!-- 主标题区域 -->
             <div class="property-main">
-              <h4 class="property-title">{{ record.title }}</h4>
-              <span v-if="record.required === 1" class="required-badge">必填</span>
+              <h4 class="property-title">
+                {{ record.title }}
+                <span v-if="record.required === 1" class="required-star" aria-label="必填">*</span>
+              </h4>
             </div>
-            <!-- 详细信息区域 -->
-            <div class="property-details">
-              <div class="detail-item">
-                <span class="detail-label">属性键:</span>
-                <code class="detail-code">{{ record.propKey }}</code>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">排序:</span>
-                <span class="detail-value">{{ record.orderValue }}</span>
-              </div>
+            <!-- 紧凑的元信息行 -->
+            <div class="property-meta">
+              <span class="meta-item">
+                <span class="meta-label">键</span>
+                <code class="meta-code">{{ record.propKey }}</code>
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="meta-item">
+                <span class="meta-label">排序</span>
+                <span class="meta-value">{{ record.orderValue }}</span>
+              </span>
             </div>
           </div>
         </template>
         
         <template v-else-if="column.dataIndex === 'details'">
           <div class="config-section">
-            <!-- 简化的类型信息 -->
+            <!-- 类型/组件摘要（紧凑） -->
             <div class="config-primary">
-              <!-- 配置属性：简化显示 -->
               <div v-if="record.propType === 1" class="config-info">
-                <span class="config-type">配置</span>
+                <span class="type-dot type-config" aria-hidden="true"></span>
+                <span class="type-text">配置</span>
                 <a-popover v-if="record.componentType" placement="topLeft" trigger="hover">
                   <template #content>
                     <div v-if="record.componentOptions?.length" class="popover-options">
                       <div class="popover-title">{{ getComponentTypeLabel(record.componentType) }} 组件选项</div>
                       <div class="popover-option-list">
-                        <div 
-                          v-for="option in record.componentOptions" 
+                        <div
+                          v-for="option in record.componentOptions"
                           :key="option.value"
                           class="popover-option-item"
                           :class="{ 'is-default': option.value === record.defaultValue }"
@@ -72,39 +75,35 @@
                   </span>
                 </a-popover>
               </div>
-              
-              <!-- 计算属性：简化显示 -->
+
               <div v-if="record.propType === 2" class="config-info">
-                <span class="config-type computed">计算</span>
+                <span class="type-dot type-computed" aria-hidden="true"></span>
+                <span class="type-text">计算</span>
                 <span class="engine-text">{{ getEngineTypeName(record.engineType) }}</span>
               </div>
             </div>
-            
-            <!-- 默认值/表达式信息 -->
+
+            <!-- 默认值/表达式（紧凑键值对） -->
             <div v-if="(record.propType === 1 && record.defaultValue) || (record.propType === 2 && record.expression)" class="config-secondary">
-              <!-- 配置属性：默认值 -->
-              <div v-if="record.propType === 1 && record.defaultValue" class="detail-item">
-                <span class="detail-label">默认值:</span>
+              <div v-if="record.propType === 1 && record.defaultValue" class="kv-item">
+                <span class="kv-label">默认</span>
                 <a-tooltip v-if="record.defaultValue && record.defaultValue.length > 30" placement="top">
                   <template #title>{{ record.defaultValue }}</template>
-                  <code class="detail-code">{{ truncateText(record.defaultValue, 30) }}</code>
+                  <code class="inline-code">{{ truncateText(record.defaultValue, 30) }}</code>
                 </a-tooltip>
-                <code v-else class="detail-code">{{ record.defaultValue }}</code>
-                <span v-if="getDefaultOptionName(record)" class="option-name">
-                  ({{ getDefaultOptionName(record) }})
-                </span>
+                <code v-else class="inline-code">{{ record.defaultValue }}</code>
+                <span v-if="getDefaultOptionName(record)" class="kv-hint">({{ getDefaultOptionName(record) }})</span>
               </div>
-              
-              <!-- 计算属性：表达式 -->
-              <div v-if="record.propType === 2 && record.expression" class="detail-item">
-                <span class="detail-label">表达式:</span>
+
+              <div v-if="record.propType === 2 && record.expression" class="kv-item">
+                <span class="kv-label">表达式</span>
                 <a-tooltip v-if="record.expression && record.expression.length > 50" placement="top">
                   <template #title>
                     <pre class="tooltip-code">{{ record.expression }}</pre>
                   </template>
-                  <code class="detail-code expression">{{ truncateText(record.expression, 50) }}</code>
+                  <code class="inline-code code-expression">{{ truncateText(record.expression, 50) }}</code>
                 </a-tooltip>
-                <code v-else class="detail-code expression">{{ record.expression }}</code>
+                <code v-else class="inline-code code-expression">{{ record.expression }}</code>
               </div>
             </div>
           </div>
@@ -112,9 +111,11 @@
         
         <template v-else-if="column.dataIndex === 'remarks'">
           <div class="remarks-section">
-            <span v-if="record.remarks" class="remarks-text">
-              {{ record.remarks }}
-            </span>
+            <a-tooltip v-if="record.remarks && record.remarks.length > 40" placement="top">
+              <template #title>{{ record.remarks }}</template>
+              <span class="remarks-text truncate">{{ truncateText(record.remarks, 40) }}</span>
+            </a-tooltip>
+            <span v-else-if="record.remarks" class="remarks-text truncate">{{ record.remarks }}</span>
             <span v-else class="remarks-empty">-</span>
           </div>
         </template>
@@ -122,10 +123,12 @@
         <template v-else-if="column.dataIndex === 'action'">
           <div class="action-buttons">
             <a-button type="link" size="small" @click="handleUpdate(record)">
+              <EditOutlined />
               编辑
             </a-button>
             <a-popconfirm title="确定要删除这个属性吗?" @confirm="handleRemove(record.id)">
               <a-button type="link" size="small" danger>
+                <DeleteOutlined />
                 删除
               </a-button>
             </a-popconfirm>
@@ -146,6 +149,7 @@ import { doRequest } from '@/utils/axios/request'
 import type { TemplateGroup } from '@/api/gen/template-group/types'
 import type { TemplateProperty } from '@/api/gen/template-property/types'
 import type { PageParam } from '@/api/types'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 
 const emits = defineEmits<{
   // 提交完成事件
@@ -273,16 +277,16 @@ export default {
 :deep(.ant-table-thead > tr > th) {
   background: @slate-50;
   border-bottom: 2px solid @slate-200;
-  padding: 20px 16px !important;
+  padding: 14px 14px !important; // 更紧凑
   font-weight: 600;
-  font-size: @font-size-2lg;
+  font-size: @font-size-lg;
   color: @slate-800;
   line-height: @line-height-compact;
 }
 
 :deep(.ant-table-tbody > tr > td) {
   border-bottom: 1px solid @slate-100;
-  padding: 20px 16px !important;
+  padding: 14px !important; // 更紧凑
   vertical-align: top;
   font-size: @font-size-base;
 }
@@ -332,150 +336,44 @@ export default {
 }
 
 /* 属性配置区域 */
-.property-section {
-  line-height: 1.6;
-}
-
-.property-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.property-title {
-  margin: 0;
-  font-size: @font-size-lg;
-  font-weight: 600;
-  color: @slate-800;
-  line-height: @line-height-compact;
-}
-
-.required-badge {
-  background: @red-600;
-  color: white;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: @font-size-2xs;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.property-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.property-section { line-height: 1.6; }
+.property-main { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.property-title { margin: 0; font-size: @font-size-lg; font-weight: 600; color: @slate-800; line-height: @line-height-compact; }
+.required-star { color: @red-600; margin-left: 6px; font-size: 14px; position: relative; top: -1px; }
+.property-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; color: @slate-500; font-size: @font-size-sm; }
+.meta-item { display: inline-flex; align-items: center; gap: 6px; }
+.meta-label { color: @slate-400; font-weight: 500; }
+.meta-code { background: @slate-100; border: 1px solid @slate-200; padding: 2px 6px; border-radius: 4px; font-family: 'SFMono-Regular','Monaco','Consolas', monospace; font-size: @font-size-2xs; color: @blue-600; }
+.meta-value { color: @slate-700; font-weight: 500; }
+.meta-sep { color: @slate-300; }
 
 /* 配置详情区域 */
-.config-section {
-  line-height: 1.6;
-}
-
-.config-primary {
-  margin-bottom: 12px;
-}
-
-.config-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-}
-
-.config-type {
-  background: @teal-600;
-  color: white;
-  padding: 4px 10px;
-  border-radius: @border-radius-base;
-  font-size: @font-size-sm;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.config-type.computed {
-  background: @purple-600;
-}
-
-.component-text {
-  color: @blue-500;
-  cursor: pointer;
-  font-size: @font-size-base;
-  font-weight: 500;
-}
-
-.component-text:hover {
-  color: @blue-600;
-  text-decoration: underline;
-}
-
-.engine-text {
-  color: @red-600;
-  font-size: @font-size-base;
-  font-weight: 500;
-}
-
-.options-count {
-  color: @slate-500;
-  font-size: @font-size-sm;
-  margin-left: 4px;
-}
+.config-section { line-height: 1.6; }
+.config-primary { margin-bottom: 8px; }
+.config-info { display: inline-flex; align-items: center; gap: 8px; font-size: @font-size-base; }
+.type-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.type-config { background: @teal-600; }
+.type-computed { background: @purple-600; }
+.type-text { color: @slate-700; font-weight: 600; }
+.component-text { color: @blue-500; cursor: pointer; font-size: @font-size-base; font-weight: 500; }
+.component-text:hover { color: @blue-600; text-decoration: underline; }
+.engine-text { color: @red-600; font-size: @font-size-base; font-weight: 500; }
+.options-count { color: @slate-500; font-size: @font-size-2xs; margin-left: 4px; }
 
 /* 详情项样式 */
-.detail-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.detail-label {
-  color: @slate-500;
-  font-weight: 500;
-  min-width: 70px;
-}
-
-.detail-code {
-  background: @slate-100;
-  border: 1px solid @slate-200;
-  padding: 4px 8px;
-  border-radius: @border-radius-base;
-  font-family: 'SFMono-Regular', 'Monaco', 'Consolas', monospace;
-  font-size: @font-size-sm;
-  color: @blue-500;
-  font-weight: 500;
-}
-
-.detail-code.expression {
-  color: @blue-700;
-  background: @blue-50;
-  border-color: @blue-200;
-}
-
-.detail-value {
-  font-size: @font-size-2sm;
-  color: @slate-800;
-  font-weight: 500;
-}
-
-.option-name {
-  font-size: @font-size-2xs;
-  color: @green-600;
-  font-style: italic;
-  font-weight: 500;
-}
+.kv-item { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: @font-size-sm; }
+.kv-label { color: @slate-500; font-weight: 500; }
+.inline-code { background: @slate-100; border: 1px solid @slate-200; padding: 2px 6px; border-radius: 4px; font-family: 'SFMono-Regular','Monaco','Consolas', monospace; font-size: @font-size-2xs; color: @slate-700; }
+.inline-code.code-expression { color: @blue-700; background: @blue-50; border-color: @blue-200; }
+.kv-hint { font-size: @font-size-2xs; color: @green-600; font-style: italic; font-weight: 500; }
 
 /* 备注区域 */
 .remarks-section {
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
-.remarks-text {
-  font-size: @font-size-2sm;
-  color: @slate-500;
-  line-height: 1.5;
-}
+.remarks-text { font-size: @font-size-2sm; color: @slate-500; line-height: 1.5; }
+.truncate { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 .remarks-empty {
   font-size: @font-size-2sm;
@@ -490,7 +388,7 @@ export default {
 }
 
 .action-buttons .ant-btn {
-  padding: 8px 12px;
+  padding: 6px 8px;
   height: auto;
   border: none;
   border-radius: @border-radius-base;
@@ -498,6 +396,10 @@ export default {
   font-weight: 500;
   transition: all 0.2s ease;
 }
+
+.action-buttons .ant-btn .anticon { line-height: 1; display: inline-flex; vertical-align: -0.125em; }
+.action-buttons .ant-btn .anticon > svg { display: block; }
+.action-buttons .ant-btn :deep(.anticon + span) { margin-left: 4px; }
 
 .action-buttons .ant-btn-link {
   color: @blue-500;
