@@ -20,6 +20,8 @@ export interface DataSourceConfig {
   dsKey?: string
   // 用户名
   username?: string
+  // 提交表单时的密码参数
+  pass?: string
   // 密码
   password?: string
   // 数据源连接

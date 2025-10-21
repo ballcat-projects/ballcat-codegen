@@ -78,7 +78,8 @@
                     <div>
                       <h4 class="font-semibold text-gray-900">{{ record.title }}</h4>
                       <div class="flex items-center space-x-2 mt-1">
-                        <span class="text-sm text-gray-600">{{ formatUrl(record.url) }}</span>
+                        <span class="text-sm text-gray-600">{{ getJdbcSummary(record.url) }}</span>
+                        <LockOutlined v-if="hasSsl(record.url)" class="text-gray-400 text-xs align-middle" />
                       </div>
                       <p class="text-sm text-gray-500 mt-1">{{ record.username }}@{{ record.dsKey }}</p>
                     </div>
@@ -140,12 +141,8 @@
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 h-full flex flex-col min-h-0">
           <div class="card-header flex-shrink-0">
             <div class="flex items-center justify-between w-full">
-              <h3 class="card-title">
-                <span v-if="isAdding">添加数据源</span>
-                <span v-else-if="isEditing">编辑数据源</span>
-                <span v-else>数据源详情</span>
-              </h3>
-              <button v-if="selectedDataSource && !isAdding && !isEditing" @click="clearSelection"
+              <h3 class="card-title">{{ headerTitle }}</h3>
+              <button v-if="selectedDataSource && panelMode === 'view'" @click="clearSelection"
                 class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition-colors"
                 title="清除选择">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -159,138 +156,8 @@
           </div>
 
           <div class="flex-1 overflow-y-auto min-h-0">
-            <!-- Add New Data Source Form -->
-            <div v-if="isAdding" class="p-6">
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    数据源名称 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.title" placeholder="请输入数据源名称" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    数据源键 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.dsKey" placeholder="请输入数据源键" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    连接地址 <span class="text-red-500">*</span>
-                  </label>
-                  <a-textarea v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" :rows="3"
-                    :auto-size="{ minRows: 2, maxRows: 4 }" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    用户名 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.username" placeholder="请输入用户名" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    密码 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input-password v-model:value="editForm.password" placeholder="请输入密码" />
-                </div>
-
-                <div class="pt-4 border-t border-gray-200 space-y-2">
-                  <button @click="handleSave"
-                    class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    :disabled="!isFormValid">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="w-4 h-4 mr-2">
-                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                      <polyline points="17,21 17,13 7,13 7,21"></polyline>
-                      <polyline points="7,3 7,8 15,8"></polyline>
-                    </svg>
-                    保存
-                  </button>
-                  <button @click="cancelEdit"
-                    class="w-full flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="w-4 h-4 mr-2">
-                      <path d="M18 6 6 18"></path>
-                      <path d="m6 6 12 12"></path>
-                    </svg>
-                    取消
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Edit Data Source Form -->
-            <div v-else-if="isEditing && selectedDataSource" class="p-6">
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    数据源名称 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.title" placeholder="请输入数据源名称" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    数据源键 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.dsKey" placeholder="请输入数据源键" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    连接地址 <span class="text-red-500">*</span>
-                  </label>
-                  <a-textarea v-model:value="editForm.url" placeholder="jdbc:mysql://localhost:3306/database" :rows="3"
-                    :auto-size="{ minRows: 2, maxRows: 4 }" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    用户名 <span class="text-red-500">*</span>
-                  </label>
-                  <a-input v-model:value="editForm.username" placeholder="请输入用户名" />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
-                  <a-input-password v-model:value="editForm.password" placeholder="不修改请留空" />
-                </div>
-
-                <div class="pt-4 border-t border-gray-200 space-y-2">
-                  <button @click="handleSave"
-                    class="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    :disabled="!isFormValid">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="w-4 h-4 mr-2">
-                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                      <polyline points="17,21 17,13 7,13 7,21"></polyline>
-                      <polyline points="7,3 7,8 15,8"></polyline>
-                    </svg>
-                    保存修改
-                  </button>
-                  <button @click="cancelEdit"
-                    class="w-full flex items-center justify-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="w-4 h-4 mr-2">
-                      <path d="M18 6 6 18"></path>
-                      <path d="m6 6 12 12"></path>
-                    </svg>
-                    取消
-                  </button>
-                </div>
-              </div>
-            </div>
-
             <!-- No Selection State -->
-            <div v-else-if="!selectedDataSource" class="p-8 text-center text-gray-500">
+            <div v-if="panelMode === 'empty'" class="p-8 text-center text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="lucide lucide-database w-12 h-12 mx-auto mb-2 text-gray-400">
@@ -323,52 +190,20 @@
               </div>
             </div>
 
-            <!-- Data Source Details -->
-            <div v-else-if="selectedDataSource && !isEditing" class="p-6 space-y-4">
-              <!-- Title -->
-              <div>
-                <h4 class="text-lg font-semibold text-gray-900">{{ selectedDataSource.title }}</h4>
-              </div>
+            <!-- Data Source Form / Details -->
+            <DataSourceForm
+              v-if="panelMode === 'form'"
+              :mode="editForm?.id ? 'edit' : 'add'"
+              v-model="editForm"
+              @save="handleSave"
+              @cancel="cancelEdit"
+            />
 
-              <!-- Connection Info -->
-              <div class="space-y-3">
-                <div v-if="selectedDataSource.url">
-                  <label class="text-sm font-medium text-gray-700">连接地址</label>
-                  <p class="text-sm text-gray-900 mt-1 break-all">{{ selectedDataSource.url }}</p>
-                </div>
-
-                <div v-if="selectedDataSource.username">
-                  <label class="text-sm font-medium text-gray-700">用户名</label>
-                  <p class="text-sm text-gray-900 mt-1">{{ selectedDataSource.username }}</p>
-                </div>
-
-                <div v-if="selectedDataSource.dsKey">
-                  <label class="text-sm font-medium text-gray-700">数据源键</label>
-                  <p class="text-sm text-gray-900 mt-1">{{ selectedDataSource.dsKey }}</p>
-                </div>
-
-                <div v-if="selectedDataSource.createTime">
-                  <label class="text-sm font-medium text-gray-700">创建时间</label>
-                  <p class="text-sm text-gray-900 mt-1">{{ selectedDataSource.createTime }}</p>
-                </div>
-              </div>
-
-              <!-- Actions -->
-              <div class="pt-4 border-t border-gray-200 space-y-2">
-                <button @click="handleEdit(selectedDataSource)"
-                  class="w-full flex items-center justify-center px-4 py-2 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-square-pen w-4 h-4 mr-2">
-                    <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path
-                      d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a .5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z">
-                    </path>
-                  </svg>
-                  编辑配置
-                </button>
-              </div>
-            </div>
+            <DataSourceDetails
+              v-if="panelMode === 'view' && selectedDataSource"
+              :record="selectedDataSource"
+              @edit="handleEdit(selectedDataSource)"
+            />
           </div>
         </div>
       </div>
@@ -382,16 +217,24 @@ import useTable from '@/hooks/table'
 import { doRequest } from '@/utils/axios/request'
 import { queryDatasourceConfigPage, removeDatasourceConfig, addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
 import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
-import { ClusterOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { ClusterOutlined, PlusOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { getJdbcSummary, hasSsl } from '@/utils/jdbc-url'
+import DataSourceForm from './components/DataSourceForm.vue'
+import DataSourceDetails from './components/DataSourceDetails.vue'
 
 import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
 
 // 选中的数据源
 const selectedDataSource = ref<DataSourceConfig | null>(null)
 
-// 编辑状态
-const isAdding = ref(false)
-const isEditing = ref(false)
+// 右侧面板模式：empty | view | form
+const panelMode = ref<'empty' | 'view' | 'form'>('empty')
+
+const headerTitle = computed(() => {
+  if (panelMode.value === 'form') return editForm.id ? '编辑数据源' : '添加数据源'
+  if (panelMode.value === 'view') return '数据源详情'
+  return '数据源详情'
+})
 
 // 编辑表单
 const editForm = reactive({
@@ -400,7 +243,7 @@ const editForm = reactive({
   dsKey: '',
   url: '',
   username: '',
-  password: ''
+  pass: ''
 })
 
 // 查询参数
@@ -419,8 +262,7 @@ tableState.loadData()
 
 // 表单验证
 const isFormValid = computed(() => {
-  return editForm.title && editForm.dsKey && editForm.url && editForm.username &&
-    (isAdding.value ? editForm.password : true)
+  return !!(editForm.title && editForm.dsKey && editForm.url && editForm.username && (editForm.id ? true : editForm.pass))
 })
 
 // 重置表单
@@ -430,31 +272,30 @@ function resetForm() {
   editForm.dsKey = ''
   editForm.url = ''
   editForm.username = ''
-  editForm.password = ''
+  editForm.pass = ''
 }
 
 // 选择数据源
 function selectDataSource(record: DataSourceConfig) {
-  if (isAdding.value || isEditing.value) {
-    return // 编辑状态下不允许切换
-  }
+  // 允许在表单模式下也能切换，防止因异常提交导致面板卡住
   selectedDataSource.value = record
+  resetForm()
+  panelMode.value = 'view'
 }
 
 // 清除选择
 function clearSelection() {
-  if (isAdding.value || isEditing.value) {
-    return // 编辑状态下不允许清除
-  }
+  // 允许在表单模式下也能清除，回到空状态
   selectedDataSource.value = null
+  resetForm()
+  panelMode.value = 'empty'
 }
 
 // 开始添加
 function startAdd() {
   resetForm()
-  isAdding.value = true
-  isEditing.value = false
   selectedDataSource.value = null
+  panelMode.value = 'form'
 }
 
 // 开始编辑
@@ -465,53 +306,58 @@ function startEdit(record: DataSourceConfig) {
   editForm.dsKey = record.dsKey || ''
   editForm.url = record.url || ''
   editForm.username = record.username || ''
-  editForm.password = '' // 密码不显示，留空表示不修改
-
-  isAdding.value = false
-  isEditing.value = true
+  editForm.pass = '' // 密码不显示，留空表示不修改
   selectedDataSource.value = record
+  panelMode.value = 'form'
 }
 
 // 取消编辑
 function cancelEdit() {
-  isAdding.value = false
-  isEditing.value = false
   resetForm()
+  panelMode.value = selectedDataSource.value ? 'view' : 'empty'
 }
 
 // 保存数据
-function handleSave() {
+function handleSave(payload?: DataSourceConfig) {
   if (!isFormValid.value) return
 
-  if (isAdding.value) {
+  // 优先使用子组件回传的 payload，回退使用 editForm
+  const data = payload ?? editForm
+  if (!data) return
+
+  if (!data.id) {
     // 添加新数据源
     doRequest<void>({
       request: addDatasourceConfig({
-        title: editForm.title,
-        dsKey: editForm.dsKey,
-        url: editForm.url,
-        username: editForm.username,
-        password: editForm.password
+        title: data.title,
+        dsKey: data.dsKey,
+        url: data.url,
+        username: data.username,
+        pass: data.pass || ''
       }),
       successMessage: '添加成功！',
       onSuccess() {
         cancelEdit()
         tableState.loadData()
       }
+      , onError() {
+        // 确保表单异常后不锁死在 form 状态
+        panelMode.value = 'empty'
+      }
     })
-  } else if (isEditing.value && editForm.id) {
+  } else if (data.id) {
     // 更新数据源
     const updateData: any = {
-      id: editForm.id,
-      title: editForm.title,
-      dsKey: editForm.dsKey,
-      url: editForm.url,
-      username: editForm.username
+      id: data.id,
+      title: data.title,
+      dsKey: data.dsKey,
+      url: data.url,
+      username: data.username
     }
 
     // 只有输入了密码才更新密码
-    if (editForm.password) {
-      updateData.password = editForm.password
+    if (data.pass) {
+      updateData.pass = data.pass
     }
 
     doRequest<void>({
@@ -520,6 +366,10 @@ function handleSave() {
       onSuccess() {
         cancelEdit()
         tableState.loadData()
+      }
+      , onError() {
+        // 确保异常后仍可操作：回到 view（仍保留原选择）
+        panelMode.value = selectedDataSource.value ? 'view' : 'empty'
       }
     })
   }
@@ -559,16 +409,7 @@ function handleDel(record: DataSourceConfig) {
   })
 }
 
-// 格式化URL显示
-function formatUrl(url?: string) {
-  if (!url) return ''
-  try {
-    const urlObj = new URL(url)
-    return `${urlObj.hostname}:${urlObj.port || '3306'}`
-  } catch {
-    return url
-  }
-}
+// 已移除旧的 formatUrl，改用通用 JDBC 工具
 </script>
 
 <style scoped lang="less">
