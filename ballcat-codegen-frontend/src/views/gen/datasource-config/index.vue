@@ -193,10 +193,9 @@
             <!-- Data Source Form / Details -->
             <DataSourceForm
               v-if="panelMode === 'form'"
-              :mode="editForm?.id ? 'edit' : 'add'"
-              v-model="editForm"
-              @save="handleSave"
-              @cancel="cancelEdit"
+              ref="formRef"
+              @done="handleFormDone"
+              @cancel="handleFormCancel"
             />
 
             <DataSourceDetails
@@ -215,7 +214,7 @@
 import { reactive, ref, computed } from 'vue'
 import useTable from '@/hooks/table'
 import { doRequest } from '@/utils/axios/request'
-import { queryDatasourceConfigPage, removeDatasourceConfig, addDatasourceConfig, updateDatasourceConfig } from '@/api/gen/datasource-config'
+import { queryDatasourceConfigPage, removeDatasourceConfig } from '@/api/gen/datasource-config'
 import PageBreadcrumb from '@/components/breadcrumb/PageBreadcrumb.vue'
 import { ClusterOutlined, PlusOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { getJdbcSummary, hasSsl } from '@/utils/jdbc-url'
@@ -223,6 +222,7 @@ import DataSourceForm from './components/DataSourceForm.vue'
 import DataSourceDetails from './components/DataSourceDetails.vue'
 
 import type { DataSourceConfig, DataSourcePageParam } from '@/api/gen/datasource-config/types'
+import type { DataSourceFormInstance } from './types'
 
 // 选中的数据源
 const selectedDataSource = ref<DataSourceConfig | null>(null)
@@ -231,20 +231,13 @@ const selectedDataSource = ref<DataSourceConfig | null>(null)
 const panelMode = ref<'empty' | 'view' | 'form'>('empty')
 
 const headerTitle = computed(() => {
-  if (panelMode.value === 'form') return editForm.id ? '编辑数据源' : '添加数据源'
+  if (panelMode.value === 'form') return '数据源表单'
   if (panelMode.value === 'view') return '数据源详情'
   return '数据源详情'
 })
 
-// 编辑表单
-const editForm = reactive({
-  id: undefined as number | undefined,
-  title: '',
-  dsKey: '',
-  url: '',
-  username: '',
-  pass: ''
-})
+// 表单组件引用
+const formRef = ref<DataSourceFormInstance>()
 
 // 查询参数
 const queryParam = reactive<DataSourcePageParam>({})
@@ -260,120 +253,31 @@ const { dataSource, pagination } = tableState
 // 立刻加载数据
 tableState.loadData()
 
-// 表单验证
-const isFormValid = computed(() => {
-  return !!(editForm.title && editForm.dsKey && editForm.url && editForm.username && (editForm.id ? true : editForm.pass))
-})
-
-// 重置表单
-function resetForm() {
-  editForm.id = undefined
-  editForm.title = ''
-  editForm.dsKey = ''
-  editForm.url = ''
-  editForm.username = ''
-  editForm.pass = ''
-}
-
 // 选择数据源
 function selectDataSource(record: DataSourceConfig) {
-  // 允许在表单模式下也能切换，防止因异常提交导致面板卡住
   selectedDataSource.value = record
-  resetForm()
   panelMode.value = 'view'
 }
 
 // 清除选择
 function clearSelection() {
-  // 允许在表单模式下也能清除，回到空状态
   selectedDataSource.value = null
-  resetForm()
   panelMode.value = 'empty'
 }
 
-// 开始添加
-function startAdd() {
-  resetForm()
+// 表单完成回调
+function handleFormDone() {
+  tableState.loadData()
   selectedDataSource.value = null
-  panelMode.value = 'form'
+  panelMode.value = 'empty'
 }
 
-// 开始编辑
-function startEdit(record: DataSourceConfig) {
-  resetForm()
-  editForm.id = record.id
-  editForm.title = record.title || ''
-  editForm.dsKey = record.dsKey || ''
-  editForm.url = record.url || ''
-  editForm.username = record.username || ''
-  editForm.pass = '' // 密码不显示，留空表示不修改
-  selectedDataSource.value = record
-  panelMode.value = 'form'
-}
-
-// 取消编辑
-function cancelEdit() {
-  resetForm()
+// 表单取消回调
+function handleFormCancel() {
   panelMode.value = selectedDataSource.value ? 'view' : 'empty'
 }
 
-// 保存数据
-function handleSave(payload?: DataSourceConfig) {
-  if (!isFormValid.value) return
 
-  // 优先使用子组件回传的 payload，回退使用 editForm
-  const data = payload ?? editForm
-  if (!data) return
-
-  if (!data.id) {
-    // 添加新数据源
-    doRequest<void>({
-      request: addDatasourceConfig({
-        title: data.title,
-        dsKey: data.dsKey,
-        url: data.url,
-        username: data.username,
-        pass: data.pass || ''
-      }),
-      successMessage: '添加成功！',
-      onSuccess() {
-        cancelEdit()
-        tableState.loadData()
-      }
-      , onError() {
-        // 确保表单异常后不锁死在 form 状态
-        panelMode.value = 'empty'
-      }
-    })
-  } else if (data.id) {
-    // 更新数据源
-    const updateData: any = {
-      id: data.id,
-      title: data.title,
-      dsKey: data.dsKey,
-      url: data.url,
-      username: data.username
-    }
-
-    // 只有输入了密码才更新密码
-    if (data.pass) {
-      updateData.pass = data.pass
-    }
-
-    doRequest<void>({
-      request: updateDatasourceConfig(updateData),
-      successMessage: '更新成功！',
-      onSuccess() {
-        cancelEdit()
-        tableState.loadData()
-      }
-      , onError() {
-        // 确保异常后仍可操作：回到 view（仍保留原选择）
-        panelMode.value = selectedDataSource.value ? 'view' : 'empty'
-      }
-    })
-  }
-}
 
 // 分页变化
 function handlePaginationChange(page: number, pageSize?: number) {
@@ -386,12 +290,16 @@ function handlePaginationChange(page: number, pageSize?: number) {
 
 // 添加数据源
 function handleAdd() {
-  startAdd()
+  formRef.value?.add()
+  selectedDataSource.value = null
+  panelMode.value = 'form'
 }
 
 // 编辑数据源
 function handleEdit(record: DataSourceConfig) {
-  startEdit(record)
+  formRef.value?.edit(record)
+  selectedDataSource.value = record
+  panelMode.value = 'form'
 }
 
 // 删除数据源

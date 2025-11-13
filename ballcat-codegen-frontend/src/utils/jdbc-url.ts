@@ -153,3 +153,44 @@ export function hasSsl(url?: string): boolean {
   if ('encrypt' in lower) return lower['encrypt'] === 'true'
   return false
 }
+
+/**
+ * 验证 JDBC URL 格式
+ * @param url JDBC 连接字符串
+ * @returns 验证结果，包含是否有效、错误信息和摘要
+ */
+export interface JdbcValidationResult {
+  valid: boolean
+  error?: string
+  summary?: string
+}
+
+export function validateJdbcUrl(url?: string): JdbcValidationResult {
+  if (!url || !url.trim()) {
+    return { valid: false, error: '请输入 JDBC 连接地址' }
+  }
+
+  try {
+    const summary = getJdbcSummary(url)
+    const parsed = parseJdbcUrl(url)
+    
+    // 检查是否成功解析
+    if (parsed.vendor === 'Other' && !url.toLowerCase().startsWith('jdbc:')) {
+      return { valid: false, error: 'JDBC URL 必须以 jdbc: 开头' }
+    }
+    
+    // 检查是否有有效的主机信息（对于需要主机的数据库类型）
+    if (parsed.vendor !== 'SQLite' && parsed.vendor !== 'H2' && parsed.vendor !== 'Other') {
+      if (!parsed.hosts || parsed.hosts.length === 0) {
+        return { valid: false, error: '缺少有效的主机信息' }
+      }
+    }
+    
+    return { valid: true, summary }
+  } catch (error) {
+    return { 
+      valid: false, 
+      error: error instanceof Error ? error.message : 'JDBC URL 格式不正确' 
+    }
+  }
+}
